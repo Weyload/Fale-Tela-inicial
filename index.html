@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Fale&Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #0b2545;
+      overflow: hidden;
+    }
+
+    /* --- TELA DE SPLASH (2.5s) --- */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #0b2545 0%, #134074 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+
+    .splash-logo {
+      font-size: 42px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -1px;
+      margin-top: 20px;
+    }
+
+    .splash-logo span { color: #ffb703; }
+
+    .splash-slogan {
+      color: #8da9c4;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .capybara-splash {
+      width: 130px;
+      height: 130px;
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* --- TELA INICIAL (TRILHA) --- */
+    #main-app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #eef4f8;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    /* Topo Fixado */
+    .header {
+      background: #0b2545;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    .header-brand {
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .header-brand span { color: #ffb703; }
+
+    .streak-badge {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffb703;
+    }
+
+    .lang-flags {
+      display: flex;
+      gap: 8px;
+    }
+
+    .flag-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, border-color 0.2s;
+      background: #fff;
+    }
+
+    .flag-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .flag-btn.active {
+      border-color: #ffb703;
+      transform: scale(1.15);
+    }
+
+    /* Trilha de Aprendizado Rolarável */
+    .map-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px 20px 100px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 35px;
+      background-image: radial-gradient(#d0e1f9 2px, transparent 2px);
+      background-size: 24px 24px;
+    }
+
+    .station-card {
+      width: 85%;
+      max-width: 320px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 8px 20px rgba(11, 37, 69, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 2px solid #e1e9f0;
+    }
+
+    .station-card:active {
+      transform: scale(0.97);
+    }
+
+    .station-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #eef4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .station-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .station-info { flex: 1; }
+
+    .station-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0b2545;
+    }
+
+    .station-subtitle {
+      font-size: 12px;
+      color: #6c757d;
+      font-weight: 700;
+    }
+
+    /* Alternar posição dos cards na trilha */
+    .station-card:nth-child(even) { align-self: flex-end; }
+    .station-card:nth-child(odd) { align-self: flex-start; }
+
+    /* Barra Inferior Fixa */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #0b2545;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 16px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #8da9c4;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      gap: 4px;
+      width: 45%;
+    }
+
+    .nav-item.active { color: #ffb703; }
+  </style>
+</head>
+<body>
+
+  <!-- 1. TELA DE SPLASH -->
+  <div id="splash-screen">
+    <!-- Ícone temporário em vetor SVG para a Capivara na Splash -->
+    <svg class="capybara-splash" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="#ffb703"/>
+      <text x="50" y="62" font-size="45" text-anchor="middle">🦫</text>
+    </svg>
+    <div class="splash-logo">Fale<span>&Go</span></div>
+    <div class="splash-slogan">Idiomas para Viagem</div>
+  </div>
+
+  <!-- 2. TELA INICIAL (TRILHA DO VIAJANTE) -->
+  <div id="main-app">
+    
+    <!-- Topo -->
+    <div class="header">
+      <div class="header-brand">Fale<span>&Go</span></div>
+      <div class="streak-badge">🌟 27 dias</div>
+      <div class="lang-flags">
+        <!-- Bandeira da Espanha -->
+        <div class="flag-btn active" title="Espanhol">
+          <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
+        </div>
+        <!-- Bandeira do Reino Unido -->
+        <div class="flag-btn" title="Inglês">
+          <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
+        </div>
+        <!-- Bandeira da França -->
+        <div class="flag-btn" title="Francês">
+          <img src="https://flagcdn.com/w40/fr.png" alt="Francês">
+        </div>
+      </div>
+    </div>
+
+    <!-- Trilha Situacional -->
+    <div class="map-container">
+      
+      <div class="station-card" onclick="alert('Treinar Aeroporto!')">
+        <div class="station-icon">✈️</div>
+        <div class="station-info">
+          <div class="station-title">Aeroporto</div>
+          <div class="station-subtitle">Check-in e bagagens</div>
+        </div>
+      </div>
+
+      <div class="station-card" onclick="alert('Treinar Hotel!')">
+        <div class="station-icon">🏨</div>
+        <div class="station-info">
+          <div class="station-title">Hotel</div>
+          <div class="station-subtitle">Recepção e reservas</div>
+        </div>
+      </div>
+
+      <div class="station-card" onclick="alert('Treinar Restaurante!')">
+        <div class="station-icon">🍽️</div>
+        <div class="station-info">
+          <div class="station-title">Restaurante</div>
+          <div class="station-subtitle">Pedidos e conta</div>
+        </div>
+      </div>
+
+      <div class="station-card" onclick="alert('Treinar Na Rua!')">
+        <div class="station-icon">🗺️</div>
+        <div class="station-info">
+          <div class="station-title">Na Rua</div>
+          <div class="station-subtitle">Pedindo informações</div>
+        </div>
+      </div>
+
+      <div class="station-card" onclick="alert('Treinar Lojas!')">
+        <div class="station-icon">🛍️</div>
+        <div class="station-info">
+          <div class="station-title">Lojas e Compras</div>
+          <div class="station-subtitle">Preços e pagamentos</div>
+        </div>
+      </div>
+
+      <div class="station-card" onclick="alert('Treinar Museu!')">
+        <div class="station-icon">🏛️</div>
+        <div class="station-info">
+          <div class="station-title">Museus e Lazer</div>
+          <div class="station-subtitle">Ingressos e passeios</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Barra Inferior -->
+    <div class="bottom-nav">
+      <div class="nav-item active">
+        <span style="font-size:18px;">🎓</span>
+        <span>Aulas</span>
+      </div>
+      <div class="nav-item">
+        <span style="font-size:18px;">🎮</span>
+        <span>Exercícios</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        const main = document.getElementById('main-app');
+
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+        main.style.opacity = '1';
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
