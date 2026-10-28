@@ -247,25 +247,31 @@
   <!-- 2. TELA INICIAL (TRILHA DO VIAJANTE) -->
   <div id="main-app">
     
-    <!-- Topo -->
-    <div class="header">
-      <div class="header-brand">Fale<span>&Go</span></div>
-      <div class="streak-badge">🌟 27 dias</div>
-      <div class="lang-flags">
-        <!-- Bandeira da Espanha -->
-        <div class="flag-btn active" title="Espanhol">
-          <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
-        </div>
-        <!-- Bandeira do Reino Unido -->
-        <div class="flag-btn" title="Inglês">
-          <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
-        </div>
-        <!-- Bandeira da França -->
-        <div class="flag-btn" title="Francês">
-          <img src="https://flagcdn.com/w40/fr.png" alt="Francês">
-        </div>
-      </div>
-    </div>
+    <!-- Topo com Bandeiras -->
+<div class="lang-flags">
+  <!-- Espanhol (Ativo) -->
+  <div class="flag-btn active" onclick="selecionarIdioma('es')" title="Espanhol">
+    <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
+  </div>
+  <!-- Inglês (Em Construção) -->
+  <div class="flag-btn" onclick="selecionarIdioma('en')" title="Inglês">
+    <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
+  </div>
+  <!-- Chinês (Em Construção) -->
+  <div class="flag-btn" onclick="selecionarIdioma('zh')" title="Mandarim">
+    <img src="https://flagcdn.com/w40/cn.png" alt="Mandarim">
+  </div>
+</div>
+
+<script>
+  function selecionarIdioma(lang) {
+    if (lang === 'es') {
+      // Idioma principal ativo
+      return;
+    }
+    alert('🚧 Este idioma está em construção e estará disponível em breve!');
+  }
+</script>
 
     <!-- Trilha Situacional -->
     <div class="map-container">
