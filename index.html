@@ -21,7 +21,7 @@
       overflow: hidden;
     }
 
-    /* --- TELA DE SPLASH (2.5s) --- */
+    /* --- TELA DE SPLASH (APRESENTAÇÃO) --- */
     #splash-screen {
       position: fixed;
       top: 0;
@@ -65,7 +65,7 @@
       50% { transform: translateY(-10px); }
     }
 
-    /* --- TELA INICIAL (TRILHA) --- */
+    /* --- TELA INICIAL (TRILHA DO VIAJANTE) --- */
     #main-app {
       width: 100%;
       height: 100%;
@@ -174,14 +174,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 26px;
       flex-shrink: 0;
       overflow: hidden;
-    }
-
-    .station-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
     }
 
     .station-info { flex: 1; }
@@ -235,7 +230,6 @@
 
   <!-- 1. TELA DE SPLASH -->
   <div id="splash-screen">
-    <!-- Ícone temporário em vetor SVG para a Capivara na Splash -->
     <svg class="capybara-splash" viewBox="0 0 100 100">
       <circle cx="50" cy="50" r="45" fill="#ffb703"/>
       <text x="50" y="62" font-size="45" text-anchor="middle">🦫</text>
@@ -247,31 +241,27 @@
   <!-- 2. TELA INICIAL (TRILHA DO VIAJANTE) -->
   <div id="main-app">
     
-    <!-- Topo com Bandeiras -->
-<div class="lang-flags">
-  <!-- Espanhol (Ativo) -->
-  <div class="flag-btn active" onclick="selecionarIdioma('es')" title="Espanhol">
-    <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
-  </div>
-  <!-- Inglês (Em Construção) -->
-  <div class="flag-btn" onclick="selecionarIdioma('en')" title="Inglês">
-    <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
-  </div>
-  <!-- Chinês (Em Construção) -->
-  <div class="flag-btn" onclick="selecionarIdioma('zh')" title="Mandarim">
-    <img src="https://flagcdn.com/w40/cn.png" alt="Mandarim">
-  </div>
-</div>
-
-<script>
-  function selecionarIdioma(lang) {
-    if (lang === 'es') {
-      // Idioma principal ativo
-      return;
-    }
-    alert('🚧 Este idioma está em construção e estará disponível em breve!');
-  }
-</script>
+    <!-- Topo Fixado -->
+    <div class="header">
+      <div class="header-brand">Fale<span>&Go</span></div>
+      <div class="streak-badge">🌟 27 dias</div>
+      
+      <!-- Seletor de Idiomas (Bandeiras) -->
+      <div class="lang-flags">
+        <!-- Espanhol (Ativo) -->
+        <div class="flag-btn active" onclick="selecionarIdioma('es')" title="Espanhol">
+          <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
+        </div>
+        <!-- Inglês (Em Construção) -->
+        <div class="flag-btn" onclick="selecionarIdioma('en')" title="Inglês">
+          <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
+        </div>
+        <!-- Mandarim (Em Construção) -->
+        <div class="flag-btn" onclick="selecionarIdioma('zh')" title="Mandarim">
+          <img src="https://flagcdn.com/w40/cn.png" alt="Mandarim">
+        </div>
+      </div>
+    </div>
 
     <!-- Trilha Situacional -->
     <div class="map-container">
@@ -340,7 +330,9 @@
 
   </div>
 
+  <!-- LÓGICA JAVASCRIPT -->
   <script>
+    // 1. Transição da Tela de Splash para a Tela Inicial
     window.addEventListener('load', () => {
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
@@ -351,6 +343,14 @@
         main.style.opacity = '1';
       }, 2500);
     });
+
+    // 2. Controle de Idiomas (Espanhol Ativo / Outros com aviso)
+    function selecionarIdioma(lang) {
+      if (lang === 'es') {
+        return;
+      }
+      alert('🚧 Este idioma está em construção e estará disponível em breve!');
+    }
   </script>
 </body>
 </html>
