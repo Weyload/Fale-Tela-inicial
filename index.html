@@ -138,15 +138,103 @@
     .map-container {
       flex: 1;
       overflow-y: auto;
-      padding: 30px 20px 100px 20px;
+      padding: 20px 20px 100px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 35px;
+      gap: 25px;
       background-image: radial-gradient(#d0e1f9 2px, transparent 2px);
       background-size: 24px 24px;
     }
 
+    /* BASTIDOR DA MASCOTE + BALÃO DE BOAS-VINDAS */
+    .welcome-banner {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 5px;
+    }
+
+    .capybara-avatar {
+      width: 68px;
+      height: 68px;
+      background: #ffb703;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      border: 3px solid #ffffff;
+    }
+
+    /* Para usar uma imagem em PNG da Capivara no lugar do emoji:
+       Substitua o conteúdo da div capybara-avatar por:
+       <img src="capivara.png" style="width:100%; height:100%; object-fit:cover; border-radius:50%;"> */
+
+    .speech-bubble {
+      background: #ffffff;
+      color: #0b2545;
+      padding: 12px 16px;
+      border-radius: 18px;
+      border-top-left-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+      box-shadow: 0 6px 16px rgba(11, 37, 69, 0.1);
+      min-height: 68px;
+      position: relative;
+      border: 2px solid #e1e9f0;
+      flex: 1;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 13px;
+      background-color: #0b2545;
+      margin-left: 2px;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ANIMAÇÃO DA SETA "COMECE POR AQUI" */
+    .start-here-pointer {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: -10px;
+    }
+
+    .arrow-badge {
+      background: #ffb703;
+      color: #0b2545;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(255, 183, 3, 0.4);
+      animation: slideArrow 1.2s ease-in-out infinite;
+    }
+
+    @keyframes slideArrow {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
+    }
+
+    /* ESTAÇÕES DA TRILHA */
     .station-card {
       width: 85%;
       max-width: 320px;
@@ -160,6 +248,12 @@
       cursor: pointer;
       transition: transform 0.2s;
       border: 2px solid #e1e9f0;
+    }
+
+    .station-card.featured {
+      border: 3px solid #ffb703;
+      background: linear-gradient(135deg, #ffffff 0%, #fffdf5 100%);
+      box-shadow: 0 8px 24px rgba(255, 183, 3, 0.25);
     }
 
     .station-card:active {
@@ -244,19 +338,16 @@
     <!-- Topo Fixado -->
     <div class="header">
       <div class="header-brand">Fale<span>&Go</span></div>
-      <div class="streak-badge">🌟 27 dias</div>
+      <div class="streak-badge" id="user-stats">🌟 1 dia | 0 XP</div>
       
       <!-- Seletor de Idiomas (Bandeiras) -->
       <div class="lang-flags">
-        <!-- Espanhol (Ativo) -->
         <div class="flag-btn active" onclick="selecionarIdioma('es')" title="Espanhol">
           <img src="https://flagcdn.com/w40/es.png" alt="Espanhol">
         </div>
-        <!-- Inglês (Em Construção) -->
         <div class="flag-btn" onclick="selecionarIdioma('en')" title="Inglês">
           <img src="https://flagcdn.com/w40/gb.png" alt="Inglês">
         </div>
-        <!-- Mandarim (Em Construção) -->
         <div class="flag-btn" onclick="selecionarIdioma('zh')" title="Mandarim">
           <img src="https://flagcdn.com/w40/cn.png" alt="Mandarim">
         </div>
@@ -266,7 +357,30 @@
     <!-- Trilha Situacional -->
     <div class="map-container">
       
-      <div class="station-card" onclick="alert('Treinar Aeroporto!')">
+      <!-- BANNER DE BOAS-VINDAS DA CAPIVARA -->
+      <div class="welcome-banner">
+        <div class="capybara-avatar">🦫</div>
+        <div class="speech-bubble">
+          <span id="typed-welcome"></span><span class="cursor"></span>
+        </div>
+      </div>
+
+      <!-- SETA ANIMADA DA ESQUERDA PARA A DIREITA -->
+      <div class="start-here-pointer">
+        <div class="arrow-badge">👉 Comece por aqui</div>
+      </div>
+
+      <!-- CARD 0: AULAS BÁSICAS (NOVO) -->
+      <div class="station-card featured" onclick="window.location.href='aula1.html'">
+        <div class="station-icon" style="background: #fff4d8;">📚</div>
+        <div class="station-info">
+          <div class="station-title">Aulas Básicas</div>
+          <div class="station-subtitle">Alfabeto, sons e frases</div>
+        </div>
+      </div>
+
+      <!-- CARD 1: AEROPORTO -->
+      <div class="station-card" onclick="alert('Iniciando treino do Aeroporto!')">
         <div class="station-icon">✈️</div>
         <div class="station-info">
           <div class="station-title">Aeroporto</div>
@@ -274,7 +388,8 @@
         </div>
       </div>
 
-      <div class="station-card" onclick="alert('Treinar Hotel!')">
+      <!-- CARD 2: HOTEL -->
+      <div class="station-card" onclick="alert('Iniciando treino do Hotel!')">
         <div class="station-icon">🏨</div>
         <div class="station-info">
           <div class="station-title">Hotel</div>
@@ -282,7 +397,8 @@
         </div>
       </div>
 
-      <div class="station-card" onclick="alert('Treinar Restaurante!')">
+      <!-- CARD 3: RESTAURANTE -->
+      <div class="station-card" onclick="alert('Iniciando treino do Restaurante!')">
         <div class="station-icon">🍽️</div>
         <div class="station-info">
           <div class="station-title">Restaurante</div>
@@ -290,7 +406,8 @@
         </div>
       </div>
 
-      <div class="station-card" onclick="alert('Treinar Na Rua!')">
+      <!-- CARD 4: NA RUA -->
+      <div class="station-card" onclick="alert('Iniciando treino Na Rua!')">
         <div class="station-icon">🗺️</div>
         <div class="station-info">
           <div class="station-title">Na Rua</div>
@@ -298,7 +415,8 @@
         </div>
       </div>
 
-      <div class="station-card" onclick="alert('Treinar Lojas!')">
+      <!-- CARD 5: LOJAS -->
+      <div class="station-card" onclick="alert('Iniciando treino de Lojas!')">
         <div class="station-icon">🛍️</div>
         <div class="station-info">
           <div class="station-title">Lojas e Compras</div>
@@ -306,7 +424,8 @@
         </div>
       </div>
 
-      <div class="station-card" onclick="alert('Treinar Museu!')">
+      <!-- CARD 6: MUSEU -->
+      <div class="station-card" onclick="alert('Iniciando treino do Museu!')">
         <div class="station-icon">🏛️</div>
         <div class="station-info">
           <div class="station-title">Museus e Lazer</div>
@@ -332,7 +451,19 @@
 
   <!-- LÓGICA JAVASCRIPT -->
   <script>
-    // 1. Transição da Tela de Splash para a Tela Inicial
+    // 1. MÁQUINA DE ESCREVER NA TELA INICIAL
+    const welcomeMessage = "Seja bem-vindo! Vamos começar a aprender Espanhol? O que acha de começar com algumas aulas básicas?";
+    let welcomeIndex = 0;
+
+    function typeWriterWelcome() {
+      if (welcomeIndex < welcomeMessage.length) {
+        document.getElementById("typed-welcome").innerHTML += welcomeMessage.charAt(welcomeIndex);
+        welcomeIndex++;
+        setTimeout(typeWriterWelcome, 35);
+      }
+    }
+
+    // 2. Transição da Tela de Splash e Carregamento de Estatísticas
     window.addEventListener('load', () => {
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
@@ -341,14 +472,24 @@
         splash.style.opacity = '0';
         splash.style.visibility = 'hidden';
         main.style.opacity = '1';
+
+        // Inicia a digitação do balão assim que a tela inicial aparece
+        typeWriterWelcome();
       }, 2500);
+
+      carregarProgresso();
     });
 
-    // 2. Controle de Idiomas (Espanhol Ativo / Outros com aviso)
+    // 3. Carrega XP e Dias Salvos no localStorage
+    function carregarProgresso() {
+      let streak = localStorage.getItem('faleandgo_streak') || '1';
+      let xp = localStorage.getItem('faleandgo_xp') || '0';
+      document.getElementById('user-stats').innerHTML = `🌟 ${streak} dia(s) | ${xp} XP`;
+    }
+
+    // 4. Controle de Idiomas
     function selecionarIdioma(lang) {
-      if (lang === 'es') {
-        return;
-      }
+      if (lang === 'es') return;
       alert('🚧 Este idioma está em construção e estará disponível em breve!');
     }
   </script>
