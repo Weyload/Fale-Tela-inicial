@@ -1,0 +1,341 @@
+Aqui está o código completo da nova página de Hub de Aulas Básicas (aulas_basicas.html).
+Ela funciona como o sumário dessa seção: exibe a mensagem de boas-vindas da capivara, a lista com as miniaturas oficiais dos vídeos no YouTube, os títulos, prévias do que será aprendido e os botões clicáveis direcionando diretamente para os seus links do GitHub (Aula1 e Aula2).
+Código Completo (aulas_basicas.html)
+Salve o código abaixo em um novo arquivo no seu repositório com o nome aulas_basicas.html:
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Aulas Básicas | Fale&Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0b2545;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 30px;
+    }
+
+    /* --- TOPO FIXADO --- */
+    .header {
+      background: #081c33;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #ffb703;
+      font-size: 20px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .back-btn:active {
+      background: rgba(255,183,3,0.3);
+    }
+
+    .header-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* --- MASCOTE + BALÃO DE DIÁLOGO --- */
+    .mascot-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .capybara-avatar {
+      width: 68px;
+      height: 68px;
+      background: #ffb703;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      flex-shrink: 0;
+      border: 3px solid #ffffff;
+    }
+
+    .speech-bubble {
+      background: #ffffff;
+      color: #0b2545;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border-top-left-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      min-height: 68px;
+      position: relative;
+      flex: 1;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 13px;
+      background-color: #0b2545;
+      margin-left: 2px;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* --- TÍTULO DA LISTA --- */
+    .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffb703;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* --- CARDS DE AULA --- */
+    .lessons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .lesson-card {
+      background: #ffffff;
+      color: #0b2545;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 2px solid #e1e9f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lesson-card:active {
+      transform: scale(0.98);
+    }
+
+    /* Banner / Miniatura do Vídeo */
+    .thumb-wrapper {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      background: #134074;
+      overflow: hidden;
+    }
+
+    .thumb-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 183, 3, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #0b2545;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    .xp-tag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(11, 37, 69, 0.85);
+      color: #ffb703;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Conteúdo do Card */
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 800;
+      color: #2ec4b6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #0b2545;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #5c677d;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .start-btn {
+      background: #ffb703;
+      color: #0b2545;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPO -->
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+    <div class="header-title">Aulas Básicas</div>
+  </div>
+
+  <div class="container">
+
+    <!-- MASCOTE + MÁQUINA DE ESCREVER -->
+    <div class="mascot-section">
+      <div class="capybara-avatar">🦫</div>
+      <div class="speech-bubble">
+        <span id="typed-text"></span><span class="cursor"></span>
+      </div>
+    </div>
+
+    <div class="section-title">📚 Módulos Recomendados</div>
+
+    <div class="lessons-list">
+
+      <!-- AULA 1 -->
+      <div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Aula1/'">
+        <div class="thumb-wrapper">
+          <img class="thumb-img" src="https://img.youtube.com/vi/HLkK5_-jV_M/hqdefault.jpg" alt="Aula 1">
+          <div class="play-badge">▶</div>
+          <div class="xp-tag">🌟 +100 XP</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Lição 01 • Pronúncia & Sons</div>
+          <div class="card-title">O Segredo dos Sons e o Alfabeto</div>
+          <div class="card-desc">
+            Aprenda a pronunciar as letras Ñ, V/B e R. Descubra os significados de palavras essenciais como <i>deletrear</i> e <i>migraña</i>.
+          </div>
+          <button class="start-btn">Iniciar Aula (10 min) →</button>
+        </div>
+      </div>
+
+      <!-- AULA 2 -->
+      <div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Aula2/'">
+        <div class="thumb-wrapper">
+          <img class="thumb-img" src="https://img.youtube.com/vi/nd_xTQN81Xg/hqdefault.jpg" alt="Aula 2">
+          <div class="play-badge">▶</div>
+          <div class="xp-tag">🌟 +150 XP</div>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">Lição 02 • Expressões de Conversa</div>
+          <div class="card-title">10 Frases Curtas para Destravar</div>
+          <div class="card-desc">
+            Domine expressões cotidianas essenciais como <i>Me toca</i>, <i>Suelo</i>, <i>Cargar</i>, <i>Ni idea</i> e <i>Se me fue</i>.
+          </div>
+          <button class="start-btn">Iniciar Aula (10 min) →</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Digitação da Mascote
+    const introMessage = "Escolha uma das aulas abaixo para começar! Cada lição leva apenas 10 minutos e vai te dar uma base sólida para a viagem. ¡Vamos!";
+    let typeIndex = 0;
+
+    function typeWriterIntro() {
+      if (typeIndex < introMessage.length) {
+        document.getElementById("typed-text").innerHTML += introMessage.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(typeWriterIntro, 30);
+      }
+    }
+
+    window.addEventListener('load', typeWriterIntro);
+  </script>
+</body>
+</html>
+
+Como conectar com o index.html:
+Para que o botão Aulas Básicas da tela inicial abra esse hub, abra o seu arquivo index.html e garanta que a tag do card esteja apontando para aulas_basicas.html:
+<!-- CARD DE AULAS BÁSICAS NO index.html -->
+<div class="station-card featured" onclick="window.location.href='aulas_basicas.html'">
+  <div class="station-icon" style="background: #fff4d8;">📚</div>
+  <div class="station-info">
+    <div class="station-title">Aulas Básicas</div>
+    <div class="station-subtitle">Alfabeto, sons e frases</div>
+  </div>
+</div>
+
