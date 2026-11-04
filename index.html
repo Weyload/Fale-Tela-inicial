@@ -158,22 +158,14 @@
     }
 
     .capybara-avatar {
-      width: 68px;
-      height: 68px;
-      background: #ffb703;
-      border-radius: 50%;
+      width: 80px; /* Um pouco maior para destacar */
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 38px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
       flex-shrink: 0;
-      border: 3px solid #ffffff;
+      /* Removemos o fundo amarelo e a borda para ela ficar solta */
     }
-
-    /* Para usar uma imagem em PNG da Capivara no lugar do emoji:
-       Substitua o conteúdo da div capybara-avatar por:
-       <img src="capivara.png" style="width:100%; height:100%; object-fit:cover; border-radius:50%;"> */
 
     .speech-bubble {
       background: #ffffff;
@@ -359,7 +351,9 @@
       
       <!-- BANNER DE BOAS-VINDAS DA CAPIVARA -->
       <div class="welcome-banner">
-        <div class="capybara-avatar">🦫</div>
+        <div class="capybara-avatar">
+          <img src="capivara.png" alt="Capivara" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.15);">
+        </div>
         <div class="speech-bubble">
           <span id="typed-welcome"></span><span class="cursor"></span>
         </div>
