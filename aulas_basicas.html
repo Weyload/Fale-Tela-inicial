@@ -77,17 +77,13 @@
     }
 
     .capybara-avatar {
-      width: 68px;
-      height: 68px;
-      background: #ffb703;
-      border-radius: 50%;
+     .capybara-avatar {
+      width: 80px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 38px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       flex-shrink: 0;
-      border: 3px solid #ffffff;
     }
 
     .speech-bubble {
@@ -258,7 +254,9 @@
 
     <!-- MASCOTE + MÁQUINA DE ESCREVER -->
     <div class="mascot-section">
-      <div class="capybara-avatar">🦫</div>
+      <div class="capybara-avatar">
+        <img src="capivara.png" alt="Capivara" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.15);">
+      </div>
       <div class="speech-bubble">
         <span id="typed-text"></span><span class="cursor"></span>
       </div>
