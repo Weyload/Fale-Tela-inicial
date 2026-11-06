@@ -48,11 +48,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .back-btn:active {
-      background: rgba(255,183,3,0.3);
     }
 
     .header-title {
@@ -62,43 +57,53 @@
     }
 
     .container {
-      padding: 20px;
+      padding: 16px;
       max-width: 500px;
       margin: 0 auto;
       width: 100%;
     }
 
-    /* --- MASCOTE + BALÃO DE DIÁLOGO --- */
+    /* --- MASCOTE + BALÃO (FIXO SEM DISTORÇÃO) --- */
     .mascot-section {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 12px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 16px;
     }
 
     .capybara-avatar {
-     .capybara-avatar {
-      width: 80px;
-      height: 80px;
+      width: 75px;
+      height: 75px;
+      min-width: 75px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+    }
+
+    .capybara-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .speech-bubble {
       background: #ffffff;
       color: #0b2545;
-      padding: 14px 16px;
-      border-radius: 18px;
+      padding: 12px 14px;
+      border-radius: 16px;
       border-top-left-radius: 4px;
       font-size: 13px;
       font-weight: 700;
       line-height: 1.4;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-      min-height: 68px;
-      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       flex: 1;
+      min-height: 75px;
+      display: flex;
+      align-items: center;
     }
 
     .cursor {
@@ -115,15 +120,11 @@
       50% { opacity: 0; }
     }
 
-    /* --- TÍTULO DA LISTA --- */
     .section-title {
       font-size: 18px;
       font-weight: 900;
       color: #ffb703;
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     /* --- CARDS DE AULA --- */
@@ -138,23 +139,17 @@
       color: #0b2545;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
       border: 2px solid #e1e9f0;
       display: flex;
       flex-direction: column;
     }
 
-    .lesson-card:active {
-      transform: scale(0.98);
-    }
-
-    /* Banner / Miniatura do Vídeo */
+    /* Banner / Miniatura 16:9 ajustada */
     .thumb-wrapper {
       position: relative;
       width: 100%;
-      height: 160px;
+      aspect-ratio: 16 / 9;
       background: #134074;
       overflow: hidden;
     }
@@ -170,9 +165,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 50px;
-      height: 50px;
-      background: rgba(255, 183, 3, 0.9);
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 183, 3, 0.95);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -192,12 +187,13 @@
       border-radius: 12px;
       font-size: 11px;
       font-weight: 800;
-      backdrop-filter: blur(4px);
     }
 
-    /* Conteúdo do Card */
     .card-body {
       padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .card-tag {
@@ -205,15 +201,12 @@
       font-weight: 800;
       color: #2ec4b6;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
     }
 
     .card-title {
       font-size: 17px;
       font-weight: 900;
       color: #0b2545;
-      margin-bottom: 6px;
       line-height: 1.3;
     }
 
@@ -222,29 +215,36 @@
       color: #5c677d;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
 
+    /* BOTÃO GRANDE DE PONTA A PONTA */
     .start-btn {
       background: #ffb703;
       color: #0b2545;
       border: none;
-      padding: 10px 16px;
-      border-radius: 12px;
+      padding: 14px;
+      border-radius: 14px;
       font-weight: 900;
-      font-size: 14px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
-      box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
+      box-shadow: 0 4px 14px rgba(255, 183, 3, 0.4);
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .start-btn:active {
+      transform: scale(0.98);
+      background: #e0a200;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOPO -->
   <div class="header">
     <button class="back-btn" onclick="window.location.href='index.html'">←</button>
     <div class="header-title">Aulas Básicas</div>
@@ -252,17 +252,16 @@
 
   <div class="container">
 
-    <!-- MASCOTE + MÁQUINA DE ESCREVER -->
     <div class="mascot-section">
       <div class="capybara-avatar">
-        <img src="capivara.png" alt="Capivara" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.15);">
+        <img src="capivara.png" alt="Capivara">
       </div>
       <div class="speech-bubble">
-        <span id="typed-text"></span><span class="cursor"></span>
+        <div><span id="typed-text"></span><span class="cursor"></span></div>
       </div>
     </div>
 
-    <div class="station-subtitle">Alfabeto, sons e frases</div>
+    <div class="section-title">📚 Módulos Recomendados</div>
 
     <div class="lessons-list">
 
@@ -282,7 +281,7 @@
           <button class="start-btn">Iniciar Aula (10 min) →</button>
         </div>
       </div>
-<div class="station-subtitle">10 Frases para começar a falar.</div>
+
       <!-- AULA 2 -->
       <div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Aula2/'">
         <div class="thumb-wrapper">
@@ -305,15 +304,14 @@
   </div>
 
   <script>
-    // Digitação da Mascote
-    const introMessage = "Escolha uma das aulas abaixo para começar! Cada lição leva apenas 10 minutos e vai te dar uma base sólida para a viagem. ¡Vamos!";
+    const introMessage = "Escolha uma das aulas abaixo para começar! Cada lição leva apenas 10 minutos. ¡Vamos!";
     let typeIndex = 0;
 
     function typeWriterIntro() {
       if (typeIndex < introMessage.length) {
         document.getElementById("typed-text").innerHTML += introMessage.charAt(typeIndex);
         typeIndex++;
-        setTimeout(typeWriterIntro, 30);
+        setTimeout(typeWriterIntro, 25);
       }
     }
 
@@ -321,9 +319,3 @@
   </script>
 </body>
 </html>
-
-  <div class="station-icon" style="background: #fff4d8;">📚</div>
-    
-  </div>
-</div>
-
