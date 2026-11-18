@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Aula Primeiras Palavras | Fale&Go</title>
+  <title>Aula 1 - Palavras | Fale&Go</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; }
@@ -28,12 +28,6 @@
     .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #e1e9f0; line-height: 1.6; margin-bottom: 20px; font-weight: 700; }
     .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin: 2px; font-size: 12px; }
 
-    .video-intro { background: rgba(46, 196, 182, 0.15); border-left: 4px solid #2ec4b6; padding: 12px 14px; border-radius: 10px; font-size: 14px; font-weight: 800; color: #ffffff; margin: 24px 0 14px; line-height: 1.4; }
-    .video-card { background: #134074; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 25px; border: 2px solid #1d5393; }
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-    .video-info { padding: 12px 16px; font-size: 12px; color: #8da9c4; font-weight: 700; }
-
     .exercise-card { background: #ffffff; color: #0b2545; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
     .question-text { font-size: 15px; font-weight: 800; margin-bottom: 14px; }
     
@@ -47,8 +41,6 @@
     .mic-btn { width: 55px; height: 55px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
-
-    .target-word.alt-active { color: #ffb703; background: rgba(255, 183, 3, 0.2); padding: 2px 8px; border-radius: 6px; border: 1px dashed #ffb703; font-weight: 900; }
 
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
     .modal-overlay.show { display: flex; opacity: 1; visibility: visible; }
@@ -92,12 +84,12 @@
       <span class="vocab-tag">Gusto</span>
       <span class="vocab-tag">Años</span>
       <span class="vocab-tag">Bien</span>
-      <span class="vocab-tag">A si és</span>
+      <span class="vocab-tag">Así es</span>
       <span class="vocab-tag">Empezar</span>
       <span class="vocab-tag">Número</span>
       <span class="vocab-tag">Luego</span>
       <span class="vocab-tag">Estás</span>
-      <span class="vocab-tag">que tal</span>
+      <span class="vocab-tag">Qué tal</span>
       <span class="vocab-tag">Español</span>
       <span class="vocab-tag">Llamar</span>
       <span class="vocab-tag">Gracias</span>
@@ -105,40 +97,40 @@
     </div>
 
     <!-- EXERCÍCIO 1 (ESCOLHA DE PALAVRA) -->
-    
     <div class="exercise-card" id="q1">
       <div class="question-text">1. Traduza "Hola!" Escolha a palavra que a representa em português</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Correo</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q1')">Olá!</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q1', 'Hola')">Olá!</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Llamar</button>
       </div>
     </div>
 
- <!-- EXERCÍCIO 2 (ESCOLHA DE PALAVRA) -->
+    <!-- EXERCÍCIO 2 (ESCOLHA DE PALAVRA) -->
     <div class="exercise-card" id="q2">
       <div class="question-text">2. Traduza "Nombre" Escolha a palavra que a representa em português</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Vaca</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Museu</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2')">Nome</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2', 'Nombre')">Nome</button>
       </div>
     </div>
+
     <!-- EXERCÍCIO 3 (ESCOLHA DE PALAVRA) -->
     <div class="exercise-card" id="q3">
       <div class="question-text">3. Traduza "Años" Escolha a palavra que a representa em português</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Días</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3')">Anos</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3', 'Años')">Anos</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Horas</button>
       </div>
     </div>
 
     <!-- EXERCÍCIO 4 (COMPLETAR A FRASE) -->
     <div class="exercise-card" id="q4">
-      <div class="question-text">4. Se você gosta de algo ou alguém voce diz:" (Eu gosto)</div>
+      <div class="question-text">4. Se você gosta de algo ou alguém você diz: (Eu gosto)</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q4')">Me Gusta</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q4', 'Me gusta')">Me Gusta</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Me Triste</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Me Perdido</button>
       </div>
@@ -146,11 +138,11 @@
 
     <!-- EXERCÍCIO 5 (ESCOLHA A FRASE) -->
     <div class="exercise-card" id="q5">
-      <div class="question-text">5. O que significa "Asi és!" em português?</div>
+      <div class="question-text">5. O que significa "Así es!" em português?</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Assim Espanhol</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Como Espanhol</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q5')">Isso Mesmo!</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q5', 'Así es')">Isso Mesmo!</button>
       </div>
     </div>
 
@@ -159,7 +151,7 @@
       <div class="question-text">6. Traduza "Empezar"</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Hablas</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6')">Começar</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6', 'Empezar')">Começar</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Sabes</button>
       </div>
     </div>
@@ -168,19 +160,18 @@
     <div class="exercise-card" id="q7">
       <div class="question-text">7. Como você pode pedir o número de telefone de alguém?</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q7')">¿Me puedes dar tu número de teléfono?</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q7', '¿Me puedes dar tu número de teléfono?')">¿Me puedes dar tu número de teléfono?</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q7')">Puedes dar me un Baño</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q7')">La Cuenta por favor</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q7')">La cuenta por favor</button>
       </div>
     </div>
-
 
     <!-- EXERCÍCIO 8 (COMPLETAR A FRASE) -->
     <div class="exercise-card" id="q8">
       <div class="question-text">8. Complete a despedida: "Hasta _____." (Até mais)</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Hasta Silla</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q8')">Hasta Luego</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q8', 'Hasta luego')">Hasta Luego</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Hasta Noche</button>
       </div>
     </div>
@@ -188,10 +179,10 @@
     <!-- EXERCÍCIO 9 (MICROFONE) -->
     <div class="exercise-card" id="q9">
       <div class="question-text">
-        9. Diga a frase "<span id="word-display-q9" class="target-word">Buenos Dias</span>" no microfone:
+        9. Diga a frase "<span id="word-display-q9" class="target-word">Buenos días</span>" no microfone:
       </div>
       <div class="voice-box">
-        <button class="mic-btn" id="mic1-btn" onclick="startVoiceRecognition('buenos días', 'mic1-btn', 'status1', 'q9', 'nombre')">🎙️</button>
+        <button class="mic-btn" id="mic1-btn" onclick="startVoiceRecognition('buenos días', 'mic1-btn', 'status1', 'q9')">🎙️</button>
         <div id="status1" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
       </div>
     </div>
@@ -202,7 +193,7 @@
         10. Diga a frase "<span id="word-display-q10" class="target-word">¿Cómo se llama?</span>" no microfone:
       </div>
       <div class="voice-box">
-        <button class="mic-btn" id="mic2-btn" onclick="startVoiceRecognition('cómo se llama', 'mic2-btn', 'status2', 'q10', 'gusto')">🎙️</button>
+        <button class="mic-btn" id="mic2-btn" onclick="startVoiceRecognition('cómo se llama', 'mic2-btn', 'status2', 'q10')">🎙️</button>
         <div id="status2" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
       </div>
     </div>
@@ -210,10 +201,10 @@
     <!-- EXERCÍCIO 11 (MICROFONE) -->
     <div class="exercise-card" id="q11">
       <div class="question-text">
-        11. Diga a frase "<span id="word-display-q11" class="target-word">¿De Dónde Eres?</span>" no microfone:
+        11. Diga a frase "<span id="word-display-q11" class="target-word">¿De dónde eres?</span>" no microfone:
       </div>
       <div class="voice-box">
-        <button class="mic-btn" id="mic3-btn" onclick="startVoiceRecognition('de dónde eres', 'mic3-btn', 'status3', 'q11', 'dónde')">🎙️</button>
+        <button class="mic-btn" id="mic3-btn" onclick="startVoiceRecognition('de dónde eres', 'mic3-btn', 'status3', 'q11')">🎙️</button>
         <div id="status3" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
       </div>
     </div>
@@ -221,44 +212,45 @@
     <!-- EXERCÍCIO 12 (MICROFONE) -->
     <div class="exercise-card" id="q12">
       <div class="question-text">
-        12. Diga a frase "<span id="word-display-q12" class="target-word">¿Cuál Es Tu Número?</span>" no microfone:
+        12. Diga a frase "<span id="word-display-q12" class="target-word">¿Cuál es tu número?</span>" no microfone:
       </div>
       <div class="voice-box">
-        <button class="mic-btn" id="mic4-btn" onclick="startVoiceRecognition('cuál es tu número', 'mic4-btn', 'status4', 'q12', 'número')">🎙️</button>
+        <button class="mic-btn" id="mic4-btn" onclick="startVoiceRecognition('cuál es tu número', 'mic4-btn', 'status4', 'q12')">🎙️</button>
         <div id="status4" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
       </div>
     </div>
 
-<!-- EXERCÍCIO 13 (COMPLETAR A FRASE) -->
+    <!-- EXERCÍCIO 13 (COMPLETAR A FRASE) -->
     <div class="exercise-card" id="q13">
-      <div class="question-text">13. "Veja, olhe, é ali!" O que esta frase quer dizer em espanhol?"</div>
+      <div class="question-text">13. "Veja, olhe, é ali!" O que esta frase quer dizer em espanhol?</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">No veo nada</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q13')">Mira, es allí</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q13', 'Mira, es allí')">Mira, es allí</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Hasta Noche</button>
       </div>
     </div>
 
     <!-- EXERCÍCIO 14 (COMPLETAR A FRASE) -->
     <div class="exercise-card" id="q14">
-      <div class="question-text">14. "Estou de férias" O que esta frase quer dizer em espanhol?"</div>
+      <div class="question-text">14. "Estou de férias" O que esta frase quer dizer em espanhol?</div>
       <div class="options-grid">
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q14')">Estoy a trabajo</button>
         <button class="opt-btn" onclick="checkAnswer(this, false, 'q14')">Estoy Mirando</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q14')">Estoy de vacaciones</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q14', 'Estoy de vacaciones')">Estoy de vacaciones</button>
       </div>
     </div>
 
-<!-- EXERCÍCIO 15 (MICROFONE) -->
+    <!-- EXERCÍCIO 15 (MICROFONE) -->
     <div class="exercise-card" id="q15">
       <div class="question-text">
-15. Diga a frase "<span id="word-display-q15" class="target-word">Hola, qué tal?</span>" no microfone:
+        15. Diga a frase "<span id="word-display-q15" class="target-word">Hola, ¿qué tal?</span>" (Olá, tudo bem?) no microfone:
       </div>
       <div class="voice-box">
-        <button class="mic-btn" id="mic5-btn" onclick="startVoiceRecognition('hola qué tal', 'mic5-btn', 'status5', 'q15', 'hola')">🎙️</button>
+        <button class="mic-btn" id="mic5-btn" onclick="startVoiceRecognition('hola qué tal', 'mic5-btn', 'status5', 'q15')">🎙️</button>
         <div id="status5" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
       </div>
     </div>
+
   </div>
 
   <!-- MODAL DE VITÓRIA -->
@@ -289,9 +281,8 @@
     </div>
   </div>
 
-  <!-- INÍCIO DO CÓDIGO JAVASCRIPT CORRIGIDO -->
+  <!-- JAVASCRIPT -->
   <script>
-    // URL reserva da página de Aulas Básicas (ajuste o nome do repositório se necessário)
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
 
     function voltarParaAulasBasicas() {
@@ -315,10 +306,9 @@
     }
     window.addEventListener('load', typeWriter);
 
-    // 2. CONTROLE DOS 15 EXERCÍCIOS (Sem contar duplicado e permitindo tentar até acertar)
+    // 2. CONTROLE DOS 15 EXERCÍCIOS
     const totalQuestions = 15;
     const completedQuestions = new Set();
-    const questionAttempts = {};
 
     function updateProgressUI() {
       const counter = document.getElementById('progress-counter');
@@ -327,7 +317,7 @@
       }
     }
 
-    function checkAnswer(btn, isCorrect, qId) {
+    function checkAnswer(btn, isCorrect, qId, spanishAudioText = '') {
       if (completedQuestions.has(qId)) return;
 
       const card = document.getElementById(qId);
@@ -336,33 +326,31 @@
       if (isCorrect) {
         btn.classList.add('correct');
         buttons.forEach(b => b.disabled = true);
+        
+        // Fala a palavra/frase em espanhol ao clicar na resposta certa
+        if (spanishAudioText) {
+          hablarPronunciacionCorrecta(spanishAudioText);
+        }
+
         completedQuestions.add(qId);
         updateProgressUI();
         checkCompletion();
       } else {
-        // Desativa apenas o botão errado para o aluno poder escolher a resposta certa
         btn.classList.add('wrong');
         btn.disabled = true;
       }
     }
 
-    // 3. RECONHECIMENTO DE VOZ (Com troca de palavra após 2 erros)
+    // 3. RECONHECIMENTO DE VOZ (Sem pronúncia automática e sem troca de palavra ao errar)
     let palavraEsperadaAtual = '';
-    let palavraAlternativaAtual = '';
     let btnIdAtual = '';
     let statusIdAtual = '';
     let qIdAtual = '';
 
-    function startVoiceRecognition(expectedText, btnId, statusId, qId, altWord = '') {
+    function startVoiceRecognition(expectedText, btnId, statusId, qId) {
       if (completedQuestions.has(qId)) return;
 
-      if (questionAttempts[qId] && questionAttempts[qId].switched) {
-        palavraEsperadaAtual = questionAttempts[qId].currentWord;
-      } else {
-        palavraEsperadaAtual = expectedText;
-        palavraAlternativaAtual = altWord;
-      }
-
+      palavraEsperadaAtual = expectedText;
       btnIdAtual = btnId;
       statusIdAtual = statusId;
       qIdAtual = qId;
@@ -429,30 +417,10 @@
         updateProgressUI();
         checkCompletion();
       } else {
-        if (!questionAttempts[qIdAtual]) {
-          questionAttempts[qIdAtual] = { count: 0, switched: false, currentWord: palavraEsperadaAtual };
-        }
-        questionAttempts[qIdAtual].count++;
-
-        if (questionAttempts[qIdAtual].count >= 2 && palavraAlternativaAtual && !questionAttempts[qIdAtual].switched) {
-          questionAttempts[qIdAtual].switched = true;
-          questionAttempts[qIdAtual].currentWord = palavraAlternativaAtual;
-          palavraEsperadaAtual = palavraAlternativaAtual;
-
-          const wordElement = document.getElementById(`word-display-${qIdAtual}`);
-          if (wordElement) {
-            wordElement.innerHTML = palavraAlternativaAtual.toUpperCase() + " 🔄";
-            wordElement.classList.add("alt-active");
-          }
-
-          statusText.innerHTML = `Facilitamos para você! Diga "${palavraAlternativaAtual.toUpperCase()}" 🔊`;
-          statusText.style.color = "#ffb703";
-        } else {
-          statusText.innerHTML = transcript ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia!` : "Não ouvi bem. 🔊 Ouça a pronúncia!";
-          statusText.style.color = "#e63946";
-        }
-
-        hablarPronunciacionCorrecta(palavraEsperadaAtual);
+        statusText.innerHTML = transcript 
+          ? `Ouvi "${transcript}". Tente novamente!` 
+          : "Não ouvi bem. Toque no microfone e tente novamente!";
+        statusText.style.color = "#e63946";
       }
     }
 
@@ -461,6 +429,7 @@
         window.AppInventor.setWebViewString("Falar_" + texto);
       } else if ('speechSynthesis' in window) {
         const synth = window.speechSynthesis;
+        synth.cancel(); // Interrompe qualquer áudio anterior caso o aluno clique rápido em outro botão
         const utterThis = new SpeechSynthesisUtterance(texto);
         utterThis.lang = 'es-ES';
         synth.speak(utterThis);
