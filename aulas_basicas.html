@@ -143,50 +143,13 @@
       border: 2px solid #e1e9f0;
       display: flex;
       flex-direction: column;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Banner / Miniatura 16:9 ajustada */
-    .thumb-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #134074;
-      overflow: hidden;
-    }
-
-    .thumb-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .play-badge {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 52px;
-      height: 52px;
-      background: rgba(255, 183, 3, 0.95);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      color: #0b2545;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    }
-
-    .xp-tag {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(11, 37, 69, 0.85);
-      color: #ffb703;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 800;
+    /* AURA NEON VERDE QUANDO A AULA FOR CONCLUÍDA */
+    .lesson-card.completed {
+      border: 3px solid #00f59b;
+      box-shadow: 0 0 18px rgba(0, 245, 155, 0.7), 0 0 34px rgba(0, 245, 155, 0.35);
     }
 
     .card-body {
@@ -266,63 +229,63 @@
 
     <div class="lessons-list">
 
-    <!-- PRIMEIRAS PALAVRAS (SOMENTE CARD BRANCO, SEM PLAYER) -->
-<div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Fale-Tela-inicial/primeras_palavras.html'">
-  <div class="card-body">
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-      <div class="card-tag">Primeiras Palavras e Frases Básicas</div>
-      <span style="background: #eef4f8; color: #0b2545; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; white-space: nowrap;">🌟 +100 XP</span>
-    </div>
-    <div class="card-title">O que precisa saber Primeiro</div>
-    <div class="card-desc">
-      Aprenda as primeiras palavras em Espanhol e frases a ser usada em uma conversa.
-    </div>
-    <button class="start-btn">Iniciar Aula (10 min) →</button>
-  </div>
-</div>
-        
-      
-     <!-- AULA 1 (SOMENTE CARD BRANCO, SEM PLAYER) -->
-<div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Aula1/'">
-  <div class="card-body">
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-      <div class="card-tag">Lição 01 • Palavras e Frases Básicas 2</div>
-      <span style="background: #eef4f8; color: #0b2545; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; white-space: nowrap;">🌟 +100 XP</span>
-    </div>
-    <div class="card-title">Como Iniciar uma Conversa</div>
-    <div class="card-desc">
-      Aprenda as primeiras palavras em Espanhol e frases a ser usada em uma conversa.
-    </div>
-    <button class="start-btn">Iniciar Aula (10 min) →</button>
-  </div>
-</div>
-        
+      <!-- PRIMEIRAS PALAVRAS -->
+      <div class="lesson-card" data-lesson-id="primeiras_palavras" onclick="window.location.href='https://weyload.github.io/Fale-Tela-inicial/primeras_palavras.html'">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <div class="card-tag">Primeiras Palavras e Frases Básicas</div>
+            <span style="background: #eef4f8; color: #0b2545; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; white-space: nowrap;">🌟 +100 XP</span>
+          </div>
+          <div class="card-title">O que precisa saber Primeiro</div>
+          <div class="card-desc">
+            Aprenda as primeiras palavras em Espanhol e frases a ser usada em uma conversa.
+          </div>
+          <button class="start-btn">Iniciar Aula (10 min) →</button>
+        </div>
+      </div>
+
+      <!-- AULA 1 -->
+      <div class="lesson-card" data-lesson-id="aula_1" onclick="window.location.href='https://weyload.github.io/Aula1/'">
+        <div class="card-body">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <div class="card-tag">Lição 01 • Palavras e Frases Básicas 2</div>
+            <span style="background: #eef4f8; color: #0b2545; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; white-space: nowrap;">🌟 +100 XP</span>
+          </div>
+          <div class="card-title">Como Iniciar uma Conversa</div>
+          <div class="card-desc">
+            Aprenda as primeiras palavras em Espanhol e frases a ser usada em uma conversa.
+          </div>
+          <button class="start-btn">Iniciar Aula (10 min) →</button>
+        </div>
+      </div>
 
       <!-- AULA 2 -->
-      <div class="lesson-card" onclick="window.location.href='https://weyload.github.io/Aula2/'">
-            <div class="card-body">
+      <div class="lesson-card" data-lesson-id="aula_2" onclick="window.location.href='https://weyload.github.io/Aula2/'">
+        <div class="card-body">
           <div class="card-tag">Lição 02 • 30 Palavras para Destravar</div>
           <div class="card-title">Exercícios Dinâmicos</div>
           <div class="card-desc">
             Domine expressões cotidianas essenciais.
           </div>
-          <!-- Botão Grande -->
           <button class="start-btn">Iniciar Aula (10 min) →</button>
         </div>
       </div>
 
-            <!-- AULA 3 -->
-      <div class="lesson-card" onclick="window.location.href='https://qxp-patrick.github.io/ModoRapido/'">
-            <div class="card-body">
+      <!-- AULA 3 -->
+      <div class="lesson-card" data-lesson-id="aula_3" onclick="window.location.href='https://qxp-patrick.github.io/ModoRapido/'">
+        <div class="card-body">
           <div class="card-tag">Lição 02 • 260 Palavras para treinar Pronúncia</div>
           <div class="card-title">Exercícios de Fala</div>
           <div class="card-desc">
             Aprenda a falar.
           </div>
-          <!-- Botão Grande -->
           <button class="start-btn">Iniciar Aula (10 min) →</button>
         </div>
       </div>
+
+    </div>
+  </div>
+
   <script>
     // Máquina de escrever para a Capivara
     const introMessage = "Escolha uma das aulas abaixo para começar! Cada lição leva apenas 10 minutos. Vamos!";
@@ -336,7 +299,24 @@
       }
     }
 
-    window.addEventListener('load', typeWriterIntro);
+    // Verifica no localStorage quais aulas já foram concluídas e aplica a aura verde
+    function marcarAulasConcluidas() {
+      const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
+      document.querySelectorAll('.lesson-card').forEach(card => {
+        const lessonId = card.getAttribute('data-lesson-id');
+        if (concluidas.includes(lessonId)) {
+          card.classList.add('completed');
+        }
+      });
+    }
+
+    window.addEventListener('load', () => {
+      typeWriterIntro();
+      marcarAulasConcluidas();
+    });
+
+    // Garante atualização mesmo se o navegador voltar pelo cache (botão voltar)
+    window.addEventListener('pageshow', marcarAulasConcluidas);
   </script>
 </body>
 </html>
