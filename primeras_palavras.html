@@ -456,9 +456,12 @@
       voltarParaAulasBasicas();
     }
 
+const LESSON_ID = 'primeras_palavras';
+
     function checkCompletion() {
       if (completedQuestions.size >= totalQuestions) {
         saveUserProgress(100);
+        marcarAulaConcluida();
         setTimeout(() => {
           playVictorySound();
           document.getElementById('victory-modal').classList.add('show');
@@ -466,6 +469,13 @@
       }
     }
 
+    function marcarAulaConcluida() {
+      const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
+      if (!concluidas.includes(LESSON_ID)) {
+        concluidas.push(LESSON_ID);
+        localStorage.setItem('faleandgo_completed_lessons', JSON.stringify(concluidas));
+      }
+    }
     function saveUserProgress(xpEarned) {
       let currentXP = parseInt(localStorage.getItem('faleandgo_xp') || '0');
       let currentStreak = parseInt(localStorage.getItem('faleandgo_streak') || '1');
