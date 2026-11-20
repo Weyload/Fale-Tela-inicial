@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treino de Vocabulário Interativo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* --- TELA DE MENUu --- */
+        #menu-container {
+            width: 90%;
+            max-width: 600px;
+            height: 90vh;
+            margin-top: 5vh;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: #FFFFFF);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #menu-container h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        #block-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 10px;
+        }
+
+        .btn-bloco {
+            padding: 15px;
+            font-size: 1.1rem;
+            background-color: #f8f9fa;
+            color: #333;
+            border: 2px solid #dee2e6;
+            cursor: pointer;
+            text-align: left;
+            font-weight: bold;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .btn-bloco:hover {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+        /* --- TELA DE TREINO --- */
+        #treino-area {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #game-container {
+            width: 95%;
+            max-width: 800px;
+            height: 310px;
+            background-color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid #ccc;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        #word-card {
+            font-size: 2.0rem;
+            font-weight: bold;
+            color: #333;
+            position: absolute;
+            white-space: nowrap;
+            will-change: transform;
+        }
+
+        /* Novo estilo para a dica de repescagem */
+        #dica-repescagem {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6c757d;
+            display: none; /* Escondido por padrão */
+        }
+
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 0 5px;
+            border-radius: 0; /* Botões retangulares */
+        }
+
+        #btn-start { background-color: #007bff; }
+        #btn-start:hover { background-color: #0056b3; }
+        
+        #btn-stop { background-color: #dc3545; }
+        #btn-stop:hover { background-color: #bd2130; }
+        
+        #status {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #555;
+            font-weight: 500;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .feedback-verde { background-color: #d4edda !important; border-color: #28a745 !important; }
+        .feedback-laranja { background-color: #fff3cd !important; border-color: #ffc107 !important; }
+        .feedback-vermelho { background-color: #f8d7da !important; border-color: #dc3545 !important; }
+    </style>
+</head>
+<body>
+
+    <div id="menu-container">
+        <h2>Escolha um Bloco</h2>
+        <div id="block-list"></div>
+    </div>
+
+    <div id="treino-area">
+        <div id="game-container">
+            <div id="word-card">Prepare-se...</div>
+            <div id="dica-repescagem"></div> 
+        </div>
+
+        <div id="controls">
+            <button id="btn-start" onclick="iniciarJogo()">Iniciar</button>
+            <button id="btn-stop" onclick="pararJogo()">Parar</button>
+            <div id="status">Clique em Iniciar para começar.</div>
+        </div>
+    </div>
+
+    <script>
+        const bancoPalavrasCompleto = [
+            { pt: "Começar", es: ["comenzar", "empezar"] },
+            { pt: "Bonito", es: ["guapo", "hermoso"] },
+            { pt: "Casa", es: ["casa"] },
+            { pt: "GuardaChuva", es: ["paraguas"] },
+            { pt: "Ciumento", es: ["celoso", "celosa"] },
+            { pt: "Tudo Bem?", es: ["qué tal", "que tal"] },
+            { pt: "Quebrado", es: ["roto"] },
+            { pt: "Janeiro", es: ["enero"] },
+            { pt: "Vermelho", es: ["rojo"] },
+            { pt: "Aniversário", es: ["cumpleaños", "cumple años"] },
+            { pt: "Distraída", es: ["despistada"] },
+            { pt: "Cartão", es: ["tarjeta"] },
+            { pt: "Dinheiro", es: ["billete", "plata", "dinero"] },
+            { pt: "Sobrancelha", es: ["ceja"] },
+            { pt: "Segunda Feira", es: ["lunes"] },
+            { pt: "Longe", es: ["lejos"] },
+            { pt: "Perto", es: ["cerca"] },
+            { pt: "Aproximando", es: ["cercando"] },
+            { pt: "Pipas", es: ["cometas"] },
+            { pt: "Binóculo", es: ["prismático"] },
+            { pt: "Fevereiro", es: ["febrero"] },
+            { pt: "Óculos", es: ["gafas"] },
+            { pt: "Devagar", es: ["despacio"] },
+            { pt: "Bum bum", es: ["trasero", "pompas", "culata"] },
+            { pt: "Dançar", es: ["bailar"] },
+            { pt: "Data", es: ["fecha"] },
+            { pt: "Terça Feira", es: ["martes"] },
+            { pt: "Lembre se", es: ["recuerda"] },
+            { pt: "Criança", es: ["niño", "criatura", "chico", "guri"] },
+            { pt: "Brinquedo", es: ["juguete"] },
+            { pt: "Acreditar", es: ["creer", "confiar"] },
+            { pt: "Esquecer", es: ["olvidar"] },
+            { pt: "Ficar", es: ["quedarse", "permanecer"] },
+            { pt: "Garfo", es: ["tenedor"] },
+            { pt: "Cadeira", es: ["silla", "asiento"] },
+            { pt: "Vassoura", es: ["escoba"] },
+            { pt: "Escritório", es: ["oficina", "despacho"] },
+            { pt: "Fuja", es: ["huye", "escapa"] },
+            { pt: "Ouvir", es: ["oír", "escuchar"] },
+            { pt: "Bochechas", es: ["mejillas", "cachetes"] },
+            { pt: "Março", es: ["marzo"] },
+            { pt: "Maio", es: ["mayo"] },
+            { pt: "Junho", es: ["junio"] },
+            { pt: "Cheio", es: ["lleno"] },
+            { pt: "Peitos", es: ["pechos", "senos"] },
+            { pt: "Joelhos", es: ["rodillas", "rojillas"] },
+            { pt: "Julho", es: ["julio"] },
+            { pt: "Agosto", es: ["agosto"] },
+            { pt: "Escada", es: ["escalera"] },
+            { pt: "Vazio", es: ["vacío"] },
+            { pt: "Mas", es: ["pero", "sino"] },
+            { pt: "Então", es: ["entonces", "luego"] },
+            { pt: "Avô", es: ["abuelo", "abuelos"] },
+            { pt: "Avó", es: ["abuela", "abuelas"] },
+            { pt: "Quinta feira", es: ["jueves"] },
+            { pt: "Sexta feira", es: ["viernes"] },
+            { pt: "Não acha?", es: ["¿no crees?", "¿no te parece?"] },
+            { pt: "Quarto (Cômodo)", es: ["cuarto", "habitación", "dormitorio"] },
+            { pt: "Cômodo", es: ["cómodo"] },
+            { pt: "Galhos", es: ["ramas"] },
+            { pt: "Derrotado", es: ["derrotado", "vencido"] },
+            { pt: "Cansado", es: ["cansado", "agotado"] },
+            { pt: "Pedras", es: ["piedras", "rocas"] },
+            { pt: "Boné", es: ["gorra", "gorro"] },
+            { pt: "Treme", es: ["tiembla", "tiemble"] },
+            { pt: "Tirar", es: ["quitar", "sacar"] },
+            { pt: "Enquanto", es: ["mientras"] },
+            { pt: "Entre", es: ["entre", "mientras"] },
+            { pt: "Fome", es: ["hambre"] },
+            { pt: "Sede", es: ["sed"] },
+            { pt: "Dor", es: ["dolor"] },
+            { pt: "Alegria", es: ["alegría"] },
+            { pt: "Medo", es: ["miedo", "temor"] },
+            { pt: "Saudade", es: ["extrañar", "echar de menos", "añoranza"] },
+            { pt: "Angústia", es: ["angustia"] },
+            { pt: "Pêssego", es: ["durazno", "melocotón"] },
+            { pt: "Mexerica", es: ["mandarina"] },
+            { pt: "Uva", es: ["uva"] },
+            { pt: "Melancia", es: ["sandía"] },
+            { pt: "Abacaxi", es: ["piña", "ananá"] },
+            { pt: "Abacate", es: ["aguacate", "palta"] },
+            { pt: "Casal", es: ["pareja"] },
+            { pt: "Rua", es: ["calle"] },
+            { pt: "Batata", es: ["papa", "papá"] },
+            { pt: "Caneta", es: ["bolígrafo", "pluma", "lapicero"] },
+            { pt: "Estragado", es: ["estropeado", "podrido", "arruinado"] },
+            { pt: "Chave de fenda", es: ["destornillador"] },
+            { pt: "Consertando", es: ["arreglando", "reparando"] },
+            { pt: "Tem", es: ["tiene"] },
+            { pt: "Faz", es: ["hace"] },
+            { pt: "Fazer", es: ["hacer"] },
+            { pt: "Vitrine", es: ["muestrario", "escaparate"] },
+            { pt: "Balcão", es: ["mostrador"] },
+            { pt: "Povoado", es: ["pueblo", "poblado"] },
+            { pt: "Amarelo", es: ["amarillo"] },
+            { pt: "Hambúrguer", es: ["hamburguesa"] },
+            { pt: "Um momento", es: ["un rato"] },
+            { pt: "Levar", es: ["llevar", "marcador"] },
+            { pt: "Chateado", es: ["enojado", "molesto", "aburrido"] },
+            { pt: "Carregam", es: ["cargan", "llevan"] },
+            { pt: "Ficam-se", es: ["quedan", "estar", "quedarse"] },
+            { pt: "Chato", es: ["aburrido", "pesado"] },
+            { pt: "Usar", es: ["usar", "utilizar", "llevar"] },
+            { pt: "Zangado", es: ["enfadado", "rabioso"] },
+            { pt: "Demorar", es: ["tardar", "demorar"] },
+            { pt: "Preciso", es: ["necesito"] },
+            { pt: "Certo", es: ["cierto", "correcto", "verdad"] },
+            { pt: "Pegar", es: ["tomar", "agarrar", "recoger"] },
+            { pt: "Lá", es: ["allá", "allí"] },
+            { pt: "Levando", es: ["llevando"] },
+            { pt: "Adiante", es: ["adelante"] },
+            { pt: "Frequentemente", es: ["a menudo", "frecuentemente"] },
+            { pt: "Preguiçoso", es: ["perezoso", "flojo"] },
+            { pt: "Treino", es: ["entrenamiento", "práctica", "entreno"] },
+            { pt: "No entanto", es: ["sin embargo", "no obstante"] },
+            { pt: "Eu gosto", es: ["mi mola", "me gusta"] },
+            { pt: "Então", es: ["entonces", "así que"] },
+            { pt: "Praça", es: ["plaza"] },
+            { pt: "Espantado", es: ["asombrado", "espantado"] },
+            { pt: "Esqueci", es: ["olvidé", "se me olvidó"] },
+            { pt: "Jantar", es: ["cenar"] },
+            { pt: "Almoço", es: ["almuerzo", "comida"] },
+            { pt: "Café da manhã", es: ["desayuno"] },
+            { pt: "Acordar", es: ["despertar", "despertarse"] },
+            { pt: "Fechado", es: ["cerrado"] },
+            { pt: "On line", es: ["en línea", "conectado"] },
+            { pt: "Pescoço", es: ["cuello"] },
+            { pt: "Eu olhei", es: ["miré", "he mirado"] },
+            { pt: "Demais", es: ["demasiado"] },
+            { pt: "Em excesso", es: ["demasiado", "excesivamente"] },
+            { pt: "Isso mesmo", es: ["así es", "exactamente"] },
+            { pt: "Que faço", es: ["que hago", "qué hago"] },
+            { pt: "Me contou", es: ["me contó", "me dijo", "me ha contado"] },
+            { pt: "Inveja", es: ["envidia"] },
+            { pt: "Concordou", es: ["estuvo de acuerdo", "accedió"] },
+            { pt: "Conseguir", es: ["lograr", "conseguir"] },
+            { pt: "Não conseguiu", es: ["no pudo", "no lo logró"] },
+            { pt: "Nele", es: ["en él"] },
+            { pt: "Neste", es: ["en este"] },
+            { pt: "Claro", es: ["claro", "por supuesto"] },
+            { pt: "Embora", es: ["aunque"] },
+            { pt: "Legal", es: ["chévere", "guay", "bacán"] },
+            { pt: "Feito", es: ["hecho"] },
+            { pt: "Pintado", es: ["pintado", "mosqueado"] },
+            { pt: "Manchado", es: ["manchado", "mosqueado"] },
+            { pt: "Fedor", es: ["hedor", "peste"] },
+            { pt: "Mau hálito", es: ["mal aliento"] },
+            { pt: "Mau cheiro", es: ["mal olor"] },
+            { pt: "Cheiro bom", es: ["buen olor", "aroma"] },
+            { pt: "Fragrância", es: ["fragancia"] },
+            { pt: "Barulho", es: ["ruido"] },
+            { pt: "Vontade", es: ["ganas", "voluntad"] },
+            { pt: "Desejo", es: ["deseo"] },
+            { pt: "Magro", es: ["flaco", "delgado"] },
+            { pt: "Gordo", es: ["gordo"] },
+            { pt: "Belo corpo", es: ["buen cuerpo", "cuerpazo"] },
+            { pt: "Pronto", es: ["listo", "preparado"] },
+            { pt: "Feijão", es: ["frijoles", "porotos", "alubias", "frijol"] },
+            { pt: "Esperto", es: ["listo", "espabilado"] },
+            { pt: "Biscoitos", es: ["galletas"] },
+            { pt: "Desenhar", es: ["dibujar"] },
+            { pt: "Sorveteria", es: ["heladería"] },
+            { pt: "Lanchonete", es: ["cafetería", "snack-bar"] },
+            { pt: "Dor de cabeça", es: ["dolor de cabeza", "jaqueca"] },
+            { pt: "Remédio", es: ["remedio", "medicamento"] },
+            { pt: "Gripe", es: ["gripe", "resfriado"] },
+            { pt: "Febre", es: ["fiebre"] },
+            { pt: "Enjoado", es: ["mareado", "con náuseas"] },
+            { pt: "Falamos", es: ["hablamos"] },
+            { pt: "Melhorar", es: ["mejorar", "recuperarse"] },
+            { pt: "Ferida", es: ["herida", "lesión"] },
+            { pt: "Farmácia", es: ["farmacia", "botica"] },
+            { pt: "Tudo bem!", es: ["vale"] },
+            { pt: "Adesivos", es: ["calcomanías"] },
+            { pt: "Tornou", es: ["hizo"] },
+            { pt: "Ovo", es: ["huevo"] },
+            { pt: "Molho", es: ["salsa"] },
+            { pt: "Verduras", es: ["verduras"] },
+            { pt: "Sinto muito", es: ["lo siento"] },
+            { pt: "Passagem", es: ["pasaje", "boleto", "billete"] },
+            { pt: "Cartão de embarque", es: ["tarjeta de embarque"] },
+            { pt: "Portão de embarque", es: ["puerta de embarque"] },
+            { pt: "Voo", es: ["vuelo"] },
+            { pt: "Bagagem de mão", es: ["equipaje de mano"] },
+            { pt: "Despachar mala", es: ["facturar equipaje", "despachar maleta"] },
+            { pt: "Passaporte", es: ["pasaporte"] },
+            { pt: "Alfândega", es: ["aduana"] },
+            { pt: "Comissário de bordo", es: ["auxiliar de vuelo", "azafata"] },
+            { pt: "Decolagem", es: ["despegue"] },
+            { pt: "Pouso", es: ["aterrizaje"] },
+            { pt: "Assento", es: ["asiento", "plaza"] },
+            { pt: "Rodoviária", es: ["terminal de autobuses", "central de autobuses"] },
+            { pt: "Ônibus", es: ["autobús", "camión", "guagua"] },
+            { pt: "Plataforma", es: ["andén", "plataforma"] },
+            { pt: "Motorista", es: ["conductor", "chofer"] },
+            { pt: "Endereço", es: ["dirección", "señas"] },
+            { pt: "Chave", es: ["llave"] },
+            { pt: "Andar", es: ["piso", "planta"] },
+            { pt: "Elevador", es: ["ascensor", "elevador"] },
+            { pt: "Virar", es: ["girar", "doblar"] },
+            { pt: "Seguir reto", es: ["seguir recto", "seguir derecho"] },
+            { pt: "Nota fiscal", es: ["factura"] },
+            { pt: "Pipoca", es: ["palomitas", "pochoclo", "cabritas"] },
+            { pt: "Trabalho", es: ["trabajo", "laburo"] },
+            { pt: "Camiseta", es: ["camiseta", "remera", "polera"] },
+            { pt: "Amigo", es: ["amigo", "che", "boludo"] },
+            { pt: "Morango", es: ["fresa", "frutilla"] },
+            { pt: "Chinelos", es: ["chanclas", "ojotas"] },
+            { pt: "Jaqueta", es: ["chaqueta", "camper"] },
+            { pt: "Milho", es: ["maíz", "choclo"] },
+            { pt: "muito bom", es: ["muy bueno"] },
+            { pt: "os preços", es: ["los precios"] },
+            { pt: "Filme", es: ["película"] },
+            { pt: "de carro", es: ["en coche"] },
+            { pt: "Eu sei", es: ["yo sé"] },
+            { pt: "Preciso", es: ["necessito", "necesito"] },
+            { pt: "Ruim", es: ["mala", "malo"] },
+            { pt: '"4"', es: ["cuatro", "cuarto"] },
+            { pt: "Viajar", es: ["viajar"] },
+            { pt: "Trabalho", es: ["trabajo", "para el trabajo"] },
+            { pt: "Ontem", es: ["ayer"] },
+            { pt: "Hoje", es: ["hoy"] },
+            { pt: "Amanhã", es: ["mañana"] },
+            { pt: "Agora", es: ["ahora"] },
+            { pt: "Frango", es: ["pollo"] },
+            { pt: "Bife de boi", es: ["filete de res"] },
+            { pt: "Porco", es: ["cerdo"] },
+            { pt: "Dirige", es: ["maneja"] },
+            { pt: "Idoso", es: ["mayores", "viejo", "anciano"] },
+            { pt: "Aposentado", es: ["jubilado"] },
+            { pt: "Desempregado", es: ["desempleados", "desempleado"] },
+            { pt: "Vocês", es: ["ustedes"] },
+            { pt: "Primavera", es: ["primavera"] },
+            { pt: "Verão", es: ["verano"] },
+            { pt: "Outono", es: ["otoño"] },
+            { pt: "Inverno", es: ["invierno"] },
+            { pt: "Casaco", es: ["abrigo"] },
+            { pt: "Colher", es: ["cuchara"] },
+            { pt: "Faca", es: ["cuchillo"] },
+            { pt: "Palitos Japoneses", es: ["palillos", "palillo"] },
+            { pt: "Tigela", es: ["tazón"] },
+            { pt: "Prato", es: ["plato", "platos"] },
+            { pt: "Caneca", es: ["taza", "tazas"] },
+            { pt: "Garrafa", es: ["botella", "botellas"] },
+            { pt: "Batatas Fritas", es: ["patatas fritas", "papas fritas"] },
+            { pt: "Fritar", es: ["freír"] },
+            { pt: "Guardanapo", es: ["servilleta"] },
+            { pt: "Moro", es: ["vivo"] },
+            { pt: "Saída", es: ["Salida"] }
+        ];
+
+        let palavrasDoBlocoAtual = [];
+        let listaRepescagem = [];
+        let emRepescagem = false;
+        let indicePalavraAtual = 0;
+        let palavraAtual = null;
+
+        const container = document.getElementById('game-container');
+        const card = document.getElementById('word-card');
+        const dicaRepescagem = document.getElementById('dica-repescagem');
+        const menuContainer = document.getElementById('menu-container');
+        const treinoArea = document.getElementById('treino-area');
+        
+        let posicaoX = 0;
+        let idAnimacao = null;
+        const velocidade = 1.5; 
+
+        function renderizarMenu() {
+            const blockList = document.getElementById('block-list');
+            blockList.innerHTML = ''; 
+            
+            for (let i = 0; i < bancoPalavrasCompleto.length; i += 10) {
+                let fim = Math.min(i + 10, bancoPalavrasCompleto.length);
+                let btn = document.createElement('button');
+                btn.className = 'btn-bloco';
+                btn.innerText = `Bloco ${(i/10)+1} (${i+1} a ${fim})`;
+                btn.onclick = () => prepararBloco(i, fim);
+                blockList.appendChild(btn);
+            }
+        }
+
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let reconhecedor = null;
+        let microfoneAtivo = false;
+
+        if (Recognition) {
+            reconhecedor = new Recognition();
+            reconhecedor.lang = 'es-ES'; 
+            reconhecedor.continuous = false; 
+            reconhecedor.interimResults = false;
+
+            reconhecedor.onresult = (event) => {
+                const textoFalado = event.results[0][0].transcript.trim().toLowerCase();
+                verificarResposta(textoFalado);
+            };
+
+            reconhecedor.onend = () => {
+                microfoneAtivo = false;
+                if (palavraAtual) {
+                    setTimeout(AtivarMicrofone, 300);
+                }
+            };
+        }
+
+        function AtivarMicrofone() {
+            if (reconhecedor && !microfoneAtivo && palavraAtual) {
+                try { 
+                    reconhecedor.start(); 
+                    microfoneAtivo = true;
+                } catch(e) {}
+            }
+        }
+
+        function DesativarMicrofone() {
+            if (reconhecedor && microfoneAtivo) {
+                try {
+                    reconhecedor.stop();
+                    microfoneAtivo = false;
+                } catch(e) {}
+            }
+        }
+
+        function limparTextoParaComparacao(texto) {
+            return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '').toLowerCase().trim();
+        }
+
+        function obterDistanciaLevenshtein(a, b) {
+            const matriz = [];
+            for (let i = 0; i <= b.length; i++) matriz[i] = [i];
+            for (let j = 0; j <= a.length; j++) matriz[0][j] = j;
+
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matriz[i][j] = matriz[i - 1][j - 1];
+                    } else {
+                        matriz[i][j] = Math.min(
+                            matriz[i - 1][j - 1] + 1, 
+                            matriz[i][j - 1] + 1,     
+                            matriz[i - 1][j] + 1      
+                        );
+                    }
+                }
+            }
+            return matriz[b.length][a.length];
+        }
+
+        function verificarAproximidade(palavraFalada, alternativasCorretas) {
+            const faladaLimpa = limparTextoParaComparacao(palavraFalada);
+            
+            for (let correta of alternativasCorretas) {
+                const corretaLimpa = limparTextoParaComparacao(correta);
+                const distancia = obterDistanciaLevenshtein(faladaLimpa, corretaLimpa);
+                const toleranciaMaxima = corretaLimpa.length <= 4 ? 1 : 2; 
+                if (distancia <= toleranciaMaxima) return true;
+            }
+            return false;
+        }
+
+        function prepararBloco(inicio, fim) {
+            palavrasDoBlocoAtual = bancoPalavrasCompleto.slice(inicio, fim);
+            
+            menuContainer.style.display = 'none';
+            treinoArea.style.display = 'flex';
+            
+            document.getElementById('btn-start').style.display = 'inline-block';
+            document.getElementById('btn-stop').style.display = 'none';
+            container.style.justifyContent = 'center';
+            card.innerText = "Clique em Iniciar";
+            card.style.transform = 'none';
+            dicaRepescagem.style.display = 'none'; // Garante que começa escondida
+            atualizarStatus(`Bloco selecionado. Clique em Iniciar.`);
+        }
+
+        function iniciarJogo() {
+            document.getElementById('btn-start').style.display = 'none';
+            document.getElementById('btn-stop').style.display = 'inline-block';
+            container.style.justifyContent = 'flex-start'; 
+            emRepescagem = false;
+            listaRepescagem = [];
+            indicePalavraAtual = 0;
+            
+            proximaPalavra();
+        }
+
+        function pararJogo(mensagem = "Treino finalizado.") {
+            cancelAnimationFrame(idAnimacao);
+            DesativarMicrofone();
+            
+            palavraAtual = null;
+            limparFeedbackVisual();
+            dicaRepescagem.style.display = 'none';
+            
+            treinoArea.style.display = 'none';
+            menuContainer.style.display = 'flex';
+        }
+
+        function proximaPalavra() {
+            limparFeedbackVisual();
+            cancelAnimationFrame(idAnimacao);
+
+            let listaAlvo = emRepescagem ? listaRepescagem : palavrasDoBlocoAtual;
+
+            if (indicePalavraAtual >= listaAlvo.length) {
+                DesativarMicrofone();
+                dicaRepescagem.style.display = 'none'; // Esconde a dica na transição
+
+                if (!emRepescagem && listaRepescagem.length > 0) {
+                    emRepescagem = true;
+                    indicePalavraAtual = 0;
+                    atualizarStatus("Fim do bloco! Iniciando repescagem das laranjas...");
+                    setTimeout(proximaPalavra, 2500);
+                } else {
+                    atualizarStatus(`Bloco concluído com sucesso!`);
+                    setTimeout(() => pararJogo("Bloco concluído!"), 2000); 
+                }
+                return;
+            }
+
+            palavraAtual = listaAlvo[indicePalavraAtual];
+            card.innerText = palavraAtual.pt;
+            
+            // Lógica para mostrar ou esconder a dica dependendo do modo
+            if (emRepescagem) {
+                dicaRepescagem.innerText = palavraAtual.es.join(" / ");
+                dicaRepescagem.style.display = 'block';
+            } else {
+                dicaRepescagem.style.display = 'none';
+            }
+            
+            posicaoX = container.clientWidth;
+            card.style.transform = `translateX(${posicaoX}px)`;
+
+            atualizarStatus(emRepescagem ? "Repescagem! Fale em espanhol:" : "Fale em espanhol:");
+            
+            DesativarMicrofone();
+            setTimeout(AtivarMicrofone, 200);
+            
+            animarEsteira();
+        }
+
+        function animarEsteira() {
+            posicaoX -= velocidade;
+            card.style.transform = `translateX(${posicaoX}px)`;
+
+            if (posicaoX + card.offsetWidth < 0) {
+                processarErro();
+            } else {
+                idAnimacao = requestAnimationFrame(animarEsteira);
+            }
+        }
+
+        function verificarResposta(falado) {
+            if (!palavraAtual) return;
+            
+            if (verificarAproximidade(falado, palavraAtual.es)) {
+                processarAcerto();
+            } else {
+                processarErro();
+            }
+        }
+
+        function processarAcerto() {
+            cancelAnimationFrame(idAnimacao);
+            DesativarMicrofone(); 
+            container.className = "feedback-verde";
+            indicePalavraAtual++;
+            palavraAtual = null; 
+            setTimeout(proximaPalavra, 1200); 
+        }
+
+        function processarErro() {
+            cancelAnimationFrame(idAnimacao);
+            DesativarMicrofone(); 
+            
+            if (!emRepescagem) {
+                container.className = "feedback-laranja";
+                if (!listaRepescagem.includes(palavraAtual)) {
+                    listaRepescagem.push(palavraAtual);
+                }
+            } else {
+                container.className = "feedback-vermelho";
+            }
+
+            indicePalavraAtual++;
+            palavraAtual = null;
+            setTimeout(proximaPalavra, 1200);
+        }
+
+        function limparFeedbackVisual() {
+            container.className = "";
+        }
+
+        function atualizarStatus(texto) {
+            document.getElementById('status').innerText = texto;
+        }
+
+        window.onload = renderizarMenu;
+
+    </script>
+</body>
+</html>
