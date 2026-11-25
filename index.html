@@ -426,6 +426,128 @@
       cursor: pointer;
       font-size: 14px;
     }
+    /* --- CARTÃO DE PATENTE E PROGRESSO DE XP --- */
+    .rank-card {
+      width: 100%;
+      max-width: 360px;
+      background: linear-gradient(135deg, #0b2545 0%, #134074 100%);
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 12px 16px;
+      box-shadow: 0 6px 18px rgba(11, 37, 69, 0.18);
+      border: 2px solid #ffb703;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .rank-card:active {
+      transform: scale(0.98);
+    }
+
+    .rank-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .rank-badge-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rank-icon {
+      font-size: 28px;
+      background: rgba(255, 255, 255, 0.12);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rank-level-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #ffb703;
+    }
+
+    .rank-name {
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .rank-passport-btn {
+      background: rgba(255, 183, 3, 0.2);
+      border: 1px solid #ffb703;
+      color: #ffb703;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .rank-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .rank-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffb703, #2ec4b6);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .rank-next-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b8cde0;
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* LISTA DE PATENTES NO MODAL DE PASSAPORTE */
+    .passport-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+      max-height: 260px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .passport-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eef4f8;
+      border: 1.5px solid #d0e1f9;
+    }
+
+    .passport-item.achieved {
+      background: #fffbeb;
+      border-color: #ffb703;
+    }
+
+    .passport-item.locked {
+      opacity: 0.5;
+      filter: grayscale(80%);
+    }
+
   </style>
 </head>
 <body>
@@ -470,6 +592,26 @@
         </div>
         <div class="speech-bubble">
           <span id="typed-welcome"></span><span class="cursor"></span>
+        </div>
+      </div>
+      <!-- CARTÃO DE PATENTE DO VIAJANTE -->
+      <div class="rank-card" onclick="abrirPassaporte()">
+        <div class="rank-top">
+          <div class="rank-badge-info">
+            <div class="rank-icon" id="rank-icon">🎒</div>
+            <div>
+              <div class="rank-level-tag" id="rank-level-tag">Patente Atual • Nível 1</div>
+              <div class="rank-name" id="rank-name">Turista Curioso</div>
+            </div>
+          </div>
+          <div class="rank-passport-btn">🛂 Passaporte</div>
+        </div>
+        <div class="rank-bar-bg">
+          <div class="rank-bar-fill" id="rank-bar-fill"></div>
+        </div>
+        <div class="rank-next-text">
+          <span id="rank-xp-current">0 XP</span>
+          <span id="rank-next-goal">Próxima: 150 XP</span>
         </div>
       </div>
 
@@ -588,6 +730,33 @@
       <div class="modal-actions">
         <button class="btn-secondary" onclick="cancelarSaidaApp()">Ficar no App</button>
         <button class="btn-primary" onclick="confirmarSaidaApp()">Sim, sair</button>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL DO PASSAPORTE (GALERIA DE PATENTES) -->
+  <div id="passport-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 36px; margin-bottom: 4px;">🛂</div>
+      <div class="modal-title">Passaporte do Viajante</div>
+      <div class="modal-desc">Acumule XP nas aulas e provas para subir de patente!</div>
+      <div class="passport-list" id="passport-list"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="fecharModal('passport-modal')">Fechar Passaporte</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE NOVA PATENTE CONQUISTADA -->
+  <div id="rankup-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 54px; margin-bottom: 8px;" id="rankup-icon">🥉</div>
+      <div style="font-size: 12px; font-weight: 900; color: #2ec4b6; text-transform: uppercase;">🎉 Nova Patente Alcançada!</div>
+      <div class="modal-title" id="rankup-title" style="font-size: 22px; margin-top: 4px;">Viajante Bronze</div>
+      <div class="modal-desc" id="rankup-desc">
+        Parabéns! Seu esforço nas aulas elevou seu nível no Fale&Go.
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="fecharModal('rankup-modal')">Continuar Jornada!</button>
       </div>
     </div>
   </div>
@@ -761,6 +930,91 @@
       if (lang === 'es') return;
       alert('🚧 Este idioma está em construção e estará disponível em breve!');
     }
+    // 7. SISTEMA DE PATENTES POR XP (ESCALA PROGRESSIVA ATÉ 2000 XP)
+    // Dica: Quando adicionar mais aulas no futuro, basta ajustar os valores de "xpMin" abaixo!
+    const PATENTES_FALEANDGO = [
+      { nivel: 1, xpMin: 0,    icone: '🎒', nome: 'Turista Curioso',      premio: 'Acesso à trilha básica' },
+      { nivel: 2, xpMin: 150,  icone: '🧭', nome: 'Explorador Iniciante', premio: 'Selo de Primeiros Passos' },
+      { nivel: 3, xpMin: 400,  icone: '🥉', nome: 'Viajante Bronze',      premio: 'Medalha Bronze no Passaporte' },
+      { nivel: 4, xpMin: 850,  icone: '🥈', nome: 'Viajante Prata',       premio: 'Medalha Prata de Conversação' },
+      { nivel: 5, xpMin: 1400, icone: '🥇', nome: 'Viajante Ouro',        premio: 'Medalha Ouro de Fluência' },
+      { nivel: 6, xpMin: 2000, icone: '👑', nome: 'Embaixador Poliglota', premio: 'Título Máximo do Fale&Go' }
+    ];
+
+    function atualizarPatentesXP() {
+      const xpAtual = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
+
+      let patenteAtual = PATENTES_FALEANDGO[0];
+      let proximaPatente = null;
+
+      for (let i = 0; i < PATENTES_FALEANDGO.length; i++) {
+        if (xpAtual >= PATENTES_FALEANDGO[i].xpMin) {
+          patenteAtual = PATENTES_FALEANDGO[i];
+          proximaPatente = PATENTES_FALEANDGO[i + 1] || null;
+        }
+      }
+
+      document.getElementById('rank-icon').textContent = patenteAtual.icone;
+      document.getElementById('rank-level-tag').textContent = `Patente Atual • Nível ${patenteAtual.nivel}`;
+      document.getElementById('rank-name').textContent = patenteAtual.nome;
+      document.getElementById('rank-xp-current').textContent = `${xpAtual} XP`;
+
+      if (proximaPatente) {
+        const intervalo = proximaPatente.xpMin - patenteAtual.xpMin;
+        const progressoNoNivel = xpAtual - patenteAtual.xpMin;
+        const pct = Math.min(100, Math.max(0, Math.round((progressoNoNivel / intervalo) * 100)));
+        const faltam = proximaPatente.xpMin - xpAtual;
+
+        document.getElementById('rank-bar-fill').style.width = `${pct}%`;
+        document.getElementById('rank-next-goal').textContent = `Faltam ${faltam} XP para ${proximaPatente.nome}`;
+      } else {
+        document.getElementById('rank-bar-fill').style.width = '100%';
+        document.getElementById('rank-next-goal').textContent = 'Patente Máxima Alcançada!';
+      }
+
+      // Verifica se subiu de patente para exibir o modal comemorativo uma única vez
+      const maiorNivelComemorado = parseInt(localStorage.getItem('faleandgo_celebrated_rank') || '1', 10);
+      if (patenteAtual.nivel > maiorNivelComemorado) {
+        localStorage.setItem('faleandgo_celebrated_rank', String(patenteAtual.nivel));
+        document.getElementById('rankup-icon').textContent = patenteAtual.icone;
+        document.getElementById('rankup-title').textContent = patenteAtual.nome;
+        document.getElementById('rankup-desc').innerHTML =
+          `Você atingiu <strong>${patenteAtual.xpMin} XP</strong> e desbloqueou: <strong>${patenteAtual.premio}</strong>!`;
+        setTimeout(() => {
+          document.getElementById('rankup-modal').classList.add('show');
+        }, 600);
+      }
+    }
+
+    function abrirPassaporte() {
+      const xpAtual = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
+      const listaEl = document.getElementById('passport-list');
+      listaEl.innerHTML = '';
+
+      PATENTES_FALEANDGO.forEach((p) => {
+        const conquistada = xpAtual >= p.xpMin;
+        const div = document.createElement('div');
+        div.className = `passport-item ${conquistada ? 'achieved' : 'locked'}`;
+        div.innerHTML = `
+          <div style="font-size: 26px;">${p.icone}</div>
+          <div style="flex: 1;">
+            <div style="font-size: 13px; font-weight: 900; color: #0b2545;">
+              ${p.nome} ${conquistada ? '✅' : '🔒'}
+            </div>
+            <div style="font-size: 11px; font-weight: 700; color: #5c677d;">
+              ${p.xpMin} XP • ${p.premio}
+            </div>
+          </div>
+        `;
+        listaEl.appendChild(div);
+      });
+
+      document.getElementById('passport-modal').classList.add('show');
+    }
+
+    window.addEventListener('load', atualizarPatentesXP);
+    window.addEventListener('pageshow', atualizarPatentesXP);
+
   </script>
 </body>
 </html>
