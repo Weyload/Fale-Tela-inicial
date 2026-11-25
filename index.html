@@ -54,16 +54,15 @@
       margin-bottom: 30px;
     }
 
-    .capybara-splash {
-      width: 130px;
-      height: 130px;
-      animation: float 2.5s ease-in-out infinite;
+       .capybara-splash {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ffb703;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
 
     /* --- TELA INICIAL (TRILHA DO VIAJANTE) --- */
     #main-app {
@@ -431,15 +430,13 @@
 </head>
 <body>
 
-  <!-- 1. TELA DE SPLASH -->
+    <!-- 1. TELA DE SPLASH -->
   <div id="splash-screen">
-    <svg class="capybara-splash" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="45" fill="#ffb703"/>
-      <text x="50" y="62" font-size="45" text-anchor="middle">🦫</text>
-    </svg>
+    <img src="GifCapiTur.gif" class="capybara-splash" alt="Capivara Viajante">
     <div class="splash-logo">Fale<span>&Go</span></div>
     <div class="splash-slogan">Idiomas para Viagem</div>
   </div>
+
 
   <!-- 2. TELA INICIAL (TRILHA DO VIAJANTE) -->
   <div id="main-app">
