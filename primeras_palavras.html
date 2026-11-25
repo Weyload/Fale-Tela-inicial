@@ -283,7 +283,7 @@
 
   <!-- JAVASCRIPT -->
   <script>
-    const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
+    const URL_AULAS_BASICAS = 'https://weyload.github.io/Fale-Tela-inicial/aulas_basicas.html';
 
     function voltarParaAulasBasicas() {
       if (document.referrer && document.referrer.includes('weyload.github.io') && document.referrer !== window.location.href) {
@@ -456,7 +456,7 @@
       voltarParaAulasBasicas();
     }
 
-const LESSON_ID = 'primeras_palavras';
+const LESSON_ID = 'aula1_primeiras_palavras';
 
     function checkCompletion() {
       if (completedQuestions.size >= totalQuestions) {
@@ -504,6 +504,18 @@ const LESSON_ID = 'primeras_palavras';
         });
       } catch (e) {}
     }
+    window.addEventListener('load', () => {
+  const visitadas = JSON.parse(localStorage.getItem('faleandgo_visited_lessons') || '[]');
+  if (!visitadas.includes(LESSON_ID)) {
+    visitadas.push(LESSON_ID);
+    localStorage.setItem('faleandgo_visited_lessons', JSON.stringify(visitadas));
+  }
+  history.pushState({ aulaAtiva: true }, '', window.location.href);
+  window.addEventListener('popstate', () => {
+    confirmExit();
+    history.pushState({ aulaAtiva: true }, '', window.location.href);
+  });
+});
   </script>
 </body>
 </html>
