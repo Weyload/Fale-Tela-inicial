@@ -727,24 +727,32 @@
       }
     }
 
-    // 5. INICIALIZAÇÃO GERAL (SPLASH + ATUALIZAÇÕES)
+  // 5. INICIALIZAÇÃO GERAL (SPLASH APENAS NA ABERTURA DO APP)
     window.addEventListener('load', () => {
       atualizarDiasEProgresso();
       verificarDesbloqueioCenarios();
       configurarBotaoVoltarAndroid();
 
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        const main = document.getElementById('main-app');
+      const splash = document.getElementById('splash-screen');
+      const main = document.getElementById('main-app');
 
-        splash.style.opacity = '0';
-        splash.style.visibility = 'hidden';
+      if (sessionStorage.getItem('faleandgo_splash_shown')) {
+        // Já abriu o app nessa sessão: pula o splash direto para o menu!
+        splash.style.display = 'none';
+        main.style.transition = 'none';
         main.style.opacity = '1';
-
-        typeWriterWelcome();
-      }, 2500);
+        document.getElementById("typed-welcome").innerHTML = welcomeMessage;
+      } else {
+        // Primeira abertura do app: exibe o splash de 2,5s normalmente
+        sessionStorage.setItem('faleandgo_splash_shown', 'true');
+        setTimeout(() => {
+          splash.style.opacity = '0';
+          splash.style.visibility = 'hidden';
+          main.style.opacity = '1';
+          typeWriterWelcome();
+        }, 2500);
+      }
     });
-
     // Atualiza caso volte do cache do navegador
     window.addEventListener('pageshow', () => {
       atualizarDiasEProgresso();
