@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Lição 04 - Prova 1 | Fale&Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================================
+       [GUIA DE ESTILO 01] CONFIGURAÇÕES GERAIS DA PÁGINA
+       - background-color: cor de fundo geral da tela (#0b2545 = azul escuro)
+       - font-family: fonte padrão do aplicativo
+    ===================================================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; }
+    body { background-color: #0b2545; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 50px; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 02] TOPO FIXO (CABEÇALHO DA PROVA)
+       - .header: barra superior fixa
+       - .back-btn: botão circular da seta voltar
+       - .exam-badge-top: selo dourado de "PROVA OFICIAL" no canto direito
+    ===================================================================== */
+    .header { background: #081c33; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: rgba(255,255,255,0.1); border: none; color: #ffb703; font-size: 20px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .header-title { font-size: 17px; font-weight: 900; color: #ffffff; }
+    .exam-badge-top { background: rgba(255, 183, 3, 0.18); border: 1px solid #ffb703; color: #ffb703; padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 900; white-space: nowrap; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 03] ÁREA CENTRAL DA PROVA
+    ===================================================================== */
+    .container { padding: 20px; max-width: 500px; margin: 0 auto; width: 100%; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 04] MASCOTE CAPIVARA + INSTRUÇÕES DA PROVA
+    ===================================================================== */
+    .mascot-section { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .capybara-avatar { height: 100px; width: auto; display: block; flex-shrink: 0; }
+    .speech-bubble { background: #ffffff; color: #0b2545; padding: 14px 16px; border-radius: 18px; border-top-left-radius: 4px; font-size: 13.5px; font-weight: 700; line-height: 1.4; box-shadow: 0 6px 16px rgba(0,0,0,0.2); min-height: 70px; position: relative; flex: 1; }
+    .cursor { display: inline-block; width: 2px; height: 13px; background-color: #0b2545; margin-left: 2px; animation: blink 0.7s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 05] CABEÇALHO DE PROGRESSO DE QUESTÕES RESPONDIDAS
+    ===================================================================== */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
+    .section-title { font-size: 18px; font-weight: 900; color: #ffb703; }
+    .progress-pill { background: #134074; color: #2ec4b6; border: 1px solid #1d5393; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; white-space: nowrap; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 06] QUADRO DE REGRAS DA AVALIAÇÃO (NOTA MÍNIMA 60%)
+    ===================================================================== */
+    .exam-rules-box { background: rgba(255, 183, 3, 0.12); border: 1.5px solid rgba(255, 183, 3, 0.5); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #f8fafc; line-height: 1.5; margin-bottom: 20px; font-weight: 700; }
+    .exam-rules-box strong { color: #ffb703; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 07] TARJETAS DE SEPARAÇÃO DOS BLOCOS DA PROVA
+    ===================================================================== */
+    .stage-banner {
+      background: rgba(46, 196, 182, 0.15);
+      border-left: 4px solid #2ec4b6;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 22px 0 16px;
+      line-height: 1.4;
+    }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 08] CARTÃO BRANCO PADRÃO DAS QUESTÕES
+       - .exercise-card.answered: borda dourada discreta indicando questão marcada
+       - .exercise-card.graded-right: borda verde após entregar a prova
+       - .exercise-card.graded-wrong: borda vermelha após entregar a prova
+    ===================================================================== */
+    .exercise-card { background: #ffffff; color: #0b2545; border-radius: 20px; padding: 18px; margin-bottom: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); border: 3px solid transparent; transition: border-color 0.25s; }
+    .exercise-card.answered { border-color: #ffb703; }
+    .exercise-card.graded-right { border-color: #2ec4b6 !important; }
+    .exercise-card.graded-wrong { border-color: #e63946 !important; }
+    .question-text { font-size: 15px; font-weight: 800; margin-bottom: 14px; line-height: 1.4; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 09] BOTÕES DE MÚLTIPLA ESCOLHA (ESTILO PROVA)
+       - .opt-btn.picked: opção marcada pelo aluno antes de entregar
+       - .opt-btn.correct / .opt-btn.wrong: revelados apenas após entregar
+    ===================================================================== */
+    .options-grid { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn { background: #eef4f8; border: 2px solid #d0e1f9; padding: 12px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; color: #0b2545; cursor: pointer; text-align: left; transition: all 0.2s; }
+    .opt-btn:disabled { cursor: default; }
+    .opt-btn.picked { background: #fff3cd; border-color: #ffb703; color: #0b2545; box-shadow: 0 3px 10px rgba(255, 183, 3, 0.25); }
+    .opt-btn.correct { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; }
+    .opt-btn.wrong { background: #e63946 !important; border-color: #e63946 !important; color: #ffffff !important; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 10] MICROFONE DA PROVA (QUESTÕES 9 A 11)
+    ===================================================================== */
+    .voice-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 15px; background: #eef4f8; border-radius: 16px; }
+    .mic-btn { width: 55px; height: 55px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; }
+    .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 11] COMBINAR PARES PT <-> ES (QUESTÕES 12 E 13)
+    ===================================================================== */
+    .pairs-columns-header { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+    .pairs-col-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #5c677d; text-align: center; background: #eef4f8; padding: 4px 8px; border-radius: 8px; }
+    .pairs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .pairs-col { display: flex; flex-direction: column; gap: 9px; }
+    .pair-btn { background: #eef4f8; border: 2px solid #d0e1f9; color: #0b2545; padding: 11px 10px; border-radius: 12px; font-size: 13px; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.18s ease; min-height: 46px; display: flex; align-items: center; justify-content: center; }
+    .pair-btn.selected { background: #fff3cd; border-color: #ffb703; color: #0b2545; }
+    .pair-btn.matched { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; cursor: default; }
+    .pair-btn.wrong-flash { background: #e63946 !important; border-color: #e63946 !important; color: #ffffff !important; }
+    .pairs-status { font-size: 13px; font-weight: 800; color: #5c677d; text-align: center; margin-top: 12px; min-height: 18px; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 12] MONTAR FRASES / DIÁLOGOS (QUESTÕES 14 E 15)
+    ===================================================================== */
+    .dialogue-prompt { background: #134074; color: #ffffff; padding: 12px 16px; border-radius: 14px; margin-bottom: 12px; }
+    .dialogue-prompt-es { font-size: 15px; font-weight: 900; color: #ffb703; }
+    .dialogue-prompt-pt { font-size: 12px; font-weight: 700; color: #b8cde0; margin-top: 3px; }
+    .sentence-builder-area { min-height: 54px; background: #eef4f8; border: 2px dashed #b8cde0; border-radius: 14px; padding: 8px 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; transition: all 0.2s; }
+    .fixed-word-chip { background: #0b2545; color: #ffb703; padding: 7px 12px; border-radius: 10px; font-weight: 900; font-size: 14px; }
+    .word-bank-area { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .word-chip { background: #ffffff; border: 2px solid #d0e1f9; color: #0b2545; padding: 7px 13px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; }
+    .word-chip.in-answer { background: #ffb703; border-color: #ffb703; color: #0b2545; }
+    .btn-clear-sentence { background: #e1e9f0; color: #0b2545; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12.5px; cursor: pointer; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 13] GABARITO POR QUESTÃO (APARECE APÓS ENTREGAR PROVA)
+    ===================================================================== */
+    .grade-explanation {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .grade-explanation.right { display: block; background: #dcfce7; color: #166534; }
+    .grade-explanation.wrong { display: block; background: #fee2e2; color: #991b1b; }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 14] BOTÃO PRINCIPAL DE ENTREGAR PROVA
+    ===================================================================== */
+    .submit-exam-btn {
+      background: linear-gradient(135deg, #ffb703 0%, #f59e0b 100%);
+      color: #0b2545;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 18px;
+      font-weight: 900;
+      font-size: 16px;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(255, 183, 3, 0.4);
+      margin-top: 10px;
+    }
+    .submit-exam-btn:active { transform: scale(0.98); }
+
+    /* =====================================================================
+       [GUIA DE ESTILO 15] JANELAS MODAIS (BOLETIM DA PROVA E SAÍDA)
+    ===================================================================== */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.82); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .modal-overlay.show { display: flex; opacity: 1; visibility: visible; }
+    .modal-box { background: #ffffff; color: #0b2545; padding: 24px; border-radius: 22px; text-align: center; max-width: 370px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
+    .modal-title { font-size: 19px; font-weight: 900; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: #5c677d; font-weight: 700; line-height: 1.45; }
+    .score-circle { width: 96px; height: 96px; border-radius: 50%; margin: 12px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: 26px; border: 5px solid #2ec4b6; color: #0b2545; background: #e6faf8; }
+    .score-circle.failed { border-color: #e63946; background: #ffeaea; color: #991b1b; }
+    .btn-primary { background: #ffb703; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; font-size: 14px; }
+    .btn-secondary { background: #e1e9f0; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       [SEÇÃO HTML 01] TOPO FIXO DA PROVA
+  ===================================================================== -->
+  <div class="header">
+    <div class="header-left">
+      <button class="back-btn" onclick="confirmExit()">←</button>
+      <div class="header-title">Lição 04: Prova 1</div>
+    </div>
+    <div class="exam-badge-top">🏆 +150 XP</div>
+  </div>
+
+  <div class="container">
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 02] MASCOTE CAPIVARA + ORIENTAÇÕES DA PROVA
+    ===================================================================== -->
+    <div class="mascot-section">
+      <img class="capybara-avatar" src="BtCapivarA_Escutar-SemFundo.png" alt="Capivara">
+      <div class="speech-bubble">
+        <span id="typed-text"></span><span class="cursor"></span>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 03] CONTADOR DE QUESTÕES RESPONDIDAS
+    ===================================================================== -->
+    <div class="section-header">
+      <div class="section-title">📝 Avaliação da Etapa 1</div>
+      <div class="progress-pill" id="progress-counter">0 / 15 respondidas</div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 04] REGRAS DA PROVA (NOTA MÍNIMA DE 60%)
+    ===================================================================== -->
+    <div class="exam-rules-box">
+      📌 <strong>Regras da Prova:</strong> Responda todas as 15 questões abaixo sem dicas. Ao terminar, toque em <strong>Entregar Prova</strong>. Você precisa atingir pelo menos <strong>60% de acerto (9 questões)</strong> para desbloquear a Etapa 2!
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 05] BLOCO 1 — VOCABULÁRIO E INTERPRETAÇÃO (QUESTÕES 1 A 8)
+    ===================================================================== -->
+    <div class="stage-banner">
+      Parte 1 • Vocabulário das Aulas 1, 2 e 3
+    </div>
+
+    <!-- QUESTÃO 1 -->
+    <div class="exercise-card" id="q1">
+      <div class="question-text">1. Qual expressão em espanhol significa "Muito prazer"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q1', 0, this)">Hasta luego</button>
+        <button class="opt-btn" onclick="pickOption('q1', 1, this)">Mucho gusto</button>
+        <button class="opt-btn" onclick="pickOption('q1', 2, this)">Buenos días</button>
+      </div>
+      <div class="grade-explanation" id="exp-q1"></div>
+    </div>
+
+    <!-- QUESTÃO 2 -->
+    <div class="exercise-card" id="q2">
+      <div class="question-text">2. Como se diz "Até amanhã" em espanhol?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q2', 0, this)">Hasta mañana</button>
+        <button class="opt-btn" onclick="pickOption('q2', 1, this)">Buenas noches</button>
+        <button class="opt-btn" onclick="pickOption('q2', 2, this)">Así es</button>
+      </div>
+      <div class="grade-explanation" id="exp-q2"></div>
+    </div>
+
+    <!-- QUESTÃO 3 -->
+    <div class="exercise-card" id="q3">
+      <div class="question-text">3. Alguém pergunta: "¿Cómo te llamas?". Qual é a resposta adequada?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q3', 0, this)">Hace mucho calor</button>
+        <button class="opt-btn" onclick="pickOption('q3', 1, this)">Me llamo Carlos</button>
+        <button class="opt-btn" onclick="pickOption('q3', 2, this)">Un pastel, por favor</button>
+      </div>
+      <div class="grade-explanation" id="exp-q3"></div>
+    </div>
+
+    <!-- QUESTÃO 4 -->
+    <div class="exercise-card" id="q4">
+      <div class="question-text">4. O que significa a frase "Está lloviendo"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q4', 0, this)">Está fazendo sol</button>
+        <button class="opt-btn" onclick="pickOption('q4', 1, this)">Está frio</button>
+        <button class="opt-btn" onclick="pickOption('q4', 2, this)">Está chovendo</button>
+      </div>
+      <div class="grade-explanation" id="exp-q4"></div>
+    </div>
+
+    <!-- QUESTÃO 5 -->
+    <div class="exercise-card" id="q5">
+      <div class="question-text">5. Se está chovendo lá fora, de qual objeto você vai precisar?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q5', 0, this)">Paraguas</button>
+        <button class="opt-btn" onclick="pickOption('q5', 1, this)">Postre</button>
+        <button class="opt-btn" onclick="pickOption('q5', 2, this)">Celular</button>
+      </div>
+      <div class="grade-explanation" id="exp-q5"></div>
+    </div>
+
+    <!-- QUESTÃO 6 -->
+    <div class="exercise-card" id="q6">
+      <div class="question-text">6. Em uma cafeteria em espanhol, o que significa "Pastel"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q6', 0, this)">Pastel salgado de feira</button>
+        <button class="opt-btn" onclick="pickOption('q6', 1, this)">Bolo / Torta doce</button>
+        <button class="opt-btn" onclick="pickOption('q6', 2, this)">Café com leite</button>
+      </div>
+      <div class="grade-explanation" id="exp-q6"></div>
+    </div>
+
+    <!-- QUESTÃO 7 -->
+    <div class="exercise-card" id="q7">
+      <div class="question-text">7. Como você diz "Com licença / Desculpa" para chamar a atenção de alguém?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q7', 0, this)">Disculpa</button>
+        <button class="opt-btn" onclick="pickOption('q7', 1, this)">Soleado</button>
+        <button class="opt-btn" onclick="pickOption('q7', 2, this)">¿Y tú?</button>
+      </div>
+      <div class="grade-explanation" id="exp-q7"></div>
+    </div>
+
+    <!-- QUESTÃO 8 -->
+    <div class="exercise-card" id="q8">
+      <div class="question-text">8. Qual é a tradução de "Me gusta mucho tu mochila"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="pickOption('q8', 0, this)">Perdi a minha mochila</button>
+        <button class="opt-btn" onclick="pickOption('q8', 1, this)">Gosto muito da sua mochila</button>
+        <button class="opt-btn" onclick="pickOption('q8', 2, this)">Quanto custa sua mochila?</button>
+      </div>
+      <div class="grade-explanation" id="exp-q8"></div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 06] BLOCO 2 — AVALIAÇÃO ORAL NO MICROFONE (QUESTÕES 9 A 11)
+    ===================================================================== -->
+    <div class="stage-banner">
+      Parte 2 • Avaliação de Pronúncia (3 questões)
+    </div>
+
+    <!-- QUESTÃO 9 -->
+    <div class="exercise-card" id="q9">
+      <div class="question-text">9. Pronuncie em espanhol: "Muchas gracias"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic1-btn" onclick="startExamVoice('muchas gracias', 'mic1-btn', 'status1', 'q9')">🎙️</button>
+        <div id="status1" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para gravar sua resposta</div>
+      </div>
+      <div class="grade-explanation" id="exp-q9"></div>
+    </div>
+
+    <!-- QUESTÃO 10 -->
+    <div class="exercise-card" id="q10">
+      <div class="question-text">10. Pronuncie em espanhol: "Hace calor hoy"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic2-btn" onclick="startExamVoice('hace calor hoy', 'mic2-btn', 'status2', 'q10')">🎙️</button>
+        <div id="status2" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para gravar sua resposta</div>
+      </div>
+      <div class="grade-explanation" id="exp-q10"></div>
+    </div>
+
+    <!-- QUESTÃO 11 -->
+    <div class="exercise-card" id="q11">
+      <div class="question-text">11. Pronuncie em espanhol: "¿Qué tal estás?"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic3-btn" onclick="startExamVoice('qué tal estás', 'mic3-btn', 'status3', 'q11')">🎙️</button>
+        <div id="status3" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para gravar sua resposta</div>
+      </div>
+      <div class="grade-explanation" id="exp-q11"></div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 07] BLOCO 3 — ASSOCIAÇÃO DE PARES (QUESTÕES 12 E 13)
+    ===================================================================== -->
+    <div class="stage-banner">
+      Parte 3 • Associação de Vocabulário (2 questões)
+    </div>
+
+    <!-- QUESTÃO 12 -->
+    <div class="exercise-card" id="q12">
+      <div class="question-text">12. Combine os 5 pares de Saudações e Cortesia:</div>
+      <div id="pairs-container-q12"></div>
+      <div class="grade-explanation" id="exp-q12"></div>
+    </div>
+
+    <!-- QUESTÃO 13 -->
+    <div class="exercise-card" id="q13">
+      <div class="question-text">13. Combine os 5 pares de Clima e Cafeteria:</div>
+      <div id="pairs-container-q13"></div>
+      <div class="grade-explanation" id="exp-q13"></div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 08] BLOCO 4 — CONSTRUÇÃO DE FRASES (QUESTÕES 14 E 15)
+    ===================================================================== -->
+    <div class="stage-banner">
+      Parte 4 • Construção de Frases (2 questões)
+    </div>
+
+    <!-- QUESTÃO 14 -->
+    <div class="exercise-card" id="q14">
+      <div class="question-text">14. Monte a resposta em espanhol: "Muito bem, obrigado. E você?"</div>
+      <div id="dialogue-container-q14"></div>
+      <div class="grade-explanation" id="exp-q14"></div>
+    </div>
+
+    <!-- QUESTÃO 15 -->
+    <div class="exercise-card" id="q15">
+      <div class="question-text">15. Monte a frase em espanhol: "Sim, está calor hoje"</div>
+      <div id="dialogue-container-q15"></div>
+      <div class="grade-explanation" id="exp-q15"></div>
+    </div>
+
+    <!-- =====================================================================
+         [SEÇÃO HTML 09] BOTÃO FINAL PARA ENTREGAR A PROVA E CALCULAR NOTA
+    ===================================================================== -->
+    <button class="submit-exam-btn" id="btn-submit-exam" onclick="entregarProva()">
+      📝 Entregar Prova e Ver Minha Nota
+    </button>
+
+  </div>
+
+  <!-- =====================================================================
+       [SEÇÃO HTML 10] MODAL DE BOLETIM DA PROVA (APROVADO >= 60% OU REPROVADO)
+  ===================================================================== -->
+  <div id="result-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 46px;" id="result-emoji">🏆</div>
+      <div class="modal-title" id="result-title" style="margin-top: 6px;">Aprovado na Prova 1!</div>
+      <div class="score-circle" id="result-score-circle">100%</div>
+      <div class="modal-desc" id="result-desc">
+        Você acertou 15 de 15 questões e desbloqueou a Etapa 2!
+      </div>
+      <div style="display: flex; gap: 10px; width: 100%; margin-top: 18px;" id="result-actions">
+        <button class="btn-secondary" onclick="fecharModalBoletim()">Ver Gabarito</button>
+        <button class="btn-primary" id="result-main-btn" onclick="voltarParaAulasBasicas()">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       [SEÇÃO HTML 11] MODAL DE CONFIRMAÇÃO DE SAÍDA DA PROVA
+  ===================================================================== -->
+  <div id="exit-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+      <div class="modal-title">Sair da Prova 1?</div>
+      <div class="modal-desc">Se você sair agora sem entregar a prova, suas respostas não serão avaliadas.</div>
+      <div style="display: flex; gap: 10px; width: 100%; margin-top: 16px;">
+        <button class="btn-secondary" onclick="closeExitModal()">Continuar Prova</button>
+        <button class="btn-primary" onclick="voltarParaAulasBasicas()">Sair mesmo assim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       LÓGICA JAVASCRIPT DA PROVA 1
+  ===================================================================== -->
+  <script>
+    /* =====================================================================
+       [GUIA JS 01] CONFIGURAÇÕES DA PROVA (ID, NOTA MÍNIMA E XP)
+       - LESSON_ID: deve ser 'aula4_prova1' para liberar as Aulas 5, 6 e 7
+       - NOTA_MINIMA_PCT: 60 (60% de acerto para aprovação)
+       - XP_APROVACAO: 150 XP ganhos ao passar na prova
+    ===================================================================== */
+    const URL_AULAS_BASICAS = 'https://weyload.github.io/Fale-Tela-inicial/aulas_basicas.html';
+    const LESSON_ID = 'aula4_prova1';
+    const TOTAL_QUESTOES = 15;
+    const NOTA_MINIMA_PCT = 60;
+    const XP_APROVACAO = 150;
+
+    let provaEntregue = false;
+    const respostasAluno = {}; // Armazena a resposta de cada questão antes de corrigir
+
+    function voltarParaAulasBasicas() {
+      window.location.href = URL_AULAS_BASICAS;
+    }
+
+    /* =====================================================================
+       [GUIA JS 02] MENSAGEM DA CAPIVARA NO TOPO DA PROVA
+    ===================================================================== */
+    const textToType = "Chegou a hora da Prova 1! Responda com calma as 15 questões. Acertando 60% ou mais, você libera a Etapa 2!";
+    let typeIndex = 0;
+
+    function typeWriter() {
+      const el = document.getElementById("typed-text");
+      if (el && typeIndex < textToType.length) {
+        el.innerHTML += textToType.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(typeWriter, 28);
+      }
+    }
+    window.addEventListener('load', typeWriter);
+
+    /* =====================================================================
+       [GUIA JS 03] GABARITO DAS QUESTÕES DE MÚLTIPLA ESCOLHA (1 A 8)
+       - correta: índice do botão certo (0 = primeiro, 1 = segundo, 2 = terceiro)
+       - explicacao: texto exibido no gabarito após entregar a prova
+    ===================================================================== */
+    const gabaritoMultipla = {
+      q1: { correta: 1, explicacao: 'Resposta certa: "Mucho gusto" (Muito prazer).' },
+      q2: { correta: 0, explicacao: 'Resposta certa: "Hasta mañana" (Até amanhã).' },
+      q3: { correta: 1, explicacao: 'Resposta certa: "Me llamo Carlos" (Meu nome é Carlos).' },
+      q4: { correta: 2, explicacao: 'Resposta certa: "Está chovendo".' },
+      q5: { correta: 0, explicacao: 'Resposta certa: "Paraguas" (Guarda-chuva).' },
+      q6: { correta: 1, explicacao: 'Resposta certa: "Bolo / Torta doce".' },
+      q7: { correta: 0, explicacao: 'Resposta certa: "Disculpa" (Com licença / Desculpa).' },
+      q8: { correta: 1, explicacao: 'Resposta certa: "Gosto muito da sua mochila".' }
+    };
+
+    function pickOption(qId, optionIndex, btnElement) {
+      if (provaEntregue) return;
+
+      const card = document.getElementById(qId);
+      card.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('picked'));
+      btnElement.classList.add('picked');
+      card.classList.add('answered');
+
+      respostasAluno[qId] = optionIndex;
+      atualizarContadorRespondidas();
+    }
+
+    function atualizarContadorRespondidas() {
+      const totalRespondidas = Object.keys(respostasAluno).length;
+      document.getElementById('progress-counter').textContent = `${totalRespondidas} / ${TOTAL_QUESTOES} respondidas`;
+    }
+
+    /* =====================================================================
+       [GUIA JS 04] GRAVAÇÃO DE VOZ NA PROVA (QUESTÕES 9, 10 E 11)
+       - Em modo prova, grava o que o aluno falou e avalia apenas na entrega
+    ===================================================================== */
+    let palavraEsperadaAtual = '';
+    let btnIdAtual = '';
+    let statusIdAtual = '';
+    let qIdAtual = '';
+
+    function startExamVoice(expectedText, btnId, statusId, qId) {
+      if (provaEntregue) return;
+
+      palavraEsperadaAtual = expectedText;
+      btnIdAtual = btnId;
+      statusIdAtual = statusId;
+      qIdAtual = qId;
+
+      const statusEl = document.getElementById(statusId);
+
+      if (window.AppInventor) {
+        statusEl.textContent = "🎙️ Ouvindo... Fale agora!";
+        statusEl.style.color = "#d97706";
+        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
+        return;
+      }
+
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        registrarVozProva(expectedText);
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+
+      const micBtn = document.getElementById(btnId);
+      micBtn.classList.add('listening');
+      statusEl.style.color = "#d97706";
+      statusEl.textContent = "🎙️ Ouvindo... Fale a frase!";
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        micBtn.classList.remove('listening');
+        registrarVozProva(event.results[0][0].transcript);
+      };
+
+      recognition.onerror = function() {
+        micBtn.classList.remove('listening');
+        statusEl.style.color = "#e63946";
+        statusEl.textContent = "Não captou som. Toque no microfone para tentar gravar de novo.";
+      };
+    }
+
+    function receberTextoVoz(textoOuvido) {
+      const limpo = (textoOuvido || '').trim();
+      if (limpo !== '') {
+        registrarVozProva(limpo);
+      }
+    }
+
+    function normalizarTextoVoz(txt) {
+      return (txt || '').toLowerCase().trim()
+        .replace(/[¿?¡!.,]/g, '')
+        .replace(/[áéíóú]/g, m => ({ 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u' }[m]))
+        .replace(/ñ/g, 'n')
+        .replace(/\bgrasias\b/g, 'gracias')
+        .replace(/\bola\b/g, 'hola');
+    }
+
+    function registrarVozProva(transcript) {
+      if (!qIdAtual || provaEntregue) return;
+
+      const statusText = document.getElementById(statusIdAtual);
+      const card = document.getElementById(qIdAtual);
+
+      respostasAluno[qIdAtual] = {
+        falado: transcript,
+        esperado: palavraEsperadaAtual
+      };
+
+      statusText.style.color = "#0b2545";
+      statusText.textContent = `📌 Resposta gravada: "${transcript}" (toque no mic se quiser regravar)`;
+      card.classList.add('answered');
+      atualizarContadorRespondidas();
+    }
+
+    /* =====================================================================
+       [GUIA JS 05] COMBINAR PARES NA PROVA (QUESTÕES 12 E 13)
+    ===================================================================== */
+    const configPares = {
+      q12: [
+        { id: 'p1', pt: 'Olá', es: 'Hola' },
+        { id: 'p2', pt: 'Muito obrigado', es: 'Muchas gracias' },
+        { id: 'p3', pt: 'E você?', es: '¿Y tú?' },
+        { id: 'p4', pt: 'Isso mesmo', es: 'Así es' },
+        { id: 'p5', pt: 'Até mais', es: 'Hasta luego' }
+      ],
+      q13: [
+        { id: 'p1', pt: 'Ensolarado', es: 'Soleado' },
+        { id: 'p2', pt: 'Frio', es: 'Frío' },
+        { id: 'p3', pt: 'Bonito', es: 'Hermoso' },
+        { id: 'p4', pt: 'Sobremesa', es: 'Postre' },
+        { id: 'p5', pt: 'Legal / Bacana', es: 'Chulo' }
+      ]
+    };
+
+    const estadoPares = {};
+
+    function embaralharLista(lista) {
+      const copia = [...lista];
+      for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+      }
+      return copia;
+    }
+
+    function iniciarExerciciosPares() {
+      Object.keys(configPares).forEach((qId) => {
+        const container = document.getElementById(`pairs-container-${qId}`);
+        if (!container) return;
+
+        const pares = configPares[qId];
+        estadoPares[qId] = { selPt: null, selEs: null, acertos: 0, total: pares.length, bloqueado: false };
+
+        const listaPt = embaralharLista(pares);
+        const listaEs = embaralharLista(pares);
+
+        container.innerHTML = `
+          <div class="pairs-columns-header">
+            <div class="pairs-col-label">🇧🇷 Português</div>
+            <div class="pairs-col-label">🇪🇸 Español</div>
+          </div>
+          <div class="pairs-grid">
+            <div class="pairs-col" id="col-pt-${qId}"></div>
+            <div class="pairs-col" id="col-es-${qId}"></div>
+          </div>
+          <div class="pairs-status" id="pairs-status-${qId}">0 de ${pares.length} pares combinados</div>
+        `;
+
+        const colPt = document.getElementById(`col-pt-${qId}`);
+        const colEs = document.getElementById(`col-es-${qId}`);
+
+        listaPt.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.className = 'pair-btn';
+          btn.textContent = item.pt;
+          btn.onclick = () => selecionarItemPar(qId, 'pt', btn, item);
+          colPt.appendChild(btn);
+        });
+
+        listaEs.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.className = 'pair-btn';
+          btn.textContent = item.es;
+          btn.onclick = () => selecionarItemPar(qId, 'es', btn, item);
+          colEs.appendChild(btn);
+        });
+      });
+    }
+
+    function selecionarItemPar(qId, lado, btn, item) {
+      const estado = estadoPares[qId];
+      if (provaEntregue || estado.bloqueado || btn.classList.contains('matched')) return;
+
+      if (lado === 'pt') {
+        if (estado.selPt) estado.selPt.btn.classList.remove('selected');
+        estado.selPt = { btn, item };
+        btn.classList.add('selected');
+      } else {
+        if (estado.selEs) estado.selEs.btn.classList.remove('selected');
+        estado.selEs = { btn, item };
+        btn.classList.add('selected');
+      }
+
+      if (estado.selPt && estado.selEs) {
+        const btnPt = estado.selPt.btn;
+        const btnEs = estado.selEs.btn;
+        const acertou = estado.selPt.item.id === estado.selEs.item.id;
+        estado.selPt = null;
+        estado.selEs = null;
+
+        if (acertou) {
+          btnPt.classList.remove('selected');
+          btnEs.classList.remove('selected');
+          btnPt.classList.add('matched');
+          btnEs.classList.add('matched');
+          btnPt.disabled = true;
+          btnEs.disabled = true;
+          estado.acertos++;
+
+          const statusEl = document.getElementById(`pairs-status-${qId}`);
+          if (estado.acertos >= estado.total) {
+            statusEl.style.color = '#1b7f75';
+            statusEl.textContent = '✅ Pares concluídos!';
+            respostasAluno[qId] = true;
+            document.getElementById(qId).classList.add('answered');
+            atualizarContadorRespondidas();
+          } else {
+            statusEl.textContent = `${estado.acertos} de ${estado.total} pares combinados`;
+          }
+        } else {
+          estado.bloqueado = true;
+          btnPt.classList.remove('selected');
+          btnEs.classList.remove('selected');
+          btnPt.classList.add('wrong-flash');
+          btnEs.classList.add('wrong-flash');
+          setTimeout(() => {
+            btnPt.classList.remove('wrong-flash');
+            btnEs.classList.remove('wrong-flash');
+            estado.bloqueado = false;
+          }, 500);
+        }
+      }
+    }
+
+    window.addEventListener('load', iniciarExerciciosPares);
+
+    /* =====================================================================
+       [GUIA JS 06] MONTAR FRASES NA PROVA (QUESTÕES 14 E 15)
+    ===================================================================== */
+    const configFrasesProva = {
+      q14: {
+        perguntaEs: '🗣️ Hola, ¿qué tal?',
+        perguntaPt: 'Olá, tudo bem? (Monte: Muito bem, obrigado. E você?)',
+        palavraInicial: 'Muy',
+        palavras: [
+          { id: 'w1', texto: 'bien,' },
+          { id: 'w2', texto: 'gracias.' },
+          { id: 'w3', texto: '¿Y tú?' },
+          { id: 'w4', texto: 'frío' }
+        ],
+        validas: ['bien, gracias. ¿Y tú?'],
+        explicacao: 'Frase correta: "Muy bien, gracias. ¿Y tú?"'
+      },
+      q15: {
+        perguntaEs: '🗣️ Hace un día bien hermoso hoy, ¿verdad?',
+        perguntaPt: 'Está um dia bem bonito hoje, não é verdade? (Monte: Sim, está calor hoje)',
+        palavraInicial: 'Sí,',
+        palavras: [
+          { id: 'w1', texto: 'hace' },
+          { id: 'w2', texto: 'calor' },
+          { id: 'w3', texto: 'hoy' },
+          { id: 'w4', texto: 'noches' }
+        ],
+        validas: ['hace calor hoy'],
+        explicacao: 'Frase correta: "Sí, hace calor hoy."'
+      }
+    };
+
+    const selecionadasFrase = { q14: [], q15: [] };
+
+    function iniciarFrasesProva() {
+      Object.keys(configFrasesProva).forEach((qId) => {
+        const container = document.getElementById(`dialogue-container-${qId}`);
+        const cfg = configFrasesProva[qId];
+
+        container.innerHTML = `
+          <div class="dialogue-prompt">
+            <div class="dialogue-prompt-es">${cfg.perguntaEs}</div>
+            <div class="dialogue-prompt-pt">${cfg.perguntaPt}</div>
+          </div>
+          <div class="sentence-builder-area" id="builder-area-${qId}">
+            <span class="fixed-word-chip">${cfg.palavraInicial}</span>
+          </div>
+          <div class="word-bank-area" id="word-bank-${qId}"></div>
+          <button class="btn-clear-sentence" onclick="limparFraseProva('${qId}')">Limpar palavras</button>
+        `;
+
+        const bank = document.getElementById(`word-bank-${qId}`);
+        cfg.palavras.forEach((item) => {
+          const btn = document.createElement('button');
+          btn.className = 'word-chip';
+          btn.id = `chip-${qId}-${item.id}`;
+          btn.textContent = item.texto;
+          btn.onclick = () => alternarPalavraProva(qId, item);
+          bank.appendChild(btn);
+        });
+      });
+    }
+
+    function alternarPalavraProva(qId, item) {
+      if (provaEntregue) return;
+      const area = document.getElementById(`builder-area-${qId}`);
+      const lista = selecionadasFrase[qId];
+      const pos = lista.findIndex(p => p.id === item.id);
+      const chipBanco = document.getElementById(`chip-${qId}-${item.id}`);
+
+      if (pos === -1) {
+        lista.push(item);
+        chipBanco.style.display = 'none';
+        const chipAns = document.createElement('button');
+        chipAns.className = 'word-chip in-answer';
+        chipAns.id = `ans-${qId}-${item.id}`;
+        chipAns.textContent = item.texto;
+        chipAns.onclick = () => alternarPalavraProva(qId, item);
+        area.appendChild(chipAns);
+      } else {
+        lista.splice(pos, 1);
+        const chipAns = document.getElementById(`ans-${qId}-${item.id}`);
+        if (chipAns) chipAns.remove();
+        chipBanco.style.display = 'inline-block';
+      }
+
+      if (lista.length > 0) {
+        respostasAluno[qId] = lista.map(p => p.texto).join(' ');
+        document.getElementById(qId).classList.add('answered');
+      } else {
+        delete respostasAluno[qId];
+        document.getElementById(qId).classList.remove('answered');
+      }
+      atualizarContadorRespondidas();
+    }
+
+    function limparFraseProva(qId) {
+      if (provaEntregue) return;
+      const cfg = configFrasesProva[qId];
+      selecionadasFrase[qId] = [];
+      delete respostasAluno[qId];
+
+      const area = document.getElementById(`builder-area-${qId}`);
+      area.innerHTML = `<span class="fixed-word-chip">${cfg.palavraInicial}</span>`;
+      document.getElementById(qId).classList.remove('answered');
+
+      cfg.palavras.forEach((item) => {
+        const chipBanco = document.getElementById(`chip-${qId}-${item.id}`);
+        if (chipBanco) chipBanco.style.display = 'inline-block';
+      });
+      atualizarContadorRespondidas();
+    }
+
+    window.addEventListener('load', iniciarFrasesProva);
+
+    /* =====================================================================
+       [GUIA JS 07] CORREÇÃO FINAL DA PROVA, CÁLCULO DE NOTA E DESBLOQUEIO
+    ===================================================================== */
+    function entregarProva() {
+      if (provaEntregue) return;
+      provaEntregue = true;
+
+      let acertos = 0;
+
+      // 1. Corrige Múltipla Escolha (q1 a q8)
+      Object.keys(gabaritoMultipla).forEach((qId) => {
+        const gab = gabaritoMultipla[qId];
+        const marcada = respostasAluno[qId];
+        const card = document.getElementById(qId);
+        const btns = card.querySelectorAll('.opt-btn');
+        const expEl = document.getElementById(`exp-${qId}`);
+
+        btns.forEach((b, i) => {
+          b.disabled = true;
+          if (i === gab.correta) b.classList.add('correct');
+          if (marcada === i && i !== gab.correta) b.classList.add('wrong');
+        });
+
+        if (marcada === gab.correta) {
+          acertos++;
+          card.classList.add('graded-right');
+          expEl.className = 'grade-explanation right';
+          expEl.textContent = `✅ Correto! ${gab.explicacao}`;
+        } else {
+          card.classList.add('graded-wrong');
+          expEl.className = 'grade-explanation wrong';
+          expEl.textContent = `❌ ${marcada === undefined ? 'Questão em branco. ' : 'Incorreto. '}${gab.explicacao}`;
+        }
+      });
+
+      // 2. Corrige Pronúncia no Microfone (q9, q10, q11)
+      const gabaritoVoz = {
+        q9: 'muchas gracias',
+        q10: 'hace calor hoy',
+        q11: 'qué tal estás'
+      };
+
+      Object.keys(gabaritoVoz).forEach((qId) => {
+        const esperada = gabaritoVoz[qId];
+        const reg = respostasAluno[qId];
+        const card = document.getElementById(qId);
+        const expEl = document.getElementById(`exp-${qId}`);
+        card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+        let acertouVoz = false;
+        if (reg && reg.falado) {
+          const normTarget = normalizarTextoVoz(esperada);
+          const normSpoken = normalizarTextoVoz(reg.falado);
+          acertouVoz = normSpoken.includes(normTarget) || (normTarget.includes(normSpoken) && normSpoken.length >= 4);
+        }
+
+        if (acertouVoz) {
+          acertos++;
+          card.classList.add('graded-right');
+          expEl.className = 'grade-explanation right';
+          expEl.textContent = `✅ Pronúncia aprovada! ("${reg.falado}")`;
+        } else {
+          card.classList.add('graded-wrong');
+          expEl.className = 'grade-explanation wrong';
+          expEl.textContent = `❌ ${reg ? `Você disse "${reg.falado}". ` : 'Sem gravação. '}Esperado: "${esperada}".`;
+        }
+      });
+
+      // 3. Corrige Pares (q12, q13)
+      ['q12', 'q13'].forEach((qId) => {
+        const card = document.getElementById(qId);
+        const expEl = document.getElementById(`exp-${qId}`);
+        card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+        if (respostasAluno[qId] === true) {
+          acertos++;
+          card.classList.add('graded-right');
+          expEl.className = 'grade-explanation right';
+          expEl.textContent = '✅ Todos os 5 pares foram associados corretamente!';
+        } else {
+          card.classList.add('graded-wrong');
+          expEl.className = 'grade-explanation wrong';
+          expEl.textContent = '❌ Associação incompleta.';
+        }
+      });
+
+      // 4. Corrige Frases Montadas (q14, q15)
+      ['q14', 'q15'].forEach((qId) => {
+        const cfg = configFrasesProva[qId];
+        const resp = respostasAluno[qId] || '';
+        const card = document.getElementById(qId);
+        const expEl = document.getElementById(`exp-${qId}`);
+        card.querySelectorAll('button').forEach(b => b.disabled = true);
+
+        if (cfg.validas.includes(resp)) {
+          acertos++;
+          card.classList.add('graded-right');
+          expEl.className = 'grade-explanation right';
+          expEl.textContent = `✅ Correto! ${cfg.explicacao}`;
+        } else {
+          card.classList.add('graded-wrong');
+          expEl.className = 'grade-explanation wrong';
+          expEl.textContent = `❌ Ordem incorreta ou em branco. ${cfg.explicacao}`;
+        }
+      });
+
+      // Calcula porcentagem final
+      const notaPct = Math.round((acertos / TOTAL_QUESTOES) * 100);
+      const aprovado = notaPct >= NOTA_MINIMA_PCT;
+
+      const btnEntregar = document.getElementById('btn-submit-exam');
+      btnEntregar.textContent = '🔄 Refazer Prova';
+      btnEntregar.onclick = () => window.location.reload();
+
+      const circle = document.getElementById('result-score-circle');
+      circle.textContent = `${notaPct}%`;
+
+      if (aprovado) {
+        circle.classList.remove('failed');
+        document.getElementById('result-emoji').textContent = '🏆';
+        document.getElementById('result-title').textContent = '¡Aprobado! Prova 1 Concluída!';
+        document.getElementById('result-desc').innerHTML =
+          `Você acertou <strong>${acertos} de ${TOTAL_QUESTOES}</strong> questões (${notaPct}%) e ganhou <strong>+${XP_APROVACAO} XP</strong>!<br><br>A <strong>Etapa 2 (Aulas 5, 6 e 7)</strong> já está desbloqueada!`;
+        document.getElementById('result-main-btn').textContent = 'Ir para Etapa 2 →';
+        document.getElementById('result-main-btn').onclick = voltarParaAulasBasicas;
+
+        registrarAprovacaoProva();
+        playVictorySound();
+      } else {
+        circle.classList.add('failed');
+        document.getElementById('result-emoji').textContent = '📚';
+        document.getElementById('result-title').textContent = 'Quase lá! Tente novamente';
+        document.getElementById('result-desc').innerHTML =
+          `Você acertou <strong>${acertos} de ${TOTAL_QUESTOES}</strong> questões (${notaPct}%).<br><br>É necessário atingir pelo menos <strong>${NOTA_MINIMA_PCT}% (9 acertos)</strong> para liberar a Etapa 2. Revise o gabarito e refaça a prova!`;
+        document.getElementById('result-main-btn').textContent = 'Refazer Prova';
+        document.getElementById('result-main-btn').onclick = () => window.location.reload();
+      }
+
+      document.getElementById('result-modal').classList.add('show');
+    }
+
+    function registrarAprovacaoProva() {
+      const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
+      // Só soma os 150 XP se for a primeira vez que o aluno passa nesta prova
+      if (!concluidas.includes(LESSON_ID)) {
+        concluidas.push(LESSON_ID);
+        localStorage.setItem('faleandgo_completed_lessons', JSON.stringify(concluidas));
+
+        const currentXP = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
+        localStorage.setItem('faleandgo_xp', String(currentXP + XP_APROVACAO));
+      }
+    }
+
+    function fecharModalBoletim() {
+      document.getElementById('result-modal').classList.remove('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* =====================================================================
+       [GUIA JS 08] SOM DE VITÓRIA E CONTROLE DO BOTÃO VOLTAR DO CELULAR
+    ===================================================================== */
+    function confirmExit() {
+      if (!provaEntregue) {
+        document.getElementById('exit-modal').classList.add('show');
+      } else {
+        voltarParaAulasBasicas();
+      }
+    }
+
+    function closeExitModal() {
+      document.getElementById('exit-modal').classList.remove('show');
+    }
+
+    function playVictorySound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        [261.63, 329.63, 392.00, 523.25].forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.3, ctx.currentTime + index * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.12 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.12);
+          osc.stop(ctx.currentTime + index * 0.12 + 0.4);
+        });
+      } catch (e) {}
+    }
+
+    window.addEventListener('load', () => {
+      history.pushState({ provaAtiva: true }, '', window.location.href);
+      window.addEventListener('popstate', () => {
+        confirmExit();
+        history.pushState({ provaAtiva: true }, '', window.location.href);
+      });
+    });
+  </script>
+</body>
+</html>
