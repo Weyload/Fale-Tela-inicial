@@ -419,42 +419,72 @@
         .replace(/\bamanha\b/g, 'manana');
     }
 
+   // Variáveis de blindagem contra eco e disparo duplo do App Inventor
+    let sessaoVozCounter = 0;
+    let sessaoVozAtiva = null;
+    let aguardandoVoz = false;
+    let timestampUltimoAceite = 0;
+
     function iniciarEscutaUnificada(textoSimuladoFallback, callback) {
-      ouvindoCallback = callback;
+      // Impede abrir nova escuta menos de 1.2s após aceitar uma resposta anterior
+      const agora = Date.now();
+      const atrasoSeguranca = Math.max(0, 1200 - (agora - timestampUltimoAceite));
 
-      if (window.AppInventor) {
-        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
-        return;
-      }
+      sessaoVozCounter++;
+      const minhaSessao = sessaoVozCounter;
+      sessaoVozAtiva = minhaSessao;
+      aguardandoVoz = false;
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        timerGeral = setTimeout(() => {
-          if (ouvindoCallback) ouvindoCallback(textoSimuladoFallback);
-        }, 700);
-        return;
-      }
+      ouvindoCallback = (textoRecebido) => {
+        // Descarta qualquer eco atrasado ou de sessão já encerrada
+        if (!aguardandoVoz || sessaoVozAtiva !== minhaSessao) return;
+        const limpo = (textoRecebido || '').trim();
+        if (limpo === '') return;
 
-      const rec = new SpeechRecognition();
-      rec.lang = 'es-ES';
-      recAtivo = rec;
-
-      rec.onresult = (ev) => {
-        const falado = ev.results[0][0].transcript;
-        if (ouvindoCallback) ouvindoCallback(falado);
+        aguardandoVoz = false;
+        sessaoVozAtiva = null;
+        timestampUltimoAceite = Date.now();
+        callback(limpo);
       };
 
-      rec.onerror = () => {
-        if (ouvindoCallback) ouvindoCallback('');
-      };
+      timerGeral = setTimeout(() => {
+        if (sessaoVozAtiva !== minhaSessao) return;
+        aguardandoVoz = true;
 
-      rec.start();
+        if (window.AppInventor) {
+          window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
+          return;
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          timerGeral = setTimeout(() => {
+            if (ouvindoCallback) ouvindoCallback(textoSimuladoFallback);
+          }, 700);
+          return;
+        }
+
+        const rec = new SpeechRecognition();
+        rec.lang = 'es-ES';
+        recAtivo = rec;
+
+        rec.onresult = (ev) => {
+          const falado = ev.results[0][0].transcript;
+          if (ouvindoCallback) ouvindoCallback(falado);
+        };
+
+        rec.onerror = () => {
+          aguardandoVoz = false;
+        };
+
+        rec.start();
+      }, atrasoSeguranca);
     }
 
     // Função chamada pelo App Inventor ao retornar texto do microfone nativo
     function receberTextoVoz(textoOuvido) {
       const limpo = (textoOuvido || '').trim();
-      if (limpo !== '' && ouvindoCallback) {
+      if (limpo !== '' && aguardandoVoz && ouvindoCallback) {
         ouvindoCallback(limpo);
       }
     }
@@ -587,21 +617,29 @@
       mostrarItemAudicao();
     }
 
-    // --- SLIDE 1: EXERCÍCIO 2 (FLASHCARDS VISUAIS FALADOS - 8 IMAGENS) ---
+   // --- SLIDE 1: EXERCÍCIO 2 (FLASHCARDS VISUAIS FALADOS - BLINDADO CONTRA PULOS) ---
     function renderEx2ImagensFaladas() {
+      const filaCards = DADOS_EX2_IMAGENS.map(item => ({ ...item, isRetry: false }));
       let cardIdx = 0;
+      let tentativasNoAtual = 0;
       const mount = document.getElementById('stage-mount');
 
-      function mostrarCardImagem() {
-        const item = DADOS_EX2_IMAGENS[cardIdx];
+      function mostrarCardImagem(abrirMicAutomatico = true) {
+        limparMotoresAtivos();
+        aguardandoVoz = false;
+        sessaoVozAtiva = null;
+
+        const item = filaCards[cardIdx];
+        const tagRevisao = item.isRetry ? ' (Revisão)' : '';
+
         mount.innerHTML = `
           <div class="slide-stage">
             <div class="stage-top-meta">
               <span class="stage-tag">Exercício 2 de 5 • Vocabulário Visual</span>
-              <span class="item-counter">${cardIdx + 1} / ${DADOS_EX2_IMAGENS.length}</span>
+              <span class="item-counter">${cardIdx + 1} / ${filaCards.length}${tagRevisao}</span>
             </div>
             <div class="stage-title">🖼️ Veja a imagem e fale em espanhol</div>
-            <div class="stage-subtitle">Pronuncie a palavra correspondente no microfone para passar ao próximo card.</div>
+            <div class="stage-subtitle">Aguarde o microfone abrir e pronuncie a palavra correspondente.</div>
 
             <div class="flashcard-box" id="flash-box">
               <div class="flash-img-frame">
@@ -611,7 +649,7 @@
               <div class="flash-reveal-es" id="flash-es-hint"></div>
               <button class="btn-hear-small" onclick="revelarEOuvirCard('${item.es.replace(/'/g, "\\'")}')">💡 Preciso de ajuda / Ouvir</button>
               <button class="mic-btn" id="flash-mic">🎙️</button>
-              <div class="status-line" id="flash-status">⏳ Preparando microfone...</div>
+              <div class="status-line" id="flash-status">⏳ Preparando próximo card...</div>
             </div>
           </div>
         `;
@@ -620,41 +658,73 @@
         const statusEl = document.getElementById('flash-status');
         const box = document.getElementById('flash-box');
 
-        function ouvirCard() {
+        function ativarMicrofoneCard() {
+          if (timerGeral) clearTimeout(timerGeral);
+          box.classList.remove('miss');
           micBtn.classList.add('listening');
           statusEl.style.color = '#e63946';
-          statusEl.textContent = '🎙️ Ouvindo... Fale em espanhol!';
+          statusEl.textContent = '🎙️ Ouvindo... Fale em espanhol agora!';
 
           iniciarEscutaUnificada(item.es, (falado) => {
             micBtn.classList.remove('listening');
             const normFalado = normalizarTexto(falado);
             const normAlvo = normalizarTexto(item.es);
 
-            if (normFalado && (normFalado.includes(normAlvo) || (normAlvo.includes(normFalado) && normFalado.length >= 4))) {
+            const acertou = normFalado !== '' && (
+              normFalado.includes(normAlvo) ||
+              (normAlvo.includes(normFalado) && normFalado.length >= 4)
+            );
+
+            if (acertou) {
               box.classList.remove('miss');
               box.classList.add('hit');
               document.getElementById('flash-es-hint').textContent = `✅ ${item.es}`;
               statusEl.style.color = '#1b7f75';
               statusEl.textContent = `Muito bem! ("${falado}")`;
               tocarSomAcerto();
+
               timerGeral = setTimeout(() => {
                 cardIdx++;
-                if (cardIdx < DADOS_EX2_IMAGENS.length) mostrarCardImagem();
-                else concluirEtapaAtual(25);
-              }, 1100);
+                tentativasNoAtual = 0;
+                if (cardIdx < filaCards.length) {
+                  mostrarCardImagem(true);
+                } else {
+                  concluirEtapaAtual(25);
+                }
+              }, 1600);
             } else {
+              tentativasNoAtual++;
               box.classList.add('miss');
-              statusEl.style.color = '#e63946';
-              statusEl.textContent = falado ? `Ouvi "${falado}". Toque no mic e tente de novo!` : 'Toque no microfone e tente novamente!';
+
+              if (tentativasNoAtual < 2 && !item.isRetry) {
+                statusEl.style.color = '#e63946';
+                statusEl.textContent = `Ouvi "${falado}". Preparando microfone...`;
+                timerGeral = setTimeout(() => {
+                  ativarMicrofoneCard();
+                }, 2200);
+              } else {
+                filaCards.push({ ...item, isRetry: true });
+                statusEl.style.color = '#e63946';
+                statusEl.textContent = `⏭️ Ouvi "${falado}". Vamos tentar "${item.es}" no final!`;
+                timerGeral = setTimeout(() => {
+                  cardIdx++;
+                  tentativasNoAtual = 0;
+                  mostrarCardImagem(true);
+                }, 1800);
+              }
             }
           });
         }
 
-        micBtn.onclick = ouvirCard;
-        timerGeral = setTimeout(ouvirCard, 900);
+        micBtn.onclick = ativarMicrofoneCard;
+
+        // Trava de 2.2 segundos antes de abrir o microfone do novo card (evita eco/pulo)
+        if (abrirMicAutomatico) {
+          timerGeral = setTimeout(ativarMicrofoneCard, 2200);
+        }
       }
 
-      mostrarCardImagem();
+      mostrarCardImagem(true);
     }
 
     function revelarEOuvirCard(textoEs) {
