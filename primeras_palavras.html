@@ -8,6 +8,39 @@
 
   <style>
     /* =====================================================================
+       [GUIA DE ESTILO EXTRA] CARTÃO DEMONSTRATIVO (FOTO + LEGENDA)
+       - .demo-media-card: cartão branco com a mesma largura dos exercícios
+       - .demo-media-img: ajusta a imagem automaticamente à largura do card
+       - .demo-media-caption: área da legenda (font-size = tamanho da letra)
+    ===================================================================== */
+    .demo-media-card {
+      background: #ffffff;
+      color: #0b2545;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      border: 2px solid #e1e9f0;
+    }
+
+    .demo-media-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .demo-media-caption {
+      padding: 12px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #0b2545;
+      background: #f8fafc;
+      border-top: 1px solid #e1e9f0;
+      line-height: 1.4;
+      text-align: center;
+    }
+    /* =====================================================================
        [GUIA DE ESTILO 01] CONFIGURAÇÕES GERAIS DA PÁGINA
        - background-color: cor de fundo geral da tela (#0b2545 = azul escuro)
        - font-family: fonte padrão do aplicativo
@@ -270,7 +303,17 @@
     <div class="stage-banner">
       Palavras e frases para começar o seu espanhol
     </div>
-
+<!-- =====================================================================
+         [BLOCO DEMONSTRATIVO] FOTO + LEGENDA EDITÁVEL
+         - src="...": coloque o nome do arquivo da foto (ex: "cafeteria.jpg")
+         - Legenda: edite o texto dentro de <div class="demo-media-caption">
+    ===================================================================== -->
+    <div class="demo-media-card">
+      <img class="demo-media-img" src="Imagem1.jpg" alt="Imagem ilustrativa">
+      <div class="demo-media-caption">
+        Digite aqui a legenda explicativa da imagem (ex: "Na cafeteria, peça um café con leche e un pastel").
+      </div>
+    </div>
     <!-- =====================================================================
          [SEÇÃO HTML 06] EXERCÍCIOS 1 A 6 — MÚLTIPLA ESCOLHA
          - checkAnswer(this, true/false, 'qX', 'Áudio em espanhol ao acertar')
