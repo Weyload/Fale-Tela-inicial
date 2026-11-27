@@ -840,7 +840,7 @@
       falarEspanhol(textoEs);
     }
 
-    // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL DE FRASES - VERDE / AMARELO SEM REPETIR) ---
+    // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL DE FRASES - FRASE COMPLETA COM ACÚMULO) ---
     function renderEx3EsteiraHorizontal() {
       let fraseIdx = 0;
       const mount = document.getElementById('stage-mount');
@@ -848,7 +848,7 @@
       function iniciarFraseEsteira() {
         const fraseObj = DADOS_EX3_ESTEIRA[fraseIdx];
         const blocos = fraseObj.blocos;
-        const resultados = new Array(blocos.length).fill('pending'); // 'pending' | 'green' | 'yellow'
+        const resultados = new Array(blocos.length).fill('pending');
         let blocoIdx = 0;
         let blocoResolvido = false;
 
@@ -858,20 +858,21 @@
               <span class="stage-tag">Exercício 3 de 5 • Esteira de Frases</span>
               <span class="item-counter">${fraseIdx + 1} / ${DADOS_EX3_ESTEIRA.length}</span>
             </div>
-            <div class="stage-title">🚂 Fale cada bloco em espanhol conforme desliza</div>
-            <div class="stage-subtitle">${fraseObj.tituloFrase} • Verde = acertou | Amarelo = passou sem repetir.</div>
+            <div class="stage-title">🚂 Fale o bloco completo em espanhol</div>
+            <div class="stage-subtitle">${fraseObj.tituloFrase} • Pronuncie todas as palavras de cada bloco antes do tempo acabar.</div>
 
             <div class="conveyor-phrase-preview" id="conveyor-pills"></div>
 
             <div class="conveyor-window" id="conveyor-window">
-              <div style="font-size:11px; font-weight:900; color:#5c677d; text-transform:uppercase; margin-bottom:4px;">Traduza falando agora:</div>
-              <div class="conveyor-slide-word" id="conveyor-word">...</div>
+              <div style="font-size:11px; font-weight:900; color:#5c677d; text-transform:uppercase; margin-bottom:4px;">Fale a expressão completa em espanhol:</div>
+              <div class="conveyor-slide-word" id="conveyor-word">Pronto?</div>
               <div class="conveyor-timer-bar">
                 <div class="conveyor-timer-fill" id="conveyor-timer-fill"></div>
               </div>
             </div>
 
-            <div class="status-line" id="conveyor-status">🎙️ Microfone ativo! Fale cada parte no ritmo.</div>
+            <button class="btn-primary-action" id="btn-start-conveyor">▶️ Iniciar Frase ${fraseIdx + 1}</button>
+            <div class="status-line" id="conveyor-status">Leia a sequência acima e toque em Iniciar!</div>
           </div>
         `;
 
@@ -887,17 +888,51 @@
           }).join('');
         }
 
+        atualizarPills();
+
+        const btnStart = document.getElementById('btn-start-conveyor');
+        btnStart.onclick = () => {
+          btnStart.style.display = 'none';
+          rodarBlocoAtual();
+        };
+
+        function verificarFraseCompleta(textoAcumulado, alvoEs) {
+          const normFalado = normalizarTexto(textoAcumulado);
+          const normAlvo = normalizarTexto(alvoEs);
+          if (!normFalado) return false;
+          if (normFalado.includes(normAlvo)) return true;
+
+          const palavrasAlvo = normAlvo.split(/\s+/).filter(Boolean);
+          const palavrasFaladas = normFalado.split(/\s+/).filter(Boolean);
+
+          // Conta quantas palavras da frase esperada foram realmente ditas
+          let acertosPalavras = 0;
+          palavrasAlvo.forEach(pAlvo => {
+            const bateu = palavrasFaladas.some(pFal =>
+              pFal === pAlvo || (pAlvo.length >= 4 && (pFal.includes(pAlvo) || pAlvo.includes(pFal)))
+            );
+            if (bateu) acertosPalavras++;
+          });
+
+          // Se o bloco tem 1 ou 2 palavras, exige TODAS; se tem 3 ou mais, exige pelo menos 75%
+          if (palavrasAlvo.length <= 2) {
+            return acertosPalavras === palavrasAlvo.length;
+          }
+          return (acertosPalavras / palavrasAlvo.length) >= 0.75;
+        }
+
         function rodarBlocoAtual() {
           if (blocoIdx >= blocos.length) {
             timerGeral = setTimeout(() => {
               fraseIdx++;
               if (fraseIdx < DADOS_EX3_ESTEIRA.length) iniciarFraseEsteira();
               else concluirEtapaAtual(30);
-            }, 900);
+            }, 1300);
             return;
           }
 
           blocoResolvido = false;
+          let textoAcumuladoNoBloco = '';
           const bloco = blocos[blocoIdx];
           const win = document.getElementById('conveyor-window');
           const wordEl = document.getElementById('conveyor-word');
@@ -905,58 +940,75 @@
           const statusEl = document.getElementById('conveyor-status');
 
           win.className = 'conveyor-window';
-          // Reinicia animação horizontal do texto
           wordEl.style.animation = 'none';
           wordEl.offsetHeight;
-          wordEl.style.animation = 'glideHorizontal 0.35s ease-out';
+          wordEl.style.animation = 'glideHorizontal 0.45s ease-out';
           wordEl.textContent = bloco.pt;
+
+          if (statusEl) {
+            statusEl.style.color = '#1b7f75';
+            statusEl.textContent = `🎙️ Fale completo: "${bloco.pt}"`;
+          }
 
           atualizarPills();
 
-          // Inicia contagem regressiva visual da esteira
-          const duracao = bloco.tempoMs;
-          const inicio = Date.now();
-          if (intervaloEsteira) clearInterval(intervaloEsteira);
-
-          intervaloEsteira = setInterval(() => {
-            const decorrido = Date.now() - inicio;
-            const restantePct = Math.max(0, 100 - (decorrido / duracao) * 100);
-            if (fillEl) fillEl.style.width = `${restantePct}%`;
-
-            if (decorrido >= duracao && !blocoResolvido) {
-              clearInterval(intervaloEsteira);
-              finalizarBlocoEsteira(false, '');
-            }
-          }, 80);
-
-          // Ativa escuta do bloco
-          iniciarEscutaUnificada(bloco.es, (falado) => {
+          function abrirEscutaDoBloco() {
             if (blocoResolvido) return;
-            const normFalado = normalizarTexto(falado);
-            const normAlvo = normalizarTexto(bloco.es);
-            const palavrasAlvo = normAlvo.split(' ');
-            const acertou = normFalado !== '' && (
-              normFalado.includes(normAlvo) ||
-              palavrasAlvo.some(p => p.length >= 4 && normFalado.includes(p))
-            );
+            iniciarEscutaUnificada(bloco.es, (falado) => {
+              if (blocoResolvido) return;
 
-            if (acertou) {
-              clearInterval(intervaloEsteira);
-              finalizarBlocoEsteira(true, falado);
-            }
-          });
+              textoAcumuladoNoBloco = (textoAcumuladoNoBloco + ' ' + falado).trim();
 
-          function finalizarBlocoEsteira(acertou, falado) {
+              if (verificarFraseCompleta(textoAcumuladoNoBloco, bloco.es)) {
+                clearInterval(intervaloEsteira);
+                finalizarBlocoEsteira(true, textoAcumuladoNoBloco);
+              } else {
+                // O aluno falou só o começo (ex: "Hola") e o microfone fechou: mantém o que ele disse e continua ouvindo!
+                if (statusEl) {
+                  statusEl.style.color = '#d97706';
+                  statusEl.textContent = `🎙️ Ouvi "${textoAcumuladoNoBloco}"... complete a frase!`;
+                }
+                setTimeout(() => {
+                  if (!blocoResolvido) abrirEscutaDoBloco();
+                }, 400);
+              }
+            });
+          }
+
+          // Pausa de 800ms para leitura antes de iniciar o relógio e o microfone
+          timerGeral = setTimeout(() => {
+            if (blocoResolvido) return;
+
+            const duracao = bloco.tempoMs;
+            const inicio = Date.now();
+            if (intervaloEsteira) clearInterval(intervaloEsteira);
+
+            intervaloEsteira = setInterval(() => {
+              const decorrido = Date.now() - inicio;
+              const restantePct = Math.max(0, 100 - (decorrido / duracao) * 100);
+              if (fillEl) fillEl.style.width = `${restantePct}%`;
+
+              if (decorrido >= duracao && !blocoResolvido) {
+                clearInterval(intervaloEsteira);
+                finalizarBlocoEsteira(false, textoAcumuladoNoBloco);
+              }
+            }, 80);
+
+            abrirEscutaDoBloco();
+          }, 800);
+
+          function finalizarBlocoEsteira(acertou, faladoFinal) {
             if (blocoResolvido) return;
             blocoResolvido = true;
-            ouvindoCallback = null;
+            aguardandoVoz = false;
+            sessaoVozAtiva = null;
 
             if (acertou) {
               resultados[blocoIdx] = 'green';
               win.classList.add('state-green');
               if (statusEl) {
                 statusEl.style.color = '#1b7f75';
-                statusEl.textContent = `✅ "${bloco.es}" (${falado})`;
+                statusEl.textContent = `✅ "${bloco.es}" (${faladoFinal})`;
               }
               tocarSomAcerto();
             } else {
@@ -964,7 +1016,9 @@
               win.classList.add('state-yellow');
               if (statusEl) {
                 statusEl.style.color = '#b45309';
-                statusEl.textContent = `🟡 Era: "${bloco.es}" — seguindo para o próximo!`;
+                statusEl.textContent = faladoFinal
+                  ? `🟡 Incompleto ("${faladoFinal}"). Era: "${bloco.es}"`
+                  : `🟡 Era: "${bloco.es}" — seguindo!`;
               }
             }
 
@@ -972,11 +1026,9 @@
             timerGeral = setTimeout(() => {
               blocoIdx++;
               rodarBlocoAtual();
-            }, 950);
+            }, 1600);
           }
         }
-
-        rodarBlocoAtual();
       }
 
       iniciarFraseEsteira();
