@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -32,7 +33,7 @@
     .step-dot.done { background: #2ec4b6; }
     .step-dot.skipped { background: #ffb703; }
 
-   /* =====================================================================
+    /* =====================================================================
        [GUIA DE ESTILO 03] CONTAINER DE TRANSIÇÃO LATERAL (VIRADA DE PÁGINA)
        - .slide-stage: desliza para a direita ou para a esquerda conforme o gesto
     ===================================================================== */
@@ -69,6 +70,12 @@
       color: #94a3b8;
       margin-top: 8px;
     }
+
+    .stage-top-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+    .stage-tag { background: #134074; color: #ffb703; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .item-counter { font-size: 12px; font-weight: 900; color: #5c677d; }
+    .stage-title { font-size: 18px; font-weight: 900; color: #0b2545; margin-bottom: 6px; line-height: 1.3; }
+    .stage-subtitle { font-size: 13px; font-weight: 700; color: #5c677d; margin-bottom: 16px; line-height: 1.4; }
 
     /* =====================================================================
        [GUIA DE ESTILO 04] BOTÕES DE NAVEGAÇÃO NO RODAPÉ (ANTERIOR E PULAR)
@@ -131,8 +138,7 @@
 
     /* =====================================================================
        [GUIA DE ESTILO 07] EXERCÍCIO 3 — ESTEIRA HORIZONTAL DE FRASES
-       - .conveyor-track: visor onde os blocos deslizam da direita para esquerda
-       - .conveyor-block: cada bloco de palavra (verde no acerto, amarelo no erro)
+       - .conveyor-window: visor onde os blocos deslizam da direita para esquerda
     ===================================================================== */
     .conveyor-phrase-preview { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 12px; }
     .mini-pill { padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; background: #eef4f8; color: #5c677d; border: 1.5px solid #d0e1f9; }
@@ -167,7 +173,7 @@
     .conveyor-timer-bar { width: 100%; height: 7px; background: rgba(11, 37, 69, 0.12); border-radius: 8px; overflow: hidden; margin-top: 12px; }
     .conveyor-timer-fill { height: 100%; width: 100%; background: #134074; transition: width 0.1s linear; }
 
-   /* =====================================================================
+    /* =====================================================================
        [GUIA DE ESTILO 08] BOTÃO DE MICROFONE E BOTÕES DE AÇÃO
        - .mic-btn: amarelo (#ffb703) = Atenção / Aguardando
        - .mic-btn.listening: verde (#2ec4b6) = Sinal aberto / Pode falar!
@@ -179,6 +185,10 @@
       70% { box-shadow: 0 0 0 16px rgba(46, 196, 182, 0); }
       100% { box-shadow: 0 0 0 0 rgba(46, 196, 182, 0); }
     }
+
+    .btn-primary-action { background: linear-gradient(135deg, #ffb703 0%, #f59e0b 100%); color: #0b2545; border: none; padding: 14px 20px; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; width: 100%; box-shadow: 0 5px 14px rgba(255, 183, 3, 0.35); margin-top: 12px; }
+    .btn-hear-small { background: #d0e1f9; color: #134074; border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; }
+    .status-line { font-size: 13px; font-weight: 800; color: #5c677d; text-align: center; min-height: 20px; margin-top: 8px; }
 
     /* =====================================================================
        [GUIA DE ESTILO 09] BATE-BOLA DE CONVERSA (EXERCÍCIO 4)
@@ -221,7 +231,7 @@
     <div class="step-dot" id="dot-5"></div>
   </div>
 
- <!-- =====================================================================
+  <!-- =====================================================================
        [SEÇÃO HTML 03] PALCO PRINCIPAL (ARRASTE HORIZONTAL + BOTÕES ANTERIOR/PULAR)
   ===================================================================== -->
   <div class="main-wrapper" id="swipe-area">
@@ -265,9 +275,7 @@
     };
 
     /* =====================================================================
-       [GUIA JS 02] CONTEÚDO DOS 5 EXERCÍCIOS (MESMAS PALAVRAS EM VÁRIOS CONTEXTOS)
-       - Observe como "mochila", "paraguas", "pastel", "calor", "mucho gusto",
-         "hasta mañana" aparecem em audição, imagem, esteira e conversa!
+       [GUIA JS 02] CONTEÚDO DOS 5 EXERCÍCIOS (INCLUINDO SUAS ALTERAÇÕES)
     ===================================================================== */
 
     // EXERCÍCIO 1: Ouça em espanhol e marque em português (8 itens)
@@ -282,7 +290,7 @@
       { audio: 'Hasta mañana, buenas noches', correta: 'Até amanhã, boa noite', opcoes: ['Bom dia, como você está?', 'Até amanhã, boa noite', 'Boa tarde, muito prazer'] }
     ];
 
-    // EXERCÍCIO 2: Flashcards Visuais Falados em Sequência (8 imagens reais dos repositórios)
+    // EXERCÍCIO 2: Flashcards Visuais Falados em Sequência (8 imagens reais)
     const DADOS_EX2_IMAGENS = [
       { img: IMG_PATHS.mochila, pt: 'Mochila', es: 'Mochila' },
       { img: IMG_PATHS.guarda_chuva, pt: 'Guarda-chuva', es: 'Paraguas' },
@@ -294,7 +302,7 @@
       { img: IMG_PATHS.bolo_choco, pt: 'Bolo de chocolate', es: 'Pastel de chocolate' }
     ];
 
-  // EXERCÍCIO 3: Esteira Horizontal Palavra por Palavra (1 palavra por vez, ritmo rápido)
+    // EXERCÍCIO 3: Esteira Horizontal Palavra por Palavra (com suas dicas gramaticais)
     const DADOS_EX3_ESTEIRA = [
       {
         tituloFrase: 'Frase 1 de 5: Cumprimento matinal',
@@ -329,7 +337,7 @@
         tituloFrase: 'Frase 4 de 5: Falando do tempo',
         fraseCompletaEs: 'Hoy hace mucho calor.',
         blocos: [
-          { pt: 'Hoje', es: 'Hoy', tempoMs: 2000 },
+          { pt: 'Hoje', es: 'Hoy', tempoMs: 2500 },
           { pt: 'Faz (Está)', es: 'Hace', tempoMs: 3000 },
           { pt: 'Muito (Quantidade)', es: 'Mucho', tempoMs: 3000 },
           { pt: 'Calor', es: 'Calor', tempoMs: 3200 }
@@ -347,7 +355,7 @@
       }
     ];
 
-    // EXERCÍCIO 4: Bate-bola de Conversa Falada (4 turnos reais)
+    // EXERCÍCIO 4: Bate-bola de Conversa Falada (4 turnos reais estilo Duolingo)
     const DADOS_EX4_CONVERSA = [
       { perguntaEs: '¡Hola! Buenos días, ¿cómo te llamas?', perguntaPt: 'Olá! Bom dia, como você se chama?', respostaAlvoEs: 'Me llamo Carlos', dicaPt: 'Fale: "Me llamo Carlos" (ou seu nome com Me llamo...)', aceitaPrefixo: 'me llamo' },
       { perguntaEs: 'Mucho gusto. ¿Qué tal estás hoy?', perguntaPt: 'Muito prazer. Como você está hoje?', respostaAlvoEs: 'Muy bien gracias y tú', dicaPt: 'Fale: "Muy bien, gracias. ¿Y tú?"' },
@@ -355,24 +363,16 @@
       { perguntaEs: 'Bueno, me voy. ¡Hasta luego!', perguntaPt: 'Bom, já vou indo. Até mais!', respostaAlvoEs: 'Hasta mañana muchas gracias', dicaPt: 'Fale: "Hasta mañana, muchas gracias"' }
     ];
 
-    // EXERCÍCIO 4: Bate-bola de Conversa Falada (4 turnos reais)
-    const DADOS_EX4_CONVERSA = [
-      { perguntaEs: '¡Hola! Buenos días, ¿cómo te llamas?', perguntaPt: 'Olá! Bom dia, como você se chama?', respostaAlvoEs: 'Me llamo Carlos', dicaPt: 'Fale: "Me llamo Carlos" (ou seu nome com Me llamo...)' , aceitaPrefixo: 'me', 'llamo', 'mê', },
-      { perguntaEs: 'Mucho gusto. ¿Qué tal estás hoy?', perguntaPt: 'Muito prazer. Como você está hoje?', respostaAlvoEs: 'Muy bien gracias y tú', dicaPt: 'Fale: "Muy bien, gracias. ¿Y tú?"' },
-      { perguntaEs: 'Hace mucho calor hoy, ¿verdad?', perguntaPt: 'Está fazendo muito calor hoje, não é verdade?', respostaAlvoEs: 'Sí hace calor hoy', dicaPt: 'Fale: "Sí, hace calor hoy"' },
-      { perguntaEs: 'Bueno, me voy. ¡Hasta luego!', perguntaPt: 'Bom, já vou indo. Até mais!', respostaAlvoEs: 'Hasta mañana muchas gracias', dicaPt: 'Fale: "Hasta mañana, muchas gracias"' }
-    ];
-
-    // EXERCÍCIO 5: Relâmpago Final de Expressões (8 cards rápidos mistos)
+    // EXERCÍCIO 5: Relâmpago Final de Expressões (com suas palavras: autobús e Frio)
     const DADOS_EX5_RELAMPAGO = [
       { es: 'Buenos días', pt: 'Bom dia' },
       { es: 'Mucho gusto', pt: 'Muito prazer' },
       { es: 'Encantado', pt: 'Encantado / Muito prazer' },
-      { es: 'autobús', pt: 'Ônibus' },
+      { es: 'Autobús', pt: 'Ônibus' },
       { es: 'Soleado', pt: 'Ensolarado' },
       { es: 'Hermoso', pt: 'Bonito / Lindo' },
       { es: 'Chulo', pt: 'Legal / Bacana' },
-      { es: 'Frio', pt: 'Frio' }
+      { es: 'Frío', pt: 'Frio' }
     ];
 
     /* =====================================================================
@@ -384,9 +384,17 @@
 
     // Timers e reconhecimento ativos (limpos a cada troca de slide)
     let timerGeral = null;
+    let timerBlocoEsteira = null;
     let intervaloEsteira = null;
+    let esteiraAbortada = false;
     let recAtivo = null;
     let ouvindoCallback = null;
+
+    // Variáveis de blindagem contra eco e disparo duplo do App Inventor
+    let sessaoVozCounter = 0;
+    let sessaoVozAtiva = null;
+    let aguardandoVoz = false;
+    let timestampUltimoAceite = 0;
 
     function carregarEstadoRevisao() {
       try {
@@ -409,9 +417,19 @@
     }
 
     function limparMotoresAtivos() {
-      if (timerGeral) { clearTimeout(timerGeral); timerGeral = null; }
-      if (intervaloEsteira) { clearInterval(intervaloEsteira); intervaloEsteira = null; }
+      esteiraAbortada = true;
+      aguardandoVoz = false;
+      sessaoVozAtiva = null;
       ouvindoCallback = null;
+
+      if (timerGeral) { clearTimeout(timerGeral); timerGeral = null; }
+      if (timerBlocoEsteira) { clearTimeout(timerBlocoEsteira); timerBlocoEsteira = null; }
+      if (intervaloEsteira) { clearInterval(intervaloEsteira); intervaloEsteira = null; }
+
+      if (window.AppInventor) {
+        try { window.AppInventor.setWebViewString("PararVoz_" + Date.now()); } catch (e) {}
+      }
+
       if (recAtivo) {
         try {
           recAtivo.onresult = null;
@@ -421,6 +439,7 @@
         } catch (e) {}
         recAtivo = null;
       }
+
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch (e) {}
       }
@@ -482,14 +501,7 @@
         .replace(/\bamanha\b/g, 'manana');
     }
 
-   // Variáveis de blindagem contra eco e disparo duplo do App Inventor
-    let sessaoVozCounter = 0;
-    let sessaoVozAtiva = null;
-    let aguardandoVoz = false;
-    let timestampUltimoAceite = 0;
-
     function iniciarEscutaUnificada(textoSimuladoFallback, callback) {
-      // Impede abrir nova escuta menos de 1.2s após aceitar uma resposta anterior
       const agora = Date.now();
       const atrasoSeguranca = Math.max(0, 1200 - (agora - timestampUltimoAceite));
 
@@ -499,7 +511,6 @@
       aguardandoVoz = false;
 
       ouvindoCallback = (textoRecebido) => {
-        // Descarta qualquer eco atrasado ou de sessão já encerrada
         if (!aguardandoVoz || sessaoVozAtiva !== minhaSessao) return;
         const limpo = (textoRecebido || '').trim();
         if (limpo === '') return;
@@ -552,10 +563,10 @@
       }
     }
 
-   /* =====================================================================
+    /* =====================================================================
        [GUIA JS 05] NAVEGAÇÃO ENTRE OS SLIDES (VOLTAR, AVANÇAR, PULAR E SWIPE)
     ===================================================================== */
-    let direcaoAnimacao = 'next'; // 'next' (vem da direita) | 'prev' (vem da esquerda)
+    let direcaoAnimacao = 'next';
 
     function concluirEtapaAtual(xpDaEtapa = 15) {
       limparMotoresAtivos();
@@ -590,7 +601,6 @@
       direcaoAnimacao = 'prev';
 
       if (modoSomentePulados) {
-        // Sai do modo somente pulados e volta uma etapa normal
         modoSomentePulados = false;
         filaPuladosAtiva = [];
       }
@@ -649,13 +659,10 @@
           toqueInicioX = 0;
           toqueInicioY = 0;
 
-          // Só dispara se o movimento horizontal for bem maior que o vertical (mín. 75px)
           if (Math.abs(deltaX) > 75 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
             if (deltaX > 0 && estadoRevisao.etapaAtual > 0) {
-              // Arrastou para a direita -> volta para o exercício anterior
               voltarExercicioAnterior();
             } else if (deltaX < 0 && estadoRevisao.etapaAtual < 5) {
-              // Arrastou para a esquerda -> pula para o próximo exercício
               pularExercicioAtual();
             }
           }
@@ -666,7 +673,7 @@
     /* =====================================================================
        [GUIA JS 06] RENDERIZADOR DE CADA EXERCÍCIO (SLIDES 0 A 5)
     ===================================================================== */
-   function renderizarSlideAtual() {
+    function renderizarSlideAtual() {
       limparMotoresAtivos();
       atualizarBarraEtapas();
 
@@ -742,14 +749,13 @@
           grid.appendChild(btn);
         });
 
-        // Toca automaticamente ao abrir o card
         timerGeral = setTimeout(() => falarEspanhol(item.audio), 350);
       }
 
       mostrarItemAudicao();
     }
 
-   // --- SLIDE 1: EXERCÍCIO 2 (FLASHCARDS VISUAIS FALADOS - BLINDADO CONTRA PULOS) ---
+    // --- SLIDE 1: EXERCÍCIO 2 (FLASHCARDS VISUAIS FALADOS - BLINDADO CONTRA PULOS) ---
     function renderEx2ImagensFaladas() {
       const filaCards = DADOS_EX2_IMAGENS.map(item => ({ ...item, isRetry: false }));
       let cardIdx = 0;
@@ -771,7 +777,7 @@
               <span class="item-counter">${cardIdx + 1} / ${filaCards.length}${tagRevisao}</span>
             </div>
             <div class="stage-title">🖼️ Veja a imagem e fale em espanhol</div>
-            <div class="stage-subtitle">Aguarde o microfone abrir e pronuncie a palavra correspondente.</div>
+            <div class="stage-subtitle">Aguarde o microfone ficar verde e pronuncie a palavra.</div>
 
             <div class="flashcard-box" id="flash-box">
               <div class="flash-img-frame">
@@ -850,7 +856,6 @@
 
         micBtn.onclick = ativarMicrofoneCard;
 
-        // Trava de 2.2 segundos antes de abrir o microfone do novo card (evita eco/pulo)
         if (abrirMicAutomatico) {
           timerGeral = setTimeout(ativarMicrofoneCard, 2200);
         }
@@ -865,18 +870,19 @@
       falarEspanhol(textoEs);
     }
 
-  // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL PALAVRA POR PALAVRA) ---
+    // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL PALAVRA POR PALAVRA COM TRAVA TOTAL) ---
     function renderEx3EsteiraHorizontal() {
       let fraseIdx = 0;
       const mount = document.getElementById('stage-mount');
+      esteiraAbortada = false;
 
       function iniciarFraseEsteira() {
+        if (esteiraAbortada) return;
         const fraseObj = DADOS_EX3_ESTEIRA[fraseIdx];
         const blocos = fraseObj.blocos;
         const resultados = new Array(blocos.length).fill('pending');
         let blocoIdx = 0;
         let blocoResolvido = false;
-        let timerBloco = null;
 
         mount.innerHTML = `
           <div class="slide-stage">
@@ -915,7 +921,6 @@
             if (resultados[i] === 'green') cls += ' green-pill';
             else if (resultados[i] === 'yellow') cls += ' yellow-pill';
             else if (i === blocoIdx) cls += ' active-pill';
-            // Quando já passou pelo bloco, mostra a palavra montada em espanhol!
             const textoPill = (resultados[i] === 'green' || resultados[i] === 'yellow') ? b.es : b.pt;
             return `<span class="${cls}">${textoPill}</span>`;
           }).join('');
@@ -934,11 +939,10 @@
           const normAlvo = normalizarTexto(alvoEs);
           if (!normFalado) return false;
 
-          // Aceita equivalências fonéticas comuns do microfone para palavras curtas
           const equivalencias = {
             'un': ['un', 'um', 'uno'],
             'tu': ['tu', 'su'],
-            'me': ['me', 'mi'],
+            'me': ['me', 'mi', 'me', 'mê'],
             'muy': ['muy', 'mui'],
             'hoy': ['hoy', 'oi'],
             'dias': ['dias', 'dia']
@@ -954,10 +958,10 @@
         }
 
         function rodarBlocoAtual() {
-          if (timerBloco) { clearTimeout(timerBloco); timerBloco = null; }
+          if (esteiraAbortada) return;
+          if (timerBlocoEsteira) { clearTimeout(timerBlocoEsteira); timerBlocoEsteira = null; }
           if (intervaloEsteira) { clearInterval(intervaloEsteira); intervaloEsteira = null; }
 
-          // Ao terminar todas as palavras da frase, toca a frase inteira conectada!
           if (blocoIdx >= blocos.length) {
             const badgeEl = document.getElementById('conveyor-mic-badge');
             const wordEl = document.getElementById('conveyor-word');
@@ -975,6 +979,7 @@
             falarEspanhol(fraseObj.fraseCompletaEs);
 
             timerGeral = setTimeout(() => {
+              if (esteiraAbortada) return;
               fraseIdx++;
               if (fraseIdx < DADOS_EX3_ESTEIRA.length) iniciarFraseEsteira();
               else concluirEtapaAtual(30);
@@ -989,6 +994,8 @@
           const fillEl = document.getElementById('conveyor-timer-fill');
           const statusEl = document.getElementById('conveyor-status');
           const badgeEl = document.getElementById('conveyor-mic-badge');
+
+          if (!win || !wordEl) return;
 
           win.className = 'conveyor-window';
           if (fillEl) fillEl.style.width = '100%';
@@ -1010,9 +1017,8 @@
 
           atualizarPills();
 
-          // Espera 1.25s para o Android limpar o mic anterior e o aluno ler a palavra
-          timerBloco = setTimeout(() => {
-            if (blocoResolvido) return;
+          timerBlocoEsteira = setTimeout(() => {
+            if (blocoResolvido || esteiraAbortada) return;
 
             if (badgeEl) {
               badgeEl.style.background = '#2ec4b6';
@@ -1028,6 +1034,10 @@
             const inicio = Date.now();
 
             intervaloEsteira = setInterval(() => {
+              if (esteiraAbortada) {
+                clearInterval(intervaloEsteira);
+                return;
+              }
               const decorrido = Date.now() - inicio;
               const restantePct = Math.max(0, 100 - (decorrido / duracao) * 100);
               if (fillEl) fillEl.style.width = `${restantePct}%`;
@@ -1039,7 +1049,7 @@
             }, 75);
 
             iniciarEscutaUnificada(bloco.es, (falado) => {
-              if (blocoResolvido) return;
+              if (blocoResolvido || esteiraAbortada) return;
 
               if (verificarPalavraUnica(falado, bloco.es)) {
                 clearInterval(intervaloEsteira);
@@ -1049,11 +1059,11 @@
           }, 1250);
 
           function finalizarBlocoEsteira(acertou, faladoFinal) {
-            if (blocoResolvido) return;
+            if (blocoResolvido || esteiraAbortada) return;
             blocoResolvido = true;
             aguardandoVoz = false;
             sessaoVozAtiva = null;
-            if (timerBloco) { clearTimeout(timerBloco); timerBloco = null; }
+            if (timerBlocoEsteira) { clearTimeout(timerBlocoEsteira); timerBlocoEsteira = null; }
 
             if (acertou) {
               resultados[blocoIdx] = 'green';
@@ -1084,6 +1094,7 @@
 
             atualizarPills();
             timerGeral = setTimeout(() => {
+              if (esteiraAbortada) return;
               blocoIdx++;
               rodarBlocoAtual();
             }, 950);
@@ -1183,7 +1194,7 @@
             const palavrasFaladas = normFalado.split(/\s+/).filter(Boolean);
 
             const equivalencias = {
-              'me': ['me', 'mi'],
+              'me': ['me', 'mi', 'mê'],
               'tu': ['tu', 'su', 'tú'],
               'muy': ['muy', 'mui'],
               'hoy': ['hoy', 'oi'],
@@ -1194,7 +1205,6 @@
             let acertos = 0;
             const estadosPalavras = palavrasExibicao.map((palavraOrig, idx) => {
               const normP = normalizarTexto(palavraOrig);
-              // Na 1ª pergunta ("Me llamo Carlos"), se o aluno falou o próprio nome no lugar de "Carlos", aceita!
               if (turno.aceitaPrefixo && idx === palavrasExibicao.length - 1 && normFalado.includes('llamo') && palavrasFaladas.length >= 3) {
                 acertos++;
                 return 'green';
@@ -1243,12 +1253,16 @@
       mostrarTurnoConversa();
     }
 
-    // --- SLIDE 4: EXERCÍCIO 5 (RELÂMPAGO FINAL DE EXPRESSÕES - 8 CARDS) ---
+    // --- SLIDE 4: EXERCÍCIO 5 (RELÂMPAGO FINAL DE EXPRESSÕES - 8 CARDS BLINDADO) ---
     function renderEx5Relampago() {
       let cardIdx = 0;
       const mount = document.getElementById('stage-mount');
 
       function mostrarCardRelampago() {
+        limparMotoresAtivos();
+        aguardandoVoz = false;
+        sessaoVozAtiva = null;
+
         const item = DADOS_EX5_RELAMPAGO[cardIdx];
         mount.innerHTML = `
           <div class="slide-stage">
@@ -1257,7 +1271,7 @@
               <span class="item-counter">${cardIdx + 1} / ${DADOS_EX5_RELAMPAGO.length}</span>
             </div>
             <div class="stage-title">⚡ Pronúncia Relâmpago Final</div>
-            <div class="stage-subtitle">Fale cada expressão em espanhol para encerrar a revisão!</div>
+            <div class="stage-subtitle">Aguarde o microfone ficar verde e fale cada expressão!</div>
 
             <div class="flashcard-box" id="rel-box">
               <div style="font-size:26px; font-weight:900; color:#0b2545;">${item.es.toUpperCase()}</div>
@@ -1274,6 +1288,8 @@
         const box = document.getElementById('rel-box');
 
         function ouvirRelampago() {
+          if (timerGeral) clearTimeout(timerGeral);
+          box.classList.remove('miss');
           micBtn.classList.add('listening');
           statusEl.style.color = '#1b7f75';
           statusEl.textContent = `🎙️ Diga "${item.es.toUpperCase()}"`;
@@ -1293,7 +1309,7 @@
                 cardIdx++;
                 if (cardIdx < DADOS_EX5_RELAMPAGO.length) mostrarCardRelampago();
                 else concluirEtapaAtual(25);
-              }, 950);
+              }, 1400);
             } else {
               box.classList.add('miss');
               statusEl.style.color = '#1b7f75';
@@ -1303,7 +1319,7 @@
         }
 
         micBtn.onclick = ouvirRelampago;
-        timerGeral = setTimeout(ouvirRelampago, 900);
+        timerGeral = setTimeout(ouvirRelampago, 2000);
       }
 
       mostrarCardRelampago();
