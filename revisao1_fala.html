@@ -294,38 +294,55 @@
       { img: IMG_PATHS.bolo_choco, pt: 'Bolo de chocolate', es: 'Pastel de chocolate' }
     ];
 
-   // EXERCÍCIO 3: Esteira Horizontal de Frases por Blocos (Verde = acertou, Amarelo = errou sem repetir)
+  // EXERCÍCIO 3: Esteira Horizontal Palavra por Palavra (1 palavra por vez, ritmo rápido)
     const DADOS_EX3_ESTEIRA = [
       {
-        tituloFrase: 'Frase 1 de 4: Cumprimento completo',
+        tituloFrase: 'Frase 1 de 5: Cumprimento matinal',
+        fraseCompletaEs: '¡Hola, buenos días!',
         blocos: [
-          { pt: 'Olá, bom dia', es: 'Hola buenos días', tempoMs: 7800 },
-          { pt: 'Tudo bem?', es: 'Qué tal', tempoMs: 7200 },
-          { pt: 'Muito bem, obrigado', es: 'Muy bien gracias', tempoMs: 8200 }
+          { pt: 'Olá', es: 'Hola', tempoMs: 4000 },
+          { pt: 'Bons', es: 'Buenos', tempoMs: 4000 },
+          { pt: 'Dias', es: 'Días', tempoMs: 4000 }
         ]
       },
       {
-        tituloFrase: 'Frase 2 de 4: Elogiando na cafeteria',
+        tituloFrase: 'Frase 2 de 5: Cortesia e agradecimento',
+        fraseCompletaEs: 'Muy bien, muchas gracias.',
         blocos: [
-          { pt: 'Com licença', es: 'Disculpa', tempoMs: 7200 },
-          { pt: 'Gosto muito', es: 'Me gusta mucho', tempoMs: 8000 },
-          { pt: 'Da sua mochila', es: 'Tu mochila', tempoMs: 7500 }
+          { pt: 'Muito', es: 'Muy', tempoMs: 4000 },
+          { pt: 'Bem', es: 'Bien', tempoMs: 4000 },
+          { pt: 'Muitas', es: 'Muchas', tempoMs: 4000 },
+          { pt: 'Obrigado(s)', es: 'Gracias', tempoMs: 4200 }
         ]
       },
       {
-        tituloFrase: 'Frase 3 de 4: Falando do clima',
+        tituloFrase: 'Frase 3 de 5: Elogiando a mochila',
+        fraseCompletaEs: 'Me gusta tu mochila.',
         blocos: [
-          { pt: 'Olha', es: 'Mira', tempoMs: 7000 },
-          { pt: 'Está chovendo', es: 'Está lloviendo', tempoMs: 8000 },
-          { pt: 'Guarda-chuva', es: 'Paraguas', tempoMs: 7500 }
+          { pt: 'Me (A mim)', es: 'Me', tempoMs: 4000 },
+          { pt: 'Gosta (Gosto)', es: 'Gusta', tempoMs: 4000 },
+          { pt: 'Sua', es: 'Tu', tempoMs: 4000 },
+          { pt: 'Mochila', es: 'Mochila', tempoMs: 4200 }
         ]
       },
       {
-        tituloFrase: 'Frase 4 de 4: Pedido e despedida',
+        tituloFrase: 'Frase 4 de 5: Falando do tempo',
+        fraseCompletaEs: 'Hoy hace mucho calor.',
         blocos: [
-          { pt: 'Um bolo', es: 'Un pastel', tempoMs: 7200 },
-          { pt: 'Isso mesmo', es: 'Así es', tempoMs: 7200 },
-          { pt: 'Até amanhã', es: 'Hasta mañana', tempoMs: 7800 }
+          { pt: 'Hoje', es: 'Hoy', tempoMs: 4000 },
+          { pt: 'Faz (Está)', es: 'Hace', tempoMs: 4000 },
+          { pt: 'Muito', es: 'Mucho', tempoMs: 4000 },
+          { pt: 'Calor', es: 'Calor', tempoMs: 4200 }
+        ]
+      },
+      {
+        tituloFrase: 'Frase 5 de 5: Pedido e despedida',
+        fraseCompletaEs: 'Un pastel, hasta mañana.',
+        blocos: [
+          { pt: 'Um', es: 'Un', tempoMs: 3800 },
+          { pt: 'Bolo', es: 'Pastel', tempoMs: 4000 },
+          { pt: 'Até', es: 'Hasta', tempoMs: 4000 },
+          { pt: 'Amanhã', es: 'Mañana', tempoMs: 4200 }
         ]
       }
     ];
@@ -840,7 +857,7 @@
       falarEspanhol(textoEs);
     }
 
-    // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL - BOTÃO PADRONIZADO + MIC SEM PICOTAR) ---
+  // --- SLIDE 2: EXERCÍCIO 3 (ESTEIRA HORIZONTAL PALAVRA POR PALAVRA) ---
     function renderEx3EsteiraHorizontal() {
       let fraseIdx = 0;
       const mount = document.getElementById('stage-mount');
@@ -856,11 +873,11 @@
         mount.innerHTML = `
           <div class="slide-stage">
             <div class="stage-top-meta">
-              <span class="stage-tag">Exercício 3 de 5 • Esteira de Frases</span>
+              <span class="stage-tag">Exercício 3 de 5 • Esteira Rápida</span>
               <span class="item-counter">${fraseIdx + 1} / ${DADOS_EX3_ESTEIRA.length}</span>
             </div>
-            <div class="stage-title">🚂 Fale cada bloco em espanhol</div>
-            <div class="stage-subtitle">${fraseObj.tituloFrase} • Leia os 3 blocos abaixo e toque em Iniciar.</div>
+            <div class="stage-title">🚂 Fale 1 palavra por vez na esteira</div>
+            <div class="stage-subtitle">${fraseObj.tituloFrase} • Verde = acertou | Amarelo = passou sem repetir.</div>
 
             <div class="conveyor-phrase-preview" id="conveyor-pills"></div>
 
@@ -878,7 +895,7 @@
               ▶️ Iniciar Frase ${fraseIdx + 1}
             </button>
 
-            <div class="status-line" id="conveyor-status" style="margin-top:10px;">Leia a sequência acima e toque no botão amarelo!</div>
+            <div class="status-line" id="conveyor-status" style="margin-top:10px;">Leia as palavras acima e toque no botão amarelo!</div>
           </div>
         `;
 
@@ -890,7 +907,9 @@
             if (resultados[i] === 'green') cls += ' green-pill';
             else if (resultados[i] === 'yellow') cls += ' yellow-pill';
             else if (i === blocoIdx) cls += ' active-pill';
-            return `<span class="${cls}">${b.pt}</span>`;
+            // Quando já passou pelo bloco, mostra a palavra montada em espanhol!
+            const textoPill = (resultados[i] === 'green' || resultados[i] === 'yellow') ? b.es : b.pt;
+            return `<span class="${cls}">${textoPill}</span>`;
           }).join('');
         }
 
@@ -902,44 +921,60 @@
           rodarBlocoAtual();
         };
 
-        function verificarFraseCompleta(textoFalado, alvoEs) {
+        function verificarPalavraUnica(textoFalado, alvoEs) {
           const normFalado = normalizarTexto(textoFalado);
           const normAlvo = normalizarTexto(alvoEs);
           if (!normFalado) return false;
-          if (normFalado.includes(normAlvo)) return true;
 
-          const palavrasAlvo = normAlvo.split(/\s+/).filter(Boolean);
-          const palavrasFaladas = normFalado.split(/\s+/).filter(Boolean);
+          // Aceita equivalências fonéticas comuns do microfone para palavras curtas
+          const equivalencias = {
+            'un': ['un', 'um', 'uno'],
+            'tu': ['tu', 'su'],
+            'me': ['me', 'mi'],
+            'muy': ['muy', 'mui'],
+            'hoy': ['hoy', 'oi'],
+            'dias': ['dias', 'dia']
+          };
 
-          let acertosPalavras = 0;
-          palavrasAlvo.forEach(pAlvo => {
-            const bateu = palavrasFaladas.some(pFal =>
-              pFal === pAlvo || (pAlvo.length >= 4 && (pFal.includes(pAlvo) || pAlvo.includes(pFal)))
-            );
-            if (bateu) acertosPalavras++;
-          });
+          const listaAceita = equivalencias[normAlvo] || [normAlvo];
+          const palavrasDitas = normFalado.split(/\s+/).filter(Boolean);
 
-          if (palavrasAlvo.length <= 2) {
-            return acertosPalavras === palavrasAlvo.length;
-          }
-          return (acertosPalavras / palavrasAlvo.length) >= 0.75;
+          return listaAceita.some(alvo =>
+            palavrasDitas.includes(alvo) ||
+            (alvo.length >= 4 && normFalado.includes(alvo))
+          );
         }
 
         function rodarBlocoAtual() {
           if (timerBloco) { clearTimeout(timerBloco); timerBloco = null; }
           if (intervaloEsteira) { clearInterval(intervaloEsteira); intervaloEsteira = null; }
 
+          // Ao terminar todas as palavras da frase, toca a frase inteira conectada!
           if (blocoIdx >= blocos.length) {
+            const badgeEl = document.getElementById('conveyor-mic-badge');
+            const wordEl = document.getElementById('conveyor-word');
+            const statusEl = document.getElementById('conveyor-status');
+            if (badgeEl) {
+              badgeEl.style.background = '#134074';
+              badgeEl.style.color = '#ffb703';
+              badgeEl.textContent = '🔊 OUVINDO FRASE COMPLETA';
+            }
+            if (wordEl) wordEl.textContent = fraseObj.fraseCompletaEs;
+            if (statusEl) {
+              statusEl.style.color = '#0b2545';
+              statusEl.textContent = 'Escute como fica a frase conectada!';
+            }
+            falarEspanhol(fraseObj.fraseCompletaEs);
+
             timerGeral = setTimeout(() => {
               fraseIdx++;
               if (fraseIdx < DADOS_EX3_ESTEIRA.length) iniciarFraseEsteira();
               else concluirEtapaAtual(30);
-            }, 1300);
+            }, 2400);
             return;
           }
 
           blocoResolvido = false;
-          let tentativasBloco = 0;
           const bloco = blocos[blocoIdx];
           const win = document.getElementById('conveyor-window');
           const wordEl = document.getElementById('conveyor-word');
@@ -952,65 +987,34 @@
 
           wordEl.style.animation = 'none';
           wordEl.offsetHeight;
-          wordEl.style.animation = 'glideHorizontal 0.45s ease-out';
+          wordEl.style.animation = 'glideHorizontal 0.35s ease-out';
           wordEl.textContent = bloco.pt;
 
           if (badgeEl) {
             badgeEl.style.background = '#fef3c7';
             badgeEl.style.color = '#92400e';
-            badgeEl.textContent = '⏳ Preparando microfone...';
+            badgeEl.textContent = '⏳ Prepare-se...';
           }
           if (statusEl) {
             statusEl.style.color = '#5c677d';
-            statusEl.textContent = `Leia: "${bloco.pt}" — aguarde o sinal verde...`;
+            statusEl.textContent = `Palavra ${blocoIdx + 1} de ${blocos.length}: "${bloco.pt}"`;
           }
 
           atualizarPills();
 
-          function iniciarEscutaComSinalVerde() {
+          // Espera 1.25s para o Android limpar o mic anterior e o aluno ler a palavra
+          timerBloco = setTimeout(() => {
             if (blocoResolvido) return;
 
             if (badgeEl) {
               badgeEl.style.background = '#2ec4b6';
               badgeEl.style.color = '#ffffff';
-              badgeEl.textContent = '🎙️ PODE FALAR AGORA!';
+              badgeEl.textContent = '🎙️ FALE AGORA!';
             }
             if (statusEl) {
               statusEl.style.color = '#1b7f75';
-              statusEl.textContent = `Fale completo: "${bloco.pt}"`;
+              statusEl.textContent = `Diga em espanhol: "${bloco.pt}"`;
             }
-
-            iniciarEscutaUnificada(bloco.es, (falado) => {
-              if (blocoResolvido) return;
-
-              if (verificarFraseCompleta(falado, bloco.es)) {
-                clearInterval(intervaloEsteira);
-                finalizarBlocoEsteira(true, falado);
-              } else {
-                tentativasBloco++;
-                if (badgeEl) {
-                  badgeEl.style.background = '#fef3c7';
-                  badgeEl.style.color = '#92400e';
-                  badgeEl.textContent = '⏳ Aguarde...';
-                }
-                if (statusEl) {
-                  statusEl.style.color = '#d97706';
-                  statusEl.textContent = `Ouvi "${falado}". Fale a expressão inteira quando ficar verde!`;
-                }
-
-                // Só reabre o microfone uma vez após 2.2s se ainda houver tempo suficiente
-                if (tentativasBloco < 2) {
-                  timerBloco = setTimeout(() => {
-                    if (!blocoResolvido) iniciarEscutaComSinalVerde();
-                  }, 2200);
-                }
-              }
-            });
-          }
-
-          // Pausa de 1.8s entre blocos para o Android fechar o mic anterior completamente
-          timerBloco = setTimeout(() => {
-            if (blocoResolvido) return;
 
             const duracao = bloco.tempoMs;
             const inicio = Date.now();
@@ -1024,10 +1028,17 @@
                 clearInterval(intervaloEsteira);
                 finalizarBlocoEsteira(false, '');
               }
-            }, 80);
+            }, 75);
 
-            iniciarEscutaComSinalVerde();
-          }, 1800);
+            iniciarEscutaUnificada(bloco.es, (falado) => {
+              if (blocoResolvido) return;
+
+              if (verificarPalavraUnica(falado, bloco.es)) {
+                clearInterval(intervaloEsteira);
+                finalizarBlocoEsteira(true, falado);
+              }
+            });
+          }, 1250);
 
           function finalizarBlocoEsteira(acertou, faladoFinal) {
             if (blocoResolvido) return;
@@ -1042,11 +1053,11 @@
               if (badgeEl) {
                 badgeEl.style.background = '#1b7f75';
                 badgeEl.style.color = '#ffffff';
-                badgeEl.textContent = '✅ ACERTOU!';
+                badgeEl.textContent = `✅ ${bloco.es.toUpperCase()}`;
               }
               if (statusEl) {
                 statusEl.style.color = '#1b7f75';
-                statusEl.textContent = `"${bloco.es}" (${faladoFinal})`;
+                statusEl.textContent = `Acertou! ("${faladoFinal}")`;
               }
               tocarSomAcerto();
             } else {
@@ -1055,11 +1066,11 @@
               if (badgeEl) {
                 badgeEl.style.background = '#ffb703';
                 badgeEl.style.color = '#0b2545';
-                badgeEl.textContent = '🟡 TEMPO ESGOTADO';
+                badgeEl.textContent = `🟡 ${bloco.es.toUpperCase()}`;
               }
               if (statusEl) {
                 statusEl.style.color = '#b45309';
-                statusEl.textContent = `Era: "${bloco.es}" — avançando...`;
+                statusEl.textContent = `Em espanhol é "${bloco.es}" — próxima!`;
               }
             }
 
@@ -1067,7 +1078,7 @@
             timerGeral = setTimeout(() => {
               blocoIdx++;
               rodarBlocoAtual();
-            }, 1800);
+            }, 950);
           }
         }
       }
