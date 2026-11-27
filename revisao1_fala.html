@@ -1086,13 +1086,36 @@
       iniciarFraseEsteira();
     }
 
-    // --- SLIDE 3: EXERCÍCIO 4 (BATE-BOLA DE CONVERSA FALADA - 4 TURNOS) ---
+    // --- SLIDE 3: EXERCÍCIO 4 (DIÁLOGO ESTILO DUOLINGO: PALAVRA POR PALAVRA VERDE/AMARELO) ---
     function renderEx4Conversa() {
       let turnoIdx = 0;
       const mount = document.getElementById('stage-mount');
 
       function mostrarTurnoConversa() {
         const turno = DADOS_EX4_CONVERSA[turnoIdx];
+        const palavrasExibicao = turno.respostaAlvoEs.split(/\s+/).filter(Boolean);
+
+        function montarHtmlPalavras(estados = []) {
+          return palavrasExibicao.map((palavra, i) => {
+            const st = estados[i] || 'neutral';
+            let bg = '#f1f5f9';
+            let color = '#0b2545';
+            let border = '#cbd5e1';
+
+            if (st === 'green') {
+              bg = '#dcfce7';
+              color = '#15803d';
+              border = '#22c55e';
+            } else if (st === 'yellow') {
+              bg = '#fef3c7';
+              color = '#b45309';
+              border = '#f59e0b';
+            }
+
+            return `<span style="display:inline-block; background:${bg}; color:${color}; border:1.5px solid ${border}; padding:4px 10px; border-radius:10px; font-size:15px; font-weight:900; margin:3px 2px; transition:all 0.25s;">${palavra}</span>`;
+          }).join('');
+        }
+
         mount.innerHTML = `
           <div class="slide-stage">
             <div class="stage-top-meta">
@@ -1100,7 +1123,7 @@
               <span class="item-counter">${turnoIdx + 1} / ${DADOS_EX4_CONVERSA.length}</span>
             </div>
             <div class="stage-title">💬 Responda em voz alta à pergunta</div>
-            <div class="stage-subtitle">Ouça a pergunta em espanhol e responda falando no microfone.</div>
+            <div class="stage-subtitle">As palavras entendidas ficam <strong style="color:#15803d;">verdes</strong> e as que falharem ficam <strong style="color:#b45309;">amarelas</strong>.</div>
 
             <div class="chat-bubble-es">
               <div class="es-line">🗣️ ${turno.perguntaEs}</div>
@@ -1109,13 +1132,18 @@
             </div>
 
             <div class="target-reply-box" id="chat-reply-box">
-              <div style="font-size:12px; font-weight:800; color:#5c677d;">Sua resposta em espanhol:</div>
-              <div style="font-size:16px; font-weight:900; color:#0b2545; margin-top:4px;">"${turno.respostaAlvoEs}"</div>
-              <div style="font-size:11.5px; font-weight:700; color:#64748b; margin-top:2px;">${turno.dicaPt}</div>
+              <div style="font-size:11.5px; font-weight:800; color:#5c677d; margin-bottom:6px;">Sua resposta em espanhol:</div>
+              <div id="chat-words-container" style="line-height:1.8;">${montarHtmlPalavras()}</div>
+              <div style="font-size:11.5px; font-weight:700; color:#64748b; margin-top:6px;">${turno.dicaPt}</div>
             </div>
 
             <button class="mic-btn" id="chat-mic">🎙️</button>
-            <div class="status-line" id="chat-status">Toque no microfone para responder</div>
+            <div class="status-line" id="chat-status">Toque no microfone amarelo para responder</div>
+
+            <div id="chat-retry-actions" style="display:none; gap:10px; margin-top:12px;">
+              <button id="btn-chat-retry" style="flex:1; background:#ffb703; color:#0b2545; border:none; padding:11px; border-radius:12px; font-weight:900; font-size:13.5px; cursor:pointer;">🔄 Tentar de novo</button>
+              <button id="btn-chat-next" style="flex:1; background:#e2e8f0; color:#0b2545; border:none; padding:11px; border-radius:12px; font-weight:900; font-size:13.5px; cursor:pointer;">Avançar →</button>
+            </div>
           </div>
         `;
 
@@ -1123,33 +1151,85 @@
 
         const micBtn = document.getElementById('chat-mic');
         const statusEl = document.getElementById('chat-status');
+        const wordsContainer = document.getElementById('chat-words-container');
+        const retryBox = document.getElementById('chat-retry-actions');
 
-        micBtn.onclick = () => {
+        function irProximoTurno() {
+          turnoIdx++;
+          if (turnoIdx < DADOS_EX4_CONVERSA.length) mostrarTurnoConversa();
+          else concluirEtapaAtual(25);
+        }
+
+        document.getElementById('btn-chat-next').onclick = irProximoTurno;
+
+        function iniciarEscutaConversa() {
+          retryBox.style.display = 'none';
+          wordsContainer.innerHTML = montarHtmlPalavras();
           micBtn.classList.add('listening');
           statusEl.style.color = '#1b7f75';
-          statusEl.textContent = '🎙️ Ouvindo sua resposta...';
+          statusEl.textContent = '🎙️ Pode falar sua resposta agora!';
 
           iniciarEscutaUnificada(turno.respostaAlvoEs, (falado) => {
             micBtn.classList.remove('listening');
             const normFalado = normalizarTexto(falado);
-            const normAlvo = normalizarTexto(turno.respostaAlvoEs);
-            const aceitaPrefixo = turno.aceitaPrefixo && normFalado.includes(turno.aceitaPrefixo);
+            const palavrasFaladas = normFalado.split(/\s+/).filter(Boolean);
 
-            if (normFalado && (aceitaPrefixo || normFalado.includes(normAlvo) || normAlvo.split(' ').filter(w => w.length >= 4 && normFalado.includes(w)).length >= 2)) {
+            const equivalencias = {
+              'me': ['me', 'mi'],
+              'tu': ['tu', 'su', 'tú'],
+              'muy': ['muy', 'mui'],
+              'hoy': ['hoy', 'oi'],
+              'si': ['si', 'sí', 'sim'],
+              'y': ['y', 'e', 'i']
+            };
+
+            let acertos = 0;
+            const estadosPalavras = palavrasExibicao.map((palavraOrig, idx) => {
+              const normP = normalizarTexto(palavraOrig);
+              // Na 1ª pergunta ("Me llamo Carlos"), se o aluno falou o próprio nome no lugar de "Carlos", aceita!
+              if (turno.aceitaPrefixo && idx === palavrasExibicao.length - 1 && normFalado.includes('llamo') && palavrasFaladas.length >= 3) {
+                acertos++;
+                return 'green';
+              }
+
+              const aceitas = equivalencias[normP] || [normP];
+              const bateu = aceitas.some(a =>
+                palavrasFaladas.includes(a) ||
+                (a.length >= 4 && palavrasFaladas.some(pf => pf.includes(a) || a.includes(pf)))
+              );
+
+              if (bateu) {
+                acertos++;
+                return 'green';
+              }
+              return 'yellow';
+            });
+
+            wordsContainer.innerHTML = montarHtmlPalavras(estadosPalavras);
+            const taxaAcerto = acertos / palavrasExibicao.length;
+
+            if (taxaAcerto >= 0.5) {
               statusEl.style.color = '#1b7f75';
-              statusEl.textContent = `✅ Ótima resposta! ("${falado}")`;
+              statusEl.textContent = taxaAcerto === 1
+                ? `✅ Perfeito! ("${falado}")`
+                : `✅ Muito bem! Entendi ${acertos} de ${palavrasExibicao.length} palavras ("${falado}")`;
               tocarSomAcerto();
+
               timerGeral = setTimeout(() => {
-                turnoIdx++;
-                if (turnoIdx < DADOS_EX4_CONVERSA.length) mostrarTurnoConversa();
-                else concluirEtapaAtual(25);
-              }, 1150);
+                irProximoTurno();
+              }, 1900);
             } else {
-              statusEl.style.color = '#1b7f75';
-              statusEl.textContent = falado ? `Ouvi "${falado}". Tente falar a resposta acima!` : 'Toque no microfone e tente novamente!';
+              statusEl.style.color = '#b45309';
+              statusEl.textContent = falado
+                ? `🟡 Ouvi "${falado}". Tente novamente ou avance para a próxima!`
+                : '🟡 Não captei bem. Tente novamente ou avance!';
+              retryBox.style.display = 'flex';
             }
           });
-        };
+        }
+
+        micBtn.onclick = iniciarEscutaConversa;
+        document.getElementById('btn-chat-retry').onclick = iniciarEscutaConversa;
       }
 
       mostrarTurnoConversa();
