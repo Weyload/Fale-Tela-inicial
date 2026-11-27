@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Revisão Oral 1 - Destrave sua Fala | Fale&Go</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">F
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* =====================================================================
@@ -309,9 +309,9 @@
         tituloFrase: 'Frase 2 de 5: Cortesia e agradecimento',
         fraseCompletaEs: 'Muy bien, muchas gracias.',
         blocos: [
-          { pt: 'Muito'(Singular), es: 'Muy', tempoMs: 3000 },
+          { pt: 'Muito (Singular)', es: 'Muy', tempoMs: 3000 },
           { pt: 'Bem', es: 'Bien', tempoMs: 3000 },
-          { pt: 'Muitas'(Plural), es: 'Muchas', tempoMs: 4000 },
+          { pt: 'Muitas (Plural)', es: 'Muchas', tempoMs: 4000 },
           { pt: 'Obrigado(s)', es: 'Gracias', tempoMs: 3200 }
         ]
       },
@@ -319,9 +319,9 @@
         tituloFrase: 'Frase 3 de 5: Elogiando a mochila',
         fraseCompletaEs: 'Me gusta tu mochila.',
         blocos: [
-          { pt: 'Me (A mim)', es: 'Mê', 'me', 'mi', tempoMs: 3000 },
+          { pt: 'Me (A mim)', es: 'Me', tempoMs: 3000 },
           { pt: 'Gosta (No Feminino)', es: 'Gusta', tempoMs: 3500 },
-          { pt: 'Sua', es: 'Tu', 'tú', tempoMs: 3000 },
+          { pt: 'Sua', es: 'Tu', tempoMs: 3000 },
           { pt: 'Mochila', es: 'Mochila', tempoMs: 3200 }
         ]
       },
@@ -331,7 +331,7 @@
         blocos: [
           { pt: 'Hoje', es: 'Hoy', tempoMs: 2000 },
           { pt: 'Faz (Está)', es: 'Hace', tempoMs: 3000 },
-          { pt: 'Muito' (Quantidade), es: 'Mucho', tempoMs: 3000 },
+          { pt: 'Muito (Quantidade)', es: 'Mucho', tempoMs: 3000 },
           { pt: 'Calor', es: 'Calor', tempoMs: 3200 }
         ]
       },
@@ -340,11 +340,19 @@
         fraseCompletaEs: 'Un pastel, hasta mañana.',
         blocos: [
           { pt: 'Um', es: 'Un', tempoMs: 2800 },
-          { pt: 'Bolo', es: 'Pastel.', tempoMs: 3000 },
+          { pt: 'Bolo', es: 'Pastel', tempoMs: 3000 },
           { pt: 'Até', es: 'Hasta', tempoMs: 3000 },
-          { pt: 'Amanhã', es: 'Mañana!', tempoMs: 3200 }
+          { pt: 'Amanhã', es: 'Mañana', tempoMs: 3200 }
         ]
       }
+    ];
+
+    // EXERCÍCIO 4: Bate-bola de Conversa Falada (4 turnos reais)
+    const DADOS_EX4_CONVERSA = [
+      { perguntaEs: '¡Hola! Buenos días, ¿cómo te llamas?', perguntaPt: 'Olá! Bom dia, como você se chama?', respostaAlvoEs: 'Me llamo Carlos', dicaPt: 'Fale: "Me llamo Carlos" (ou seu nome com Me llamo...)', aceitaPrefixo: 'me llamo' },
+      { perguntaEs: 'Mucho gusto. ¿Qué tal estás hoy?', perguntaPt: 'Muito prazer. Como você está hoje?', respostaAlvoEs: 'Muy bien gracias y tú', dicaPt: 'Fale: "Muy bien, gracias. ¿Y tú?"' },
+      { perguntaEs: 'Hace mucho calor hoy, ¿verdad?', perguntaPt: 'Está fazendo muito calor hoje, não é verdade?', respostaAlvoEs: 'Sí hace calor hoy', dicaPt: 'Fale: "Sí, hace calor hoy"' },
+      { perguntaEs: 'Bueno, me voy. ¡Hasta luego!', perguntaPt: 'Bom, já vou indo. Até mais!', respostaAlvoEs: 'Hasta mañana muchas gracias', dicaPt: 'Fale: "Hasta mañana, muchas gracias"' }
     ];
 
     // EXERCÍCIO 4: Bate-bola de Conversa Falada (4 turnos reais)
