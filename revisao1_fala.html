@@ -32,11 +32,11 @@
     .step-dot.done { background: #2ec4b6; }
     .step-dot.skipped { background: #ffb703; }
 
-    /* =====================================================================
+   /* =====================================================================
        [GUIA DE ESTILO 03] CONTAINER DE TRANSIÇÃO LATERAL (VIRADA DE PÁGINA)
-       - .slide-stage: área que desliza da esquerda para a direita ao trocar etapa
+       - .slide-stage: desliza para a direita ou para a esquerda conforme o gesto
     ===================================================================== */
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: space-between; max-width: 500px; width: 100%; margin: 0 auto; padding: 14px 18px 24px; }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: space-between; max-width: 500px; width: 100%; margin: 0 auto; padding: 14px 18px 24px; touch-action: pan-y; }
 
     .slide-stage {
       background: #ffffff;
@@ -45,7 +45,16 @@
       padding: 20px;
       box-shadow: 0 10px 28px rgba(0,0,0,0.28);
       border: 3px solid #2ec4b6;
-      animation: slideInFromLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: slideInFromRight 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide-stage.from-left {
+      animation: slideInFromLeft 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes slideInFromRight {
+      0% { opacity: 0; transform: translateX(45px); }
+      100% { opacity: 1; transform: translateX(0); }
     }
 
     @keyframes slideInFromLeft {
@@ -53,26 +62,47 @@
       100% { opacity: 1; transform: translateX(0); }
     }
 
-    .stage-top-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
-    .stage-tag { background: #134074; color: #ffb703; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
-    .item-counter { font-size: 12px; font-weight: 900; color: #5c677d; }
-    .stage-title { font-size: 18px; font-weight: 900; color: #0b2545; margin-bottom: 6px; line-height: 1.3; }
-    .stage-subtitle { font-size: 13px; font-weight: 700; color: #5c677d; margin-bottom: 16px; line-height: 1.4; }
+    .swipe-hint {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      margin-top: 8px;
+    }
 
     /* =====================================================================
-       [GUIA DE ESTILO 04] BOTÃO SEMPRE VISÍVEL DE PULAR EXERCÍCIO
+       [GUIA DE ESTILO 04] BOTÕES DE NAVEGAÇÃO NO RODAPÉ (ANTERIOR E PULAR)
     ===================================================================== */
-    .bottom-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 10px; }
-    .btn-skip-exercise {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1.5px solid rgba(255, 183, 3, 0.65);
-      color: #ffb703;
-      padding: 12px 18px;
+    .bottom-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+
+    .btn-prev-exercise {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: #e2e8f0;
+      padding: 12px 14px;
       border-radius: 14px;
       font-size: 13.5px;
       font-weight: 900;
       cursor: pointer;
-      width: 100%;
+      flex: 1;
+      transition: all 0.2s;
+    }
+    .btn-prev-exercise:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+    .btn-prev-exercise:not(:disabled):active { transform: scale(0.98); background: rgba(255, 255, 255, 0.2); }
+
+    .btn-skip-exercise {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 183, 3, 0.65);
+      color: #ffb703;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 900;
+      cursor: pointer;
+      flex: 1;
       transition: all 0.2s;
     }
     .btn-skip-exercise:active { transform: scale(0.98); background: rgba(255, 183, 3, 0.22); }
@@ -189,15 +219,21 @@
     <div class="step-dot" id="dot-5"></div>
   </div>
 
-  <!-- =====================================================================
-       [SEÇÃO HTML 03] PALCO PRINCIPAL (RENDERIZA UM EXERCÍCIO POR VEZ)
+ <!-- =====================================================================
+       [SEÇÃO HTML 03] PALCO PRINCIPAL (ARRASTE HORIZONTAL + BOTÕES ANTERIOR/PULAR)
   ===================================================================== -->
-  <div class="main-wrapper">
-    <div id="stage-mount"></div>
+  <div class="main-wrapper" id="swipe-area">
+    <div>
+      <div id="stage-mount"></div>
+      <div class="swipe-hint" id="swipe-hint">⇄ Arraste para os lados ou use os botões abaixo</div>
+    </div>
 
     <div class="bottom-controls" id="bottom-controls">
+      <button class="btn-prev-exercise" id="btn-prev-exercise" onclick="voltarExercicioAnterior()">
+        ← Anterior
+      </button>
       <button class="btn-skip-exercise" onclick="pularExercicioAtual()">
-        Pular este exercício →
+        Pular →
       </button>
     </div>
   </div>
@@ -489,9 +525,11 @@
       }
     }
 
-    /* =====================================================================
-       [GUIA JS 05] NAVEGAÇÃO ENTRE OS SLIDES (AVANÇAR, PULAR E SALVAR)
+   /* =====================================================================
+       [GUIA JS 05] NAVEGAÇÃO ENTRE OS SLIDES (VOLTAR, AVANÇAR, PULAR E SWIPE)
     ===================================================================== */
+    let direcaoAnimacao = 'next'; // 'next' (vem da direita) | 'prev' (vem da esquerda)
+
     function concluirEtapaAtual(xpDaEtapa = 15) {
       limparMotoresAtivos();
       const idx = estadoRevisao.etapaAtual;
@@ -504,6 +542,7 @@
       }
       estadoRevisao.puladas = estadoRevisao.puladas.filter(item => item !== idx);
 
+      direcaoAnimacao = 'next';
       avancarParaProximoSlide();
     }
 
@@ -515,10 +554,29 @@
         estadoRevisao.puladas.push(idx);
       }
 
+      direcaoAnimacao = 'next';
       avancarParaProximoSlide();
     }
 
+    function voltarExercicioAnterior() {
+      limparMotoresAtivos();
+      direcaoAnimacao = 'prev';
+
+      if (modoSomentePulados) {
+        // Sai do modo somente pulados e volta uma etapa normal
+        modoSomentePulados = false;
+        filaPuladosAtiva = [];
+      }
+
+      if (estadoRevisao.etapaAtual > 0) {
+        estadoRevisao.etapaAtual--;
+        salvarEstadoRevisao();
+        renderizarSlideAtual();
+      }
+    }
+
     function avancarParaProximoSlide() {
+      direcaoAnimacao = 'next';
       if (modoSomentePulados) {
         filaPuladosAtiva.shift();
         if (filaPuladosAtiva.length > 0) {
@@ -542,16 +600,57 @@
       window.location.href = URL_AULAS_BASICAS;
     }
 
+    // Gesto de arrastar horizontalmente (Swipe com o dedo no celular)
+    (function configurarSwipeHorizontal() {
+      let toqueInicioX = 0;
+      let toqueInicioY = 0;
+
+      window.addEventListener('load', () => {
+        const area = document.getElementById('swipe-area');
+        if (!area) return;
+
+        area.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          toqueInicioX = e.touches[0].clientX;
+          toqueInicioY = e.touches[0].clientY;
+        }, { passive: true });
+
+        area.addEventListener('touchend', (e) => {
+          if (!toqueInicioX || e.changedTouches.length !== 1) return;
+          const deltaX = e.changedTouches[0].clientX - toqueInicioX;
+          const deltaY = e.changedTouches[0].clientY - toqueInicioY;
+          toqueInicioX = 0;
+          toqueInicioY = 0;
+
+          // Só dispara se o movimento horizontal for bem maior que o vertical (mín. 75px)
+          if (Math.abs(deltaX) > 75 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+            if (deltaX > 0 && estadoRevisao.etapaAtual > 0) {
+              // Arrastou para a direita -> volta para o exercício anterior
+              voltarExercicioAnterior();
+            } else if (deltaX < 0 && estadoRevisao.etapaAtual < 5) {
+              // Arrastou para a esquerda -> pula para o próximo exercício
+              pularExercicioAtual();
+            }
+          }
+        }, { passive: true });
+      });
+    })();
+
     /* =====================================================================
        [GUIA JS 06] RENDERIZADOR DE CADA EXERCÍCIO (SLIDES 0 A 5)
     ===================================================================== */
-    function renderizarSlideAtual() {
+   function renderizarSlideAtual() {
       limparMotoresAtivos();
       atualizarBarraEtapas();
 
       const idx = estadoRevisao.etapaAtual;
       const controls = document.getElementById('bottom-controls');
-      controls.style.display = idx === 5 ? 'none' : 'flex';
+      const hint = document.getElementById('swipe-hint');
+      const btnPrev = document.getElementById('btn-prev-exercise');
+
+      if (controls) controls.style.display = idx === 5 ? 'none' : 'flex';
+      if (hint) hint.style.display = idx === 5 ? 'none' : 'block';
+      if (btnPrev) btnPrev.disabled = idx === 0;
 
       if (idx === 0) renderEx1Audicao();
       else if (idx === 1) renderEx2ImagensFaladas();
@@ -559,6 +658,12 @@
       else if (idx === 3) renderEx4Conversa();
       else if (idx === 4) renderEx5Relampago();
       else renderTelaFinalResumo();
+
+      const stageEl = document.querySelector('#stage-mount .slide-stage');
+      if (stageEl && direcaoAnimacao === 'prev') {
+        stageEl.classList.add('from-left');
+      }
+      direcaoAnimacao = 'next';
     }
 
     // --- SLIDE 0: EXERCÍCIO 1 (OUÇA E MARQUE - 8 ITENS) ---
