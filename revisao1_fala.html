@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Revisão Oral 1 - Destrave sua Fala | Fale&Go</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">F
 
   <style>
     /* =====================================================================
@@ -167,16 +167,18 @@
     .conveyor-timer-bar { width: 100%; height: 7px; background: rgba(11, 37, 69, 0.12); border-radius: 8px; overflow: hidden; margin-top: 12px; }
     .conveyor-timer-fill { height: 100%; width: 100%; background: #134074; transition: width 0.1s linear; }
 
-    /* =====================================================================
+   /* =====================================================================
        [GUIA DE ESTILO 08] BOTÃO DE MICROFONE E BOTÕES DE AÇÃO
+       - .mic-btn: amarelo (#ffb703) = Atenção / Aguardando
+       - .mic-btn.listening: verde (#2ec4b6) = Sinal aberto / Pode falar!
     ===================================================================== */
-    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; margin: 6px auto 0; }
-    .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
-
-    .btn-primary-action { background: #ffb703; color: #0b2545; border: none; padding: 13px 20px; border-radius: 14px; font-weight: 900; font-size: 14.5px; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(255, 183, 3, 0.35); margin-top: 10px; }
-    .btn-hear-small { background: #d0e1f9; color: #134074; border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; }
-    .status-line { font-size: 13px; font-weight: 800; color: #5c677d; text-align: center; min-height: 20px; margin-top: 8px; }
+    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; margin: 6px auto 0; transition: background-color 0.25s, transform 0.2s; }
+    .mic-btn.listening { animation: pulseGreen 1.1s infinite; background: #2ec4b6; color: #ffffff; }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(46, 196, 182, 0.75); }
+      70% { box-shadow: 0 0 0 16px rgba(46, 196, 182, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(46, 196, 182, 0); }
+    }
 
     /* =====================================================================
        [GUIA DE ESTILO 09] BATE-BOLA DE CONVERSA (EXERCÍCIO 4)
@@ -767,7 +769,7 @@
           if (timerGeral) clearTimeout(timerGeral);
           box.classList.remove('miss');
           micBtn.classList.add('listening');
-          statusEl.style.color = '#e63946';
+          statusEl.style.color = '#1b7f75';
           statusEl.textContent = '🎙️ Ouvindo... Fale em espanhol agora!';
 
           iniciarEscutaUnificada(item.es, (falado) => {
@@ -802,14 +804,14 @@
               box.classList.add('miss');
 
               if (tentativasNoAtual < 2 && !item.isRetry) {
-                statusEl.style.color = '#e63946';
+                statusEl.style.color = '#1b7f75';
                 statusEl.textContent = `Ouvi "${falado}". Preparando microfone...`;
                 timerGeral = setTimeout(() => {
                   ativarMicrofoneCard();
                 }, 2200);
               } else {
                 filaCards.push({ ...item, isRetry: true });
-                statusEl.style.color = '#e63946';
+                statusEl.style.color = '#1b7f75';
                 statusEl.textContent = `⏭️ Ouvi "${falado}". Vamos tentar "${item.es}" no final!`;
                 timerGeral = setTimeout(() => {
                   cardIdx++;
@@ -1020,7 +1022,7 @@
 
         micBtn.onclick = () => {
           micBtn.classList.add('listening');
-          statusEl.style.color = '#e63946';
+          statusEl.style.color = '#1b7f75';
           statusEl.textContent = '🎙️ Ouvindo sua resposta...';
 
           iniciarEscutaUnificada(turno.respostaAlvoEs, (falado) => {
@@ -1039,7 +1041,7 @@
                 else concluirEtapaAtual(25);
               }, 1150);
             } else {
-              statusEl.style.color = '#e63946';
+              statusEl.style.color = '#1b7f75';
               statusEl.textContent = falado ? `Ouvi "${falado}". Tente falar a resposta acima!` : 'Toque no microfone e tente novamente!';
             }
           });
@@ -1081,7 +1083,7 @@
 
         function ouvirRelampago() {
           micBtn.classList.add('listening');
-          statusEl.style.color = '#e63946';
+          statusEl.style.color = '#1b7f75';
           statusEl.textContent = `🎙️ Diga "${item.es.toUpperCase()}"`;
 
           iniciarEscutaUnificada(item.es, (falado) => {
@@ -1102,7 +1104,7 @@
               }, 950);
             } else {
               box.classList.add('miss');
-              statusEl.style.color = '#e63946';
+              statusEl.style.color = '#1b7f75';
               statusEl.textContent = falado ? `Ouvi "${falado}". Toque no mic e repita!` : 'Toque no microfone e tente novamente!';
             }
           });
