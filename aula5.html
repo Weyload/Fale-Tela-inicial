@@ -202,8 +202,16 @@
     .fill-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; font-weight: 800; color: #0b2545; margin-bottom: 10px; user-select: text; -webkit-user-select: text; }
     .fill-input:focus { outline: none; border-color: #134074; }
 
-    /* Botão Final */
-    .btn-finish-lesson { background: linear-gradient(135deg, #2ec4b6 0%, #1b7f75 100%); color: #ffffff; border: none; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 900; width: 100%; cursor: pointer; box-shadow: 0 6px 18px rgba(46, 196, 182, 0.4); margin-top: 10px; }
+    /* Modais de Vitória e Confirmação de Saída (Padrão Aulas 1 a 4) */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .modal-overlay.show { display: flex; opacity: 1; visibility: visible; }
+    .modal-box { background: #ffffff; color: #0b2545; padding: 24px; border-radius: 20px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .modal-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: #5c677d; font-weight: 700; line-height: 1.4; }
+    #victory-modal .modal-box { max-width: 340px; }
+    .btn-primary { background: #ffb703; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
+    .btn-secondary { background: #e1e9f0; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
+    .btn-continue { background: #ffb703; color: #0b2545; border: none; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; width: 100%; }
     .btn-small-hear { background: #d0e1f9; color: #134074; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; }
   </style>
 </head>
@@ -217,7 +225,7 @@
   ===================================================================== -->
   <div class="header">
     <div class="header-left">
-      <button class="back-btn" onclick="voltarParaTrilha()">←</button>
+      <button class="back-btn" onclick="confirmExit()">←</button>
       <div class="header-title">Aula 5 • Tempo e Quantidade</div>
     </div>
     <div class="xp-badge" id="xp-display">⭐ 0 XP</div>
@@ -582,12 +590,34 @@
       </div>
     </div>
 
-    <!-- =====================================================================
-         BOTÃO DE CONCLUSÃO DA AULA 5
-    ===================================================================== -->
-    <button class="btn-finish-lesson" onclick="concluirAula5()">
-      🏆 Concluir Aula 5 e Salvar Progresso
-    </button>
+  </div>
+
+  <!-- MODAL DE VITÓRIA -->
+  <div id="victory-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 60px;">🏆</div>
+      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Excelente Trabalho!</div>
+      <p style="font-size: 14px; font-weight: 700; color: #6c757d; margin-top: 8px;">
+        Você completou todos os 20 exercícios da Aula 5 e dominou o vocabulário de tempo e quantidade!
+      </p>
+      <div style="margin-top: 15px; background: #eef4f8; padding: 12px; border-radius: 12px; font-weight: 800; color: #ffb703;">
+        🌟 +120 XP Ganhos | Progresso Salvo
+      </div>
+      <button class="btn-continue" onclick="voltarParaTrilha()">Voltar para a Trilha</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE SAÍDA -->
+  <div id="exit-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+      <div class="modal-title">Ainda há exercícios incompletos!</div>
+      <div class="modal-desc">Deseja terminar depois? Seu progresso atual ficará salvo.</div>
+      <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
+        <button class="btn-secondary" onclick="closeExitModal()">Não, continuar</button>
+        <button class="btn-primary" onclick="exitLesson()">Sim, sair</button>
+      </div>
+    </div>
   </div>
 
   <!-- =====================================================================
@@ -649,6 +679,7 @@
       localStorage.setItem('faleandgo_xp', String(xpAtual + xpGanho));
       atualizarPlacarTopo();
       tocarSomAcerto();
+      checkCompletion();
     }
 
     /* =====================================================================
@@ -1266,10 +1297,40 @@
     }
 
     /* =====================================================================
-       CONCLUSÃO DA AULA E RETORNO PARA A TRILHA (SINCRONIZADO COM O MENU)
+       CONTROLES DE SAÍDA, VITÓRIA AUTOMÁTICA E SALVAMENTO (PADRÃO AULAS 1 A 4)
     ===================================================================== */
-    function concluirAula5() {
+    function confirmExit() {
+      pararTodosAudios();
+      if (concluidosSet.size < TOTAL_EXERCICIOS) {
+        document.getElementById('exit-modal').classList.add('show');
+      } else {
+        voltarParaTrilha();
+      }
+    }
+
+    function closeExitModal() {
+      document.getElementById('exit-modal').classList.remove('show');
+    }
+
+    function exitLesson() {
       limparMotoresAtivos();
+      voltarParaTrilha();
+    }
+
+    function checkCompletion() {
+      if (concluidosSet.size >= TOTAL_EXERCICIOS) {
+        const xpAtual = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
+        localStorage.setItem('faleandgo_xp', String(xpAtual + 120));
+        atualizarPlacarTopo();
+        marcarAulaConcluida();
+        setTimeout(() => {
+          playVictorySound();
+          document.getElementById('victory-modal').classList.add('show');
+        }, 500);
+      }
+    }
+
+    function marcarAulaConcluida() {
       const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
       if (!concluidas.includes(LESSON_ID)) {
         concluidas.push(LESSON_ID);
@@ -1281,8 +1342,26 @@
 
       let streak = parseInt(localStorage.getItem('faleandgo_streak') || '1', 10);
       localStorage.setItem('faleandgo_streak', String(streak + 1));
+    }
 
-      window.location.href = URL_AULAS_BASICAS;
+    function playVictorySound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        notes.forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.3, ctx.currentTime + index * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.12 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.12);
+          osc.stop(ctx.currentTime + index * 0.12 + 0.4);
+        });
+      } catch (e) {}
     }
 
     function voltarParaTrilha() {
