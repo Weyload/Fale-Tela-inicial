@@ -836,15 +836,11 @@
       utterLeituraAtual = null;
       if (window.AppInventor) {
         try {
+         if (window.AppInventor) {
+        try {
           window.AppInventor.setWebViewString("PararVoz_" + Date.now());
-          setTimeout(() => {
-            if (!leituraTimer && window.AppInventor) {
-              try { window.AppInventor.setWebViewString("Falar_ "); } catch (e) {}
-            }
-          }, 60);
         } catch (e) {}
       }
-    }
 
     function pararTodosAudios() {
       pararLeituraDialogo();
