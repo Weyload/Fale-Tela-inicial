@@ -198,9 +198,9 @@
     }
 
     /* Complete a frase digitando */
-    .fill-sentence-box { background: #eef4f8; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: 800; color: #0b2545; text-align: center; margin-bottom: 10px; line-height: 1.6; }
-    .fill-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; font-weight: 800; color: #0b2545; margin-bottom: 10px; user-select: text; -webkit-user-select: text; }
-    .fill-input:focus { outline: none; border-color: #134074; }
+    .fill-sentence-box { background: #eef4f8; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: 800; color: #0b2545; text-align: center; margin-bottom: 12px; line-height: 2; }
+    .fill-input { display: inline-block; width: 125px; padding: 4px 8px; border-radius: 10px; border: 2px solid #94a3b8; background: #ffffff; font-size: 15px; font-weight: 800; color: #134074; text-align: center; margin: 0 3px; vertical-align: baseline; user-select: text; -webkit-user-select: text; }
+    .fill-input:focus { outline: none; border-color: #134074; box-shadow: 0 0 0 3px rgba(19, 64, 116, 0.15); }
 
     /* Modais de Vitória e Confirmação de Saída (Padrão Aulas 1 a 4) */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
@@ -489,12 +489,11 @@
 
     <!-- [TIPO: Complete a frase digitando] EXERCÍCIO 13 -->
     <div class="ex-card" id="card-ex-13">
-      <div class="ex-question">13. Complete a frase digitando a palavra que falta em espanhol:</div>
+      <div class="ex-question">13. Toque no espaço em branco e digite a palavra que falta em espanhol:</div>
       <div class="fill-sentence-box">
-        "No tengo _______ tiempo hoy."<br>
+        "No tengo <input type="text" class="fill-input" id="input-ex-13" placeholder="digite..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter') verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')"> tiempo hoy."<br>
         <span style="font-size:12.5px; color:#5c677d; font-weight:700;">(Não tenho <strong>suficiente</strong> tempo hoje)</span>
       </div>
-      <input type="text" class="fill-input" id="input-ex-13" placeholder="Digite a palavra em espanhol..." autocomplete="off" onkeydown="if(event.key==='Enter') verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')">
       <button class="btn-check" style="width:100%;" onclick="verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')">Verificar Palavra</button>
       <div id="status-ex-13" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
     </div>
@@ -567,12 +566,11 @@
 
     <!-- [TIPO: Complete a frase digitando] EXERCÍCIO 19 -->
     <div class="ex-card" id="card-ex-19">
-      <div class="ex-question">19. Complete digitando a palavra que falta em espanhol:</div>
+      <div class="ex-question">19. Toque no espaço em branco e digite a palavra que falta em espanhol:</div>
       <div class="fill-sentence-box">
-        "¿_______ mochilas tienes en casa?"<br>
+        "¿<input type="text" class="fill-input" id="input-ex-19" placeholder="digite..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter') verificarDigitacao(19, ['cuantas', 'cuántas'], '¿Cuántas mochilas tienes en casa?')"> mochilas tienes en casa?"<br>
         <span style="font-size:12.5px; color:#5c677d; font-weight:700;">(<strong>Quantas</strong> mochilas você tem em casa?)</span>
       </div>
-      <input type="text" class="fill-input" id="input-ex-19" placeholder="Digite em espanhol..." autocomplete="off" onkeydown="if(event.key==='Enter') verificarDigitacao(19, ['cuantas', 'cuántas'], '¿Cuántas mochilas tienes en casa?')">
       <button class="btn-check" style="width:100%;" onclick="verificarDigitacao(19, ['cuantas', 'cuántas'], '¿Cuántas mochilas tienes en casa?')">Verificar Palavra</button>
       <div id="status-ex-19" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
     </div>
