@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Aula 5 - Tempo e Quantidade | Fale&Go</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     /* =====================================================================
        [GUIA DE ESTILO 01] CONFIGURAÇÕES GERAIS E TOPO FIXO
     ===================================================================== */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; -webkit-user-select: none; }
     body { background-color: #0b2545; color: #ffffff; min-height: 100vh; padding-bottom: 40px; overflow-x: hidden; }
 
     .header { background: #081c33; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
@@ -196,7 +197,7 @@
 
     /* Complete a frase digitando */
     .fill-sentence-box { background: #eef4f8; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: 800; color: #0b2545; text-align: center; margin-bottom: 10px; line-height: 1.6; }
-    .fill-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; font-weight: 800; color: #0b2545; margin-bottom: 10px; user-select: text; }
+    .fill-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; font-weight: 800; color: #0b2545; margin-bottom: 10px; user-select: text; -webkit-user-select: text; }
     .fill-input:focus { outline: none; border-color: #134074; }
 
     /* Botão Final */
@@ -225,7 +226,7 @@
          [SEÇÃO HTML 02] INTRODUÇÃO DO PERSONAGEM + CONTADOR DE DESAFIOS
     ===================================================================== -->
     <div class="mascot-intro">
-      <img class="mascot-avatar" src="https://weyload.github.io/Fale-Tela-inicial/CapiHotel-remov.png" alt="Capivara">
+      <img class="mascot-avatar" src="https://weyload.github.io/Fale-Tela-inicial/capi_padaria.jpg" alt="Capivara">
       <div class="speech-bubble">
         Nesta aula vamos dominar as horas, momentos do dia e quantidades em espanhol para você nunca se atrasar!
       </div>
@@ -237,11 +238,11 @@
     </div>
 
     <!-- =====================================================================
-         [BLOCO DEMONSTRATIVO] FOTO + LEGENDA EDITÁVEL (20 PALAVRAS NOVAS)
-         - Imagem sugerida: tempo_quantidade.jpg
+         [BLOCO DEMONSTRATIVO] FOTO + LEGENDA EDITÁVEL (PALAVRAS NOVAS)
+         - Imagem sugerida: tempo_quantidade.jpg (subir na mesma pasta do HTML)
     ===================================================================== -->
     <div class="demo-media-card">
-      <img class="demo-media-img" src="tempo_quantidade.jpg" alt="Tempo e Quantidade em Espanhol" onerror="this.src='https://weyload.github.io/Fale-Tela-inicial/relogio_parede.jpg'">
+      <img class="demo-media-img" src="tempo_quantidade.jpg" alt="Tempo e Quantidade em Espanhol" onerror="this.src='https://weyload.github.io/Aula1/cafeteria.jpg'">
       <div class="demo-media-caption">
         <span style="color: gray;">Leia e repita em voz alta em Espanhol.</span><br>
         <span style="color: green;">Português ⬅ ➡ Espanhol</span><br>
@@ -266,8 +267,8 @@
 
     <!-- =====================================================================
          [TIPO: Texto fala] DIÁLOGO INTRODUTÓRIO COM ÁUDIO MP3 + FALLBACK TTS
-         - Arquivos MP3: aula5_dialogo_completo.mp3, aula5_fala1.mp3,
-           aula5_fala2.mp3, aula5_fala3.mp3
+         - Arquivos MP3 (mesma pasta do HTML):
+           aula5_dialogo_completo.mp3, aula5_fala1.mp3, aula5_fala2.mp3, aula5_fala3.mp3
     ===================================================================== -->
     <div class="dialogue-card">
       <div class="dialogue-header">⏰ ¡Qué hora es!</div>
@@ -349,12 +350,12 @@
       </div>
     </div>
 
-    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 4 -->
+    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 4 (Imagem: reloj.jpg) -->
     <div class="ex-card" id="card-ex-4">
       <div class="ex-question">4. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="mic-area">
         <div class="img-exercise-frame">
-          <img src="reloj.jpg" alt="Relógio" onerror="this.src='https://weyload.github.io/Aula1/relogio_pulso.jpg'">
+          <img src="reloj.jpg" alt="Relógio" onerror="this.src='https://weyload.github.io/Aula1/celular.jpg'">
         </div>
         <div style="font-weight:900; margin-bottom:8px;">Português: Relógio</div>
         <button class="mic-btn" id="mic-ex-4" onclick="executarAperteEFale(4, 'Reloj', 'Reloj')">🎙️</button>
@@ -362,7 +363,7 @@
       </div>
     </div>
 
-    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 5 -->
+    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 5 (Imagem: calendario.jpg) -->
     <div class="ex-card" id="card-ex-5">
       <div class="ex-question">5. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="mic-area">
@@ -414,9 +415,9 @@
       </div>
     </div>
 
-    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 9 -->
+    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 9 (Imagem: poca_agua.jpg) -->
     <div class="ex-card" id="card-ex-9">
-      <div class="ex-question">9. Veja a imagem e diga em espanhol ("Pouca água"):</div>
+      <div class="ex-question">9. Veja a imagem e diga em espanhol ("Pouco"):</div>
       <div class="mic-area">
         <div class="img-exercise-frame">
           <img src="poca_agua.jpg" alt="Pouca água" onerror="this.src='https://weyload.github.io/Aula2/Sobremesa.jpg'">
@@ -449,7 +450,7 @@
       <div class="ex-question">11. Monte uma resposta para a pergunta tocando nas palavras na ordem certa:</div>
       <div class="chat-prompt-box">
         <div style="font-weight:900; color:#ffb703; font-size:15px;">🗣️ ¿Cuántos pasteles quieres?</div>
-        <div style="font-size:12px; color:#cbd5e1; margin-top:3px;">Quantos bolos você quer? (Ex: Só um, obrigado)</div>
+        <div style="font-size:12px; color:#cbd5e1; margin-top:3px;">Quantos bolos você quer? (Ex: Só um, por favor)</div>
       </div>
       <div class="answer-slots" id="slots-ex-11"></div>
       <div class="word-bank" id="bank-ex-11"></div>
@@ -483,7 +484,7 @@
         "No tengo _______ tiempo hoy."<br>
         <span style="font-size:12.5px; color:#5c677d; font-weight:700;">(Não tenho <strong>suficiente</strong> tempo hoje)</span>
       </div>
-      <input type="text" class="fill-input" id="input-ex-13" placeholder="Digite a palavra em espanhol..." autocomplete="off">
+      <input type="text" class="fill-input" id="input-ex-13" placeholder="Digite a palavra em espanhol..." autocomplete="off" onkeydown="if(event.key==='Enter') verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')">
       <button class="btn-check" style="width:100%;" onclick="verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')">Verificar Palavra</button>
       <div id="status-ex-13" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
     </div>
@@ -541,10 +542,10 @@
 
     <!-- [TIPO: Bate papo com botões] EXERCÍCIO 18 -->
     <div class="ex-card" id="card-ex-18">
-      <div class="ex-question">18. Monte a frase: "Ontem cheguei muito tarde na cafeteria":</div>
+      <div class="ex-question">18. Monte a frase: "Ontem cheguei muito tarde":</div>
       <div class="chat-prompt-box">
         <div style="font-weight:900; color:#ffb703; font-size:15px;">🗣️ ¿Cuándo llegaste a la cafetería?</div>
-        <div style="font-size:12px; color:#cbd5e1; margin-top:3px;">Quando você chegou na cafeteria?</div>
+        <div style="font-size:12px; color:#cbd5e1; margin-top:3px;">Quando você chegou na cafeteria? (Ontem cheguei muito tarde)</div>
       </div>
       <div class="answer-slots" id="slots-ex-18"></div>
       <div class="word-bank" id="bank-ex-18"></div>
@@ -561,7 +562,7 @@
         "¿_______ mochilas tienes en casa?"<br>
         <span style="font-size:12.5px; color:#5c677d; font-weight:700;">(<strong>Quantas</strong> mochilas você tem em casa?)</span>
       </div>
-      <input type="text" class="fill-input" id="input-ex-19" placeholder="Digite em espanhol..." autocomplete="off">
+      <input type="text" class="fill-input" id="input-ex-19" placeholder="Digite em espanhol..." autocomplete="off" onkeydown="if(event.key==='Enter') verificarDigitacao(19, ['cuantas', 'cuántas'], '¿Cuántas mochilas tienes en casa?')">
       <button class="btn-check" style="width:100%;" onclick="verificarDigitacao(19, ['cuantas', 'cuántas'], '¿Cuántas mochilas tienes en casa?')">Verificar Palavra</button>
       <div id="status-ex-19" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
     </div>
@@ -592,10 +593,11 @@
   ===================================================================== -->
   <script>
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Fale-Tela-inicial/aulas_basicas.html';
+    const LESSON_ID = 'aula5_tempo';
     const TOTAL_EXERCICIOS = 20;
     const concluidosSet = new Set();
 
-    // Variáveis globais de áudio e microfone blindado (App Inventor + Navegador)
+    // Variáveis globais de áudio e microfone blindado (App Inventor / Kodular + Navegador)
     let audioMp3Atual = null;
     let sessaoVozCounter = 0;
     let sessaoVozAtiva = null;
@@ -632,6 +634,19 @@
       }
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function limparMotoresAtivos() {
+      pararTodosAudios();
+      aguardandoVoz = false;
+      sessaoVozAtiva = null;
+      ouvindoCallback = null;
+      if (timerVozGeral) { clearTimeout(timerVozGeral); timerVozGeral = null; }
+      if (leituraTimer) { clearTimeout(leituraTimer); leituraTimer = null; }
+      if (intervaloEsteira17) { clearInterval(intervaloEsteira17); intervaloEsteira17 = null; }
+      if (window.AppInventor) {
+        try { window.AppInventor.setWebViewString("PararVoz_" + Date.now()); } catch (e) {}
       }
     }
 
@@ -776,6 +791,8 @@
           'ahora': ['ahora', 'ora', 'agora'],
           'todavia': ['todavia', 'toda via'],
           'reloj': ['reloj', 'relo', 'relogio'],
+          'calendario': ['calendario'],
+          'pastel': ['pastel'],
           'poco': ['poco', 'pouco'],
           'siempre': ['siempre', 'sempre']
         };
@@ -918,16 +935,19 @@
     }
 
     function selecionarPalavraChat(numEx, idx) {
+      if (concluidosSet.has(numEx)) return;
       escolhasBatePapo[numEx].push(idx);
       renderizarBatePapo(numEx);
     }
 
     function limparBatePapo(numEx) {
+      if (concluidosSet.has(numEx)) return;
       escolhasBatePapo[numEx] = [];
       renderizarBatePapo(numEx);
     }
 
     function verificarBatePapo(numEx) {
+      if (concluidosSet.has(numEx)) return;
       const dados = DADOS_BATE_PAPO[numEx];
       const montada = escolhasBatePapo[numEx].map(i => dados.banco[i]);
       if (montada.join(' ') === dados.correta.join(' ')) {
@@ -992,24 +1012,25 @@
       const tooltip = document.getElementById('word-tooltip');
 
       box.innerHTML = TEXTO_LEITURA_15.map((item, idx) =>
-        `<span class="read-word" id="rw-${idx}" data-idx="${idx}">${item.es}</span>`
+        `<span class="read-word" id="rw-${idx}" data-idx="${idx}" oncontextmenu="return false;">${item.es}</span>`
       ).join(' ');
 
       box.querySelectorAll('.read-word').forEach(span => {
         const idx = parseInt(span.dataset.idx, 10);
 
-        const mostrarTraducao = (e) => {
+        const mostrarTraducao = () => {
           if (!palavrasJaLidas.has(idx)) return;
           const rect = span.getBoundingClientRect();
           tooltip.textContent = `🇧🇷 ${TEXTO_LEITURA_15[idx].pt}`;
-          tooltip.style.left = `${Math.min(window.innerWidth - 150, Math.max(12, rect.left))}px`;
-          tooltip.style.top = `${Math.max(10, rect.top - 38)}px`;
+          tooltip.style.left = `${Math.min(window.innerWidth - 160, Math.max(12, rect.left))}px`;
+          tooltip.style.top = `${Math.max(10, rect.top - 40)}px`;
           tooltip.style.display = 'block';
         };
         const esconderTraducao = () => { tooltip.style.display = 'none'; };
 
         span.addEventListener('touchstart', mostrarTraducao, { passive: true });
         span.addEventListener('touchend', esconderTraducao);
+        span.addEventListener('touchcancel', esconderTraducao);
         span.addEventListener('mousedown', mostrarTraducao);
         span.addEventListener('mouseup', esconderTraducao);
         span.addEventListener('mouseleave', esconderTraducao);
@@ -1018,14 +1039,18 @@
 
     function iniciarLeituraGuiada() {
       pausarLeituraGuiada();
-      const textoCompleto = TEXTO_LEITURA_15.map(w => w.es).join(' ');
+      if (indiceLeitura >= TEXTO_LEITURA_15.length) {
+        indiceLeitura = 0;
+      }
+
+      const textoRestante = TEXTO_LEITURA_15.slice(indiceLeitura).map(w => w.es).join(' ');
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance(textoCompleto);
+        const u = new SpeechSynthesisUtterance(textoRestante);
         u.lang = 'es-ES';
-        u.rate = 0.82;
+        u.rate = 0.84;
         window.speechSynthesis.speak(u);
       } else if (window.AppInventor) {
-        window.AppInventor.setWebViewString("Falar_" + textoCompleto);
+        window.AppInventor.setWebViewString("Falar_" + textoRestante);
       }
 
       function destacarProxima() {
@@ -1039,7 +1064,7 @@
           atualEl.classList.add('speaking', 'read-done');
           palavrasJaLidas.add(indiceLeitura);
         }
-        const duracaoPalavra = Math.max(360, TEXTO_LEITURA_15[indiceLeitura].es.length * 78);
+        const duracaoPalavra = Math.max(360, TEXTO_LEITURA_15[indiceLeitura].es.length * 76);
         indiceLeitura++;
         leituraTimer = setTimeout(destacarProxima, duracaoPalavra);
       }
@@ -1214,25 +1239,48 @@
     }
 
     /* =====================================================================
-       CONCLUSÃO DA AULA E RETORNO PARA A TRILHA
+       CONCLUSÃO DA AULA E RETORNO PARA A TRILHA (SINCRONIZADO COM O MENU)
     ===================================================================== */
     function concluirAula5() {
-      pararTodosAudios();
-      const concluidoAulas = JSON.parse(localStorage.getItem('faleandgo_aulas_concluidas') || '[]');
-      if (!concluidoAulas.includes('aula5')) {
-        concluidoAulas.push('aula5');
-        localStorage.setItem('faleandgo_aulas_concluidas', JSON.stringify(concluidoAulas));
+      limparMotoresAtivos();
+      const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
+      if (!concluidas.includes(LESSON_ID)) {
+        concluidas.push(LESSON_ID);
       }
+      if (!concluidas.includes('aula5')) {
+        concluidas.push('aula5');
+      }
+      localStorage.setItem('faleandgo_completed_lessons', JSON.stringify(concluidas));
+
+      let streak = parseInt(localStorage.getItem('faleandgo_streak') || '1', 10);
+      localStorage.setItem('faleandgo_streak', String(streak + 1));
+
       window.location.href = URL_AULAS_BASICAS;
     }
 
     function voltarParaTrilha() {
-      pararTodosAudios();
-      window.location.href = URL_AULAS_BASICAS;
+      limparMotoresAtivos();
+      if (document.referrer && document.referrer.includes('weyload.github.io') && document.referrer !== window.location.href) {
+        window.location.href = document.referrer;
+      } else {
+        window.location.href = URL_AULAS_BASICAS;
+      }
     }
 
-    // Inicialização dos componentes dinâmicos
+    // Encerra áudios e microfone se o usuário minimizar ou sair do app
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) limparMotoresAtivos();
+    });
+    window.addEventListener('pagehide', limparMotoresAtivos);
+
+    // Inicialização dos componentes dinâmicos + registro na trilha
     (function initAula5() {
+      const visitadas = JSON.parse(localStorage.getItem('faleandgo_visited_lessons') || '[]');
+      if (!visitadas.includes(LESSON_ID)) {
+        visitadas.push(LESSON_ID);
+        localStorage.setItem('faleandgo_visited_lessons', JSON.stringify(visitadas));
+      }
+
       atualizarPlacarTopo();
       inicializarMonteADupla(7);
       inicializarMonteADupla(14);
