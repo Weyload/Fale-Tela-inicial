@@ -24,9 +24,11 @@
     /* =====================================================================
        [GUIA DE ESTILO 02] CABEÇALHO DO PERSONAGEM + BARRA DE PROGRESSO
     ===================================================================== */
-    .mascot-intro { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .mascot-avatar { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2px solid #2ec4b6; background: #ffffff; flex-shrink: 0; }
-    .speech-bubble { background: #ffffff; color: #0b2545; padding: 12px 14px; border-radius: 16px; font-size: 13.5px; font-weight: 800; line-height: 1.4; box-shadow: 0 4px 12px rgba(0,0,0,0.2); flex: 1; }
+    .mascot-section { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .capybara-avatar { height: 110px; width: auto; display: block; flex-shrink: 0; }
+    .speech-bubble { background: #ffffff; color: #0b2545; padding: 14px 18px; border-radius: 18px; border-top-left-radius: 4px; font-size: 14px; font-weight: 700; line-height: 1.4; box-shadow: 0 6px 16px rgba(0,0,0,0.2); min-height: 70px; position: relative; flex: 1; }
+    .cursor { display: inline-block; width: 2px; height: 14px; background-color: #0b2545; margin-left: 2px; animation: blink 0.7s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .progress-title { font-size: 15px; font-weight: 900; color: #ffb703; }
@@ -225,10 +227,10 @@
     <!-- =====================================================================
          [SEÇÃO HTML 02] INTRODUÇÃO DO PERSONAGEM + CONTADOR DE DESAFIOS
     ===================================================================== -->
-    <div class="mascot-intro">
-      <img class="mascot-avatar" src="https://weyload.github.io/Fale-Tela-inicial/capi_padaria.jpg" alt="Capivara">
+    <div class="mascot-section">
+      <img class="capybara-avatar" src="BtCapivarA_Escutar-SemFundo.png" alt="Capivara" onerror="this.onerror=null; this.src='https://weyload.github.io/Aula1/BtCapivarA_Escutar-SemFundo.png';">
       <div class="speech-bubble">
-        Nesta aula vamos dominar as horas, momentos do dia e quantidades em espanhol para você nunca se atrasar!
+        <span class="typed-text" data-texto="Nesta aula vamos dominar as horas, momentos do dia e quantidades em espanhol para você nunca se atrasar!"></span><span class="cursor"></span>
       </div>
     </div>
 
@@ -605,6 +607,31 @@
     let ouvindoCallback = null;
     let timestampUltimoAceite = 0;
     let timerVozGeral = null;
+
+    function iniciarBaloesMascote() {
+      const observador = new IntersectionObserver((entradas, obs) => {
+        entradas.forEach((entrada) => {
+          if (entrada.isIntersecting) {
+            const elemento = entrada.target;
+            const texto = elemento.getAttribute('data-texto') || '';
+            let index = 0;
+
+            function digitar() {
+              if (index < texto.length) {
+                elemento.textContent += texto.charAt(index);
+                index++;
+                setTimeout(digitar, 30);
+              }
+            }
+
+            digitar();
+            obs.unobserve(elemento);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      document.querySelectorAll('.typed-text').forEach((el) => observador.observe(el));
+    }
 
     function atualizarPlacarTopo() {
       const xpAtual = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
@@ -1281,6 +1308,7 @@
         localStorage.setItem('faleandgo_visited_lessons', JSON.stringify(visitadas));
       }
 
+      iniciarBaloesMascote();
       atualizarPlacarTopo();
       inicializarMonteADupla(7);
       inicializarMonteADupla(14);
