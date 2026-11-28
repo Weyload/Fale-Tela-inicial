@@ -251,7 +251,7 @@
 
     <div class="progress-header">
       <div class="progress-title">🎯 Desafios da Aula</div>
-      <div class="progress-pill" id="progress-counter">0 / 20 concluídos</div>
+      <div class="progress-pill" id="progress-counter">0 / 22 concluídos</div>
     </div>
 
     <!-- =====================================================================
@@ -342,7 +342,7 @@
 
     <!-- [TIPO: Escolha a tradução palavras] EXERCÍCIO 1 -->
     <div class="ex-card" id="card-ex-1">
-      <div class="ex-question">1. Traduza "Ahora".</div>
+      <div class="ex-question">1. O que significa "Ahora".</div>
       <div class="options-list">
         <button class="opt-btn" onclick="verificarMultiplaEscolha(1, this, false)">Ontem</button>
         <button class="opt-btn" onclick="verificarMultiplaEscolha(1, this, true)">Agora</button>
@@ -372,7 +372,19 @@
       </div>
     </div>
 
-    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 4 (Imagem: reloj.jpg) -->
+    <!-- [TIPO: Aperte e fale — Assimilação inicial] EXERCÍCIO 3-B -->
+    <div class="ex-card" id="card-ex-3b">
+      <div class="ex-question">3B. Diga a palavra "Mientras" <span style="color: #1566d1;">(Enquanto isso) </span> no microfone:</div>
+      <div style="text-align:center; margin-bottom:10px;">
+        <button class="btn-small-hear" onclick="falarEspanhol('Mientras')">🔊 Ouvir "Mientras"</button>
+      </div>
+      <div class="mic-area">
+        <button class="mic-btn" id="mic-ex-3b" onclick="executarAperteEFale('3b', 'Mientras', 'Mientras')">🎙️</button>
+        <div class="mic-status" id="status-ex-3b">Toque no microfone amarelo para falar</div>
+      </div>
+    </div>
+
+    <!-- [TIPO: Traduza a imagem] EXERCÍCIO 4 (Imagem: relogio_pulso.jpg) -->
     <div class="ex-card" id="card-ex-4">
       <div class="ex-question">4. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="mic-area">
@@ -416,9 +428,9 @@
     </div>
 
     <!-- =====================================================================
-         ETAPA 2 • QUANTIDADES E EXPRESSÕES DO DIA A DIA (EXERCÍCIOS 8 A 14)
+         ETAPA 2 • QUANTIDADES E EXPRESSÕES DO CLIMA (EXERCÍCIOS 8 A 14)
     ===================================================================== -->
-    <div class="stage-divider">ETAPA 2 • QUANTIDADES E EXPRESSÕES</div>
+    <div class="stage-divider">ETAPA 2 • QUANTIDADES E EXPRESSÕES DO CLIMA</div>
 
     <div class="tip-box">
       💡 <strong>Dica de Quantidade:</strong> <strong>"Demasiado"</strong> significa <em>demais / em excesso</em> (ex.: <em>demasiado calor</em> = calor demais). Já <strong>"Bastante"</strong> ou <strong>"Suficiente"</strong> indica a medida certa!
@@ -426,14 +438,14 @@
 
     <!-- [TIPO: Traduza a imagem] EXERCÍCIO 8 -->
     <div class="ex-card" id="card-ex-8">
-      <div class="ex-question">8. Veja a imagem e diga o nome dela em espanhol (revisão + quantidade):</div>
+      <div class="ex-question">8. Veja a imagem e diga o nome dela em espanhol:</div>
       <div class="mic-area">
         <div class="img-exercise-frame">
-          <img src="https://weyload.github.io/Aula2/bolo.png" alt="Bolo">
+          <img src="https://weyload.github.io/Fale-Tela-inicial/dia_chuva.jpg" alt="Chovendo">
         </div>
-        <div style="font-weight:900; margin-bottom:8px;">Português: Bolo</div>
-        <button class="mic-btn" id="mic-ex-8" onclick="executarAperteEFale(8, 'Pastel', 'Pastel')">🎙️</button>
-        <div class="mic-status" id="status-ex-8">Toque no microfone para falar</div>
+        <div style="font-weight:900; margin-bottom:8px;">Português: Chovendo</div>
+        <button class="mic-btn" id="mic-ex-8" onclick="executarAperteEFale(8, 'lloviendo', 'lloviendo')">🎙️</button>
+        <div class="mic-status" id="status-ex-8">Toque no microfone para falar "lloviendo"</div>
       </div>
     </div>
 
@@ -442,7 +454,7 @@
       <div class="ex-question">9. Veja a imagem e diga em espanhol ("Pouco"):</div>
       <div class="mic-area">
         <div class="img-exercise-frame">
-          <img src="poca_agua.jpg" alt="Pouca água" onerror="this.src='https://weyload.github.io/Aula2/Sobremesa.jpg'">
+          <img src="poca_agua.jpg" alt="Pouca água" onerror="this.src='https://weyload.github.io/Fale-Tela-inicial/copo_poucoVazio.jpg'">
         </div>
         <div style="font-weight:900; margin-bottom:8px;">Português: Pouco (Un poco)</div>
         <button class="mic-btn" id="mic-ex-9" onclick="executarAperteEFale(9, 'Poco', 'Poco')">🎙️</button>
@@ -508,6 +520,17 @@
       </div>
       <button class="btn-check" style="width:100%;" onclick="verificarDigitacao(13, ['suficiente'], 'No tengo suficiente tiempo hoy')">Verificar Palavra</button>
       <div id="status-ex-13" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
+    </div>
+
+    <!-- [TIPO: Complete a frase digitando] EXERCÍCIO 13-B -->
+    <div class="ex-card" id="card-ex-13b">
+      <div class="ex-question">13B. Toque no espaço em branco e digite a palavra que falta em espanhol:</div>
+      <div class="fill-sentence-box">
+        "Qué lindo día <input type="text" class="fill-input" id="input-ex-13b" placeholder="digite..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter') verificarDigitacao('13b', ['soleado'], 'Qué lindo día soleado hoy')"> hoy."<br>
+        <span style="font-size:12.5px; color:#5c677d; font-weight:700;">(Que lindo dia <strong>ensolarado</strong> hoje)</span>
+      </div>
+      <button class="btn-check" style="width:100%;" onclick="verificarDigitacao('13b', ['soleado'], 'Qué lindo día soleado hoy')">Verificar Palavra</button>
+      <div id="status-ex-13b" style="text-align:center; font-size:13px; font-weight:800; margin-top:8px;"></div>
     </div>
 
     <!-- [TIPO: Monte a dupla] EXERCÍCIO 14 -->
@@ -608,7 +631,7 @@
       <div style="font-size: 60px;">🏆</div>
       <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Excelente Trabalho!</div>
       <p style="font-size: 14px; font-weight: 700; color: #6c757d; margin-top: 8px;">
-        Você completou todos os 20 exercícios da Aula 5 e dominou o vocabulário de tempo e quantidade!
+        Você completou todos os 22 exercícios da Aula 5 e dominou o vocabulário de tempo e quantidade!
       </p>
       <div style="margin-top: 15px; background: #eef4f8; padding: 12px; border-radius: 12px; font-weight: 800; color: #ffb703;">
         🌟 +120 XP Ganhos | Progresso Salvo
@@ -636,7 +659,7 @@
   <script>
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Fale-Tela-inicial/aulas_basicas.html';
     const LESSON_ID = 'aula5_tempo';
-    const TOTAL_EXERCICIOS = 20;
+    const TOTAL_EXERCICIOS = 22;
     const concluidosSet = new Set();
 
     // Variáveis globais de áudio e microfone blindado (App Inventor / Kodular + Navegador)
@@ -681,9 +704,10 @@
     }
 
     function marcarExercicioConcluido(numEx, xpGanho = 10) {
-      if (concluidosSet.has(numEx)) return;
-      concluidosSet.add(numEx);
-      const card = document.getElementById(`card-ex-${numEx}`);
+      const chave = String(numEx);
+      if (concluidosSet.has(chave)) return;
+      concluidosSet.add(chave);
+      const card = document.getElementById(`card-ex-${chave}`);
       if (card) card.classList.add('completed');
 
       const xpAtual = parseInt(localStorage.getItem('faleandgo_xp') || '0', 10);
@@ -967,7 +991,7 @@
     }
 
     /* =====================================================================
-       2. APERTE E FALE & TRADUZA A IMAGEM (EXERCÍCIOS 3, 4, 5, 8, 9, 16)
+       2. APERTE E FALE & TRADUZA A IMAGEM (EXERCÍCIOS 3, 3B, 4, 5, 8, 9, 16)
     ===================================================================== */
     function executarAperteEFale(numEx, palavraAlvo, fallback) {
       const micBtn = document.getElementById(`mic-ex-${numEx}`);
@@ -985,8 +1009,10 @@
         const equivalencias = {
           'ahora': ['ahora', 'ora', 'agora'],
           'todavia': ['todavia', 'toda via'],
+          'mientras': ['mientras', 'enquanto'],
           'reloj': ['reloj', 'relo', 'relogio'],
           'calendario': ['calendario'],
+          'lloviendo': ['lloviendo', 'yoviendo', 'chovendo'],
           'pastel': ['pastel'],
           'poco': ['poco', 'pouco'],
           'siempre': ['siempre', 'sempre']
@@ -1130,19 +1156,19 @@
     }
 
     function selecionarPalavraChat(numEx, idx) {
-      if (concluidosSet.has(numEx)) return;
+      if (concluidosSet.has(String(numEx))) return;
       escolhasBatePapo[numEx].push(idx);
       renderizarBatePapo(numEx);
     }
 
     function limparBatePapo(numEx) {
-      if (concluidosSet.has(numEx)) return;
+      if (concluidosSet.has(String(numEx))) return;
       escolhasBatePapo[numEx] = [];
       renderizarBatePapo(numEx);
     }
 
     function verificarBatePapo(numEx) {
-      if (concluidosSet.has(numEx)) return;
+      if (concluidosSet.has(String(numEx))) return;
       const dados = DADOS_BATE_PAPO[numEx];
       const montada = escolhasBatePapo[numEx].map(i => dados.banco[i]);
       if (montada.join(' ') === dados.correta.join(' ')) {
@@ -1158,7 +1184,7 @@
     }
 
     /* =====================================================================
-       5. COMPLETE A FRASE DIGITANDO (EXERCÍCIOS 13 E 19)
+       5. COMPLETE A FRASE DIGITANDO (EXERCÍCIOS 13, 13B E 19)
     ===================================================================== */
     function verificarDigitacao(numEx, respostasAceitas, fraseCompletaEs) {
       const input = document.getElementById(`input-ex-${numEx}`);
