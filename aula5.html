@@ -285,7 +285,7 @@
       <div class="dialogue-sub">Toque no play ou em qualquer fala para ouvir a pronúncia</div>
 
       <div class="dialogue-controls">
-        <button class="btn-play-all" onclick="tocarMp3OuTts('aula5_dialogo_completo.mp3', '¡Hola, Sofía! ¿Qué hora es? Ya es muy tarde y todavía tenemos mucho trabajo hoy. No te preocupes, Marcos. Tenemos suficiente tiempo. Ahora son las diez de la mañana. ¿Cuántos cafés quieres pedir? Solo uno, por favor, y un poco de agua.')">
+        <button class="btn-play-all" onclick="tocarDialogoSequencial()">
           ▶️ Ouvir Diálogo
         </button>
         <button class="btn-stop-audio" onclick="pararTodosAudios()">⏹️ Parar</button>
@@ -631,6 +631,7 @@
 
     // Variáveis globais de áudio e microfone blindado (App Inventor / Kodular + Navegador)
     let audioMp3Atual = null;
+    let utterLeituraAtual = null;
     let sessaoVozCounter = 0;
     let sessaoVozAtiva = null;
     let aguardandoVoz = false;
@@ -685,27 +686,100 @@
     /* =====================================================================
        MOTORES DE ÁUDIO (MP3 COM FALLBACK TTS + SOM DE ACERTO)
     ===================================================================== */
+   let dialogoEmSequencia = false;
+
     function pararTodosAudios() {
+      dialogoEmSequencia = false;
       if (audioMp3Atual) {
         try { audioMp3Atual.pause(); audioMp3Atual.currentTime = 0; } catch (e) {}
         audioMp3Atual = null;
       }
       if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch (e) {}
+        try {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+      }
+      utterLeituraAtual = null;
+      if (window.AppInventor) {
+        try {
+          window.AppInventor.setWebViewString("PararVoz_" + Date.now());
+          setTimeout(() => {
+            if (!leituraTimer && window.AppInventor) {
+              try { window.AppInventor.setWebViewString("Falar_ "); } catch (e) {}
+            }
+          }, 60);
+        } catch (e) {}
       }
     }
 
+    function tocarDialogoSequencial() {
+      pararTodosAudios();
+      dialogoEmSequencia = true;
+
+      const falas = [
+        { mp3: 'aula5_fala1.mp3', tts: '¡Hola, Sofía! ¿Qué hora es? Ya es muy tarde y todavía tenemos mucho trabajo hoy.' },
+        { mp3: 'aula5_fala2.mp3', tts: 'No te preocupes, Marcos. Tenemos suficiente tiempo. Ahora son las diez de la mañana. ¿Cuántos cafés quieres pedir?' },
+        { mp3: 'aula5_fala3.mp3', tts: 'Solo uno, por favor, y un poco de agua.' }
+      ];
+
+      let indice = 0;
+
+      function tocarProximaFala() {
+        if (!dialogoEmSequencia || indice >= falas.length) {
+          dialogoEmSequencia = false;
+          return;
+        }
+
+        const atual = falas[indice];
+        let avancou = false;
+        let usouFallback = false;
+
+        const avancar = () => {
+          if (avancou || !dialogoEmSequencia) return;
+          avancou = true;
+          indice++;
+          tocarProximaFala();
+        };
+
+        const usarTts = () => {
+          if (usouFallback || !dialogoEmSequencia) return;
+          usouFallback = true;
+
+          if (window.AppInventor) {
+            window.AppInventor.setWebViewString("Falar_" + atual.tts);
+            setTimeout(avancar, Math.max(2600, atual.tts.length * 75));
+          } else if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(atual.tts);
+            u.lang = 'es-ES';
+            u.rate = 0.92;
+            u.onend = avancar;
+            u.onerror = avancar;
+            window.speechSynthesis.speak(u);
+          } else {
+            setTimeout(avancar, 2000);
+          }
+        };
+
+        const audio = new Audio(atual.mp3);
+        audioMp3Atual = audio;
+        audio.onended = avancar;
+        audio.onerror = usarTts;
+        audio.play().catch(usarTts);
+      }
+
+      tocarProximaFala();
+    }
+
     function limparMotoresAtivos() {
+      if (leituraTimer) { clearTimeout(leituraTimer); leituraTimer = null; }
+      if (intervaloEsteira17) { clearInterval(intervaloEsteira17); intervaloEsteira17 = null; }
       pararTodosAudios();
       aguardandoVoz = false;
       sessaoVozAtiva = null;
       ouvindoCallback = null;
       if (timerVozGeral) { clearTimeout(timerVozGeral); timerVozGeral = null; }
-      if (leituraTimer) { clearTimeout(leituraTimer); leituraTimer = null; }
-      if (intervaloEsteira17) { clearInterval(intervaloEsteira17); intervaloEsteira17 = null; }
-      if (window.AppInventor) {
-        try { window.AppInventor.setWebViewString("PararVoz_" + Date.now()); } catch (e) {}
-      }
     }
 
     function falarEspanhol(texto) {
@@ -1101,19 +1175,25 @@
         indiceLeitura = 0;
       }
 
+      const btnStart = document.getElementById('btn-read-start');
+      if (btnStart) btnStart.textContent = '▶️ Lendo...';
+
       const textoRestante = TEXTO_LEITURA_15.slice(indiceLeitura).map(w => w.es).join(' ');
-      if ('speechSynthesis' in window) {
+      if (window.AppInventor) {
+        window.AppInventor.setWebViewString("Falar_" + textoRestante);
+      } else if ('speechSynthesis' in window) {
         const u = new SpeechSynthesisUtterance(textoRestante);
         u.lang = 'es-ES';
         u.rate = 0.84;
+        utterLeituraAtual = u;
         window.speechSynthesis.speak(u);
-      } else if (window.AppInventor) {
-        window.AppInventor.setWebViewString("Falar_" + textoRestante);
       }
 
       function destacarProxima() {
         document.querySelectorAll('.read-word').forEach(el => el.classList.remove('speaking'));
         if (indiceLeitura >= TEXTO_LEITURA_15.length) {
+          leituraTimer = null;
+          if (btnStart) btnStart.textContent = '▶️ Ler Novamente';
           marcarExercicioConcluido(15, 20);
           return;
         }
@@ -1131,8 +1211,15 @@
     }
 
     function pausarLeituraGuiada() {
-      if (leituraTimer) { clearTimeout(leituraTimer); leituraTimer = null; }
+      if (leituraTimer) {
+        clearTimeout(leituraTimer);
+        leituraTimer = null;
+      }
       pararTodosAudios();
+      const btnStart = document.getElementById('btn-read-start');
+      if (btnStart && indiceLeitura > 0 && indiceLeitura < TEXTO_LEITURA_15.length) {
+        btnStart.textContent = '▶️ Continuar Leitura';
+      }
     }
 
     /* =====================================================================
@@ -1300,7 +1387,7 @@
        CONTROLES DE SAÍDA, VITÓRIA AUTOMÁTICA E SALVAMENTO (PADRÃO AULAS 1 A 4)
     ===================================================================== */
     function confirmExit() {
-      pararTodosAudios();
+      pausarLeituraGuiada();
       if (concluidosSet.size < TOTAL_EXERCICIOS) {
         document.getElementById('exit-modal').classList.add('show');
       } else {
