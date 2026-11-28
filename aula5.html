@@ -59,18 +59,25 @@
     }
 
     /* =====================================================================
-       [GUIA DE ESTILO 04] TEXTO FALA (DIÁLOGO INTRODUTÓRIO COM MP3)
+       [GUIA DE ESTILO 04] TEXTO FALA (DIÁLOGO INTRODUTÓRIO COM MP3 - PADRÃO AULA 3)
     ===================================================================== */
     .dialogue-card { background: #ffffff; color: #0b2545; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(0,0,0,0.18); border: 2px solid #e1e9f0; }
-    .dialogue-header { font-size: 17px; font-weight: 900; color: #0b2545; margin-bottom: 4px; }
-    .dialogue-sub { font-size: 12.5px; font-weight: 700; color: #5c677d; margin-bottom: 12px; }
-    .dialogue-controls { display: flex; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 2px solid #eef4f8; }
-    .btn-play-all { background: #ffb703; color: #0b2545; border: none; padding: 10px 16px; border-radius: 24px; font-weight: 900; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .btn-stop-audio { background: #ffeaea; color: #e63946; border: 1.5px solid #fecaca; padding: 10px 14px; border-radius: 24px; font-weight: 900; font-size: 13.5px; cursor: pointer; }
+    .dialogue-header-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .dialogue-header { font-size: 17px; font-weight: 900; color: #0b2545; margin: 0; }
+    .dialogue-sub { font-size: 12.5px; font-weight: 700; color: #5c677d; display: block; }
+    .dialogue-controls { display: flex; align-items: center; gap: 8px; }
+    .btn-play-all { background: #ffb703; color: #0b2545; border: none; padding: 9px 15px; border-radius: 50px; font-weight: 900; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(255, 183, 3, 0.35); transition: transform 0.15s; }
+    .btn-play-all:active { transform: scale(0.95); }
+    .btn-play-all.playing { background: #2ec4b6; color: #ffffff; }
+    .btn-stop-audio { background: #fee2e2; color: #b91c1c; border: 2px solid #fca5a5; padding: 8px 12px; border-radius: 50px; font-weight: 900; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: transform 0.15s, opacity 0.2s; }
+    .btn-stop-audio:active { transform: scale(0.94); }
+    .btn-stop-audio:disabled { opacity: 0.4; cursor: default; }
 
-    .dialogue-line { background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 10px; border-left: 4px solid #134074; cursor: pointer; transition: transform 0.15s; }
-    .dialogue-line.speaker-b { border-left-color: #e63946; }
+    .dialogue-line { background: #f8fafc; border-radius: 0 12px 12px 0; padding: 12px 14px; margin-bottom: 12px; border-left: 4px solid #2563eb; cursor: pointer; transition: all 0.25s ease; }
+    .dialogue-line:last-child { margin-bottom: 0; }
+    .dialogue-line.speaker-b { border-left-color: #db2777; }
     .dialogue-line:active { transform: scale(0.99); }
+    .dialogue-line.falando-agora { background-color: #fffbeb; box-shadow: 0 0 0 2px #ffb703; transform: scale(1.01); }
     .es-text { font-size: 14.5px; font-weight: 800; color: #0b2545; line-height: 1.55; margin-bottom: 4px; }
     .pt-text { font-size: 13px; font-weight: 700; color: #5c677d; line-height: 1.45; }
     .hl { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 6px; font-weight: 900; }
@@ -276,42 +283,46 @@
     </div>
 
     <!-- =====================================================================
-         [TIPO: Texto fala] DIÁLOGO INTRODUTÓRIO COM ÁUDIO MP3 + FALLBACK TTS
-         - Arquivos MP3 (mesma pasta do HTML):
-           aula5_dialogo_completo.mp3, aula5_fala1.mp3, aula5_fala2.mp3, aula5_fala3.mp3
+         [TIPO: Texto fala] DIÁLOGO INTRODUTÓRIO COM MP3 (aula5_fala1, aula5_fala2, aula5_fala3)
     ===================================================================== -->
     <div class="dialogue-card">
-      <div class="dialogue-header">⏰ ¡Qué hora es!</div>
-      <div class="dialogue-sub">Toque no play ou em qualquer fala para ouvir a pronúncia</div>
-
-      <div class="dialogue-controls">
-        <button class="btn-play-all" onclick="tocarDialogoSequencial()">
-          ▶️ Ouvir Diálogo
-        </button>
-        <button class="btn-stop-audio" onclick="pararTodosAudios()">⏹️ Parar</button>
+      <audio id="player-dialogo" preload="auto"></audio>
+      <div class="dialogue-header-bar">
+        <div>
+          <h2 class="dialogue-header">⏰ ¡Qué hora es!</h2>
+          <span class="dialogue-sub">Toque no play ou em qualquer fala para ouvir</span>
+        </div>
+        <div class="dialogue-controls">
+          <button type="button" class="btn-play-all" id="btn-dialogo-play" onclick="alternarLeituraDialogo()">
+            ▶️ Ouvir Diálogo
+          </button>
+          <button type="button" class="btn-stop-audio" id="btn-dialogo-stop" onclick="pararLeituraDialogo()" disabled>
+            ⏹️ Parar
+          </button>
+        </div>
       </div>
 
-      <div class="dialogue-line" onclick="tocarMp3OuTts('aula5_fala1.mp3', '¡Hola, Sofía! ¿Qué hora es? Ya es muy tarde y todavía tenemos mucho trabajo hoy.')">
+      <div class="dialogue-line" id="fala-0" onclick="lerFalaUnica(0)">
         <div class="es-text">
-          <strong style="color:#134074;">Marcos:</strong> ¡Hola, Sofía! ¿Qué <span class="hl">hora</span> es? Ya es muy <span class="hl">tarde</span> y <span class="hl">todavía</span> tenemos <span class="hl">mucho</span> trabajo <span class="hl">hoy</span>.
+          <strong style="color:#2563eb;">Marcos:</strong> ¡Hola, Sofía! ¿Qué <span class="hl">hora</span> es? Ya es muy <span class="hl">tarde</span> y <span class="hl">todavía</span> tenemos <span class="hl">mucho</span> trabajo <span class="hl">hoy</span>.
         </div>
         <div class="pt-text">
           Olá, Sofia! Que <span class="hl">hora</span> é? Já é muito <span class="hl">tarde</span> e <span class="hl">ainda</span> temos <span class="hl">muito</span> trabalho <span class="hl">hoje</span>.
         </div>
       </div>
 
-      <div class="dialogue-line speaker-b" onclick="tocarMp3OuTts('aula5_fala2.mp3', 'No te preocupes, Marcos. Tenemos suficiente tiempo. Ahora son las diez de la mañana. ¿Cuántos cafés quieres pedir?')">
+      <div class="dialogue-line speaker-b" id="fala-1" onclick="lerFalaUnica(1)">
         <div class="es-text">
-          <strong style="color:#e63946;">Sofía:</strong> No te preocupes, Marcos. Tenemos <span class="hl">suficiente</span> tiempo. <span class="hl">Ahora</span> son las diez de la mañana. ¿<span class="hl">Cuántos</span> cafés quieres pedir?
+          <strong style="color:#db2777;">Sofía:</strong> No te preocupes, Marcos. Tenemos <span class="hl">suficiente</span> tiempo. <span class="hl">Ahora</span> son las diez de la mañana. ¿<span class="hl">Cuántos</span> cafés quieres pedir?
         </div>
         <div class="pt-text">
           Não se preocupe, Marcos. Temos tempo <span class="hl">suficiente</span>. <span class="hl">Agora</span> são dez da manhã. <span class="hl">Quantos</span> cafés você quer pedir?
         </div>
       </div>
 
-      <div class="dialogue-line" onclick="tocarMp3OuTts('aula5_fala3.mp3', 'Solo uno, por favor, y un poco de agua.')">
+      <div class="dialogue-line" id="fala-2" onclick="lerFalaUnica(2)">
         <div class="es-text">
-          <strong style="color:#134074;">Marcos:</strong> Solo uno, por favor, y <span class="hl">un poco</span> de agua.
+          <strong style="color:#2563eb;">Marcos:</strong> Solo uno, por favor, y <span class="hl">un poco</span> de agua.
         </div>
         <div class="pt-text">
           Só um, por favor, e <span class="hl">um pouco</span> de água.
@@ -682,12 +693,136 @@
     }
 
     /* =====================================================================
-       MOTORES DE ÁUDIO (MP3 COM FALLBACK TTS + SOM DE ACERTO)
+       MOTORES DE ÁUDIO (DIÁLOGO MP3 PADRÃO AULA 3 + TTS + SOM DE ACERTO)
     ===================================================================== */
-   let dialogoEmSequencia = false;
+    const audiosDialogoAula5 = [
+      'aula5_fala1.mp3',
+      'aula5_fala2.mp3',
+      'aula5_fala3.mp3'
+    ];
 
-    function pararTodosAudios() {
-      dialogoEmSequencia = false;
+    let dialogoEstado = 'parado'; // 'parado' | 'tocando' | 'pausado'
+    let dialogoIndiceAtual = 0;
+    let dialogoModoSequencial = false;
+
+    function obterPlayerDialogo() {
+      return document.getElementById('player-dialogo');
+    }
+
+    function destacarFalaDialogo(indice) {
+      document.querySelectorAll('.dialogue-line').forEach((el, i) => {
+        el.classList.toggle('falando-agora', i === indice);
+      });
+    }
+
+    function atualizarBotoesDialogo() {
+      const btnPlay = document.getElementById('btn-dialogo-play');
+      const btnStop = document.getElementById('btn-dialogo-stop');
+      if (!btnPlay || !btnStop) return;
+
+      if (dialogoEstado === 'tocando') {
+        btnPlay.classList.add('playing');
+        btnPlay.innerHTML = '⏸️ Pausar';
+        btnStop.disabled = false;
+      } else if (dialogoEstado === 'pausado') {
+        btnPlay.classList.remove('playing');
+        btnPlay.innerHTML = '▶️ Continuar';
+        btnStop.disabled = false;
+      } else {
+        btnPlay.classList.remove('playing');
+        btnPlay.innerHTML = '▶️ Ouvir Diálogo';
+        btnStop.disabled = true;
+      }
+    }
+
+    function tocarFaixaDialogo(indice, modoSequencial) {
+      pararApenasTtsEOutrosAudios();
+      const player = obterPlayerDialogo();
+      if (!player) return;
+
+      dialogoIndiceAtual = indice;
+      dialogoModoSequencial = modoSequencial;
+      dialogoEstado = 'tocando';
+      atualizarBotoesDialogo();
+      destacarFalaDialogo(indice);
+
+      player.pause();
+      player.src = audiosDialogoAula5[indice];
+      player.load();
+
+      player.onplay = () => {
+        if (dialogoEstado === 'tocando') {
+          destacarFalaDialogo(dialogoIndiceAtual);
+        }
+      };
+
+      player.onended = () => {
+        if (dialogoEstado !== 'tocando') return;
+
+        if (dialogoModoSequencial && dialogoIndiceAtual + 1 < audiosDialogoAula5.length) {
+          dialogoIndiceAtual++;
+          destacarFalaDialogo(dialogoIndiceAtual);
+          player.src = audiosDialogoAula5[dialogoIndiceAtual];
+          player.play().catch(() => pararLeituraDialogo());
+        } else {
+          pararLeituraDialogo();
+        }
+      };
+
+      player.onerror = () => {
+        pararLeituraDialogo();
+      };
+
+      player.play().catch(() => {
+        pararLeituraDialogo();
+      });
+    }
+
+    function alternarLeituraDialogo() {
+      const player = obterPlayerDialogo();
+      if (!player) return;
+
+      if (dialogoEstado === 'tocando') {
+        player.pause();
+        dialogoEstado = 'pausado';
+        atualizarBotoesDialogo();
+      } else if (dialogoEstado === 'pausado') {
+        dialogoEstado = 'tocando';
+        atualizarBotoesDialogo();
+        player.play().catch(() => {
+          tocarFaixaDialogo(dialogoIndiceAtual, dialogoModoSequencial);
+        });
+      } else {
+        tocarFaixaDialogo(0, true);
+      }
+    }
+
+    function lerFalaUnica(indice) {
+      tocarFaixaDialogo(indice, false);
+    }
+
+    function pararLeituraDialogo() {
+      dialogoEstado = 'parado';
+      dialogoIndiceAtual = 0;
+      dialogoModoSequencial = false;
+
+      const player = obterPlayerDialogo();
+      if (player) {
+        try {
+          player.onplay = null;
+          player.onended = null;
+          player.onerror = null;
+          player.pause();
+          player.currentTime = 0;
+          player.removeAttribute('src');
+        } catch (e) {}
+      }
+
+      destacarFalaDialogo(-1);
+      atualizarBotoesDialogo();
+    }
+
+    function pararApenasTtsEOutrosAudios() {
       if (audioMp3Atual) {
         try { audioMp3Atual.pause(); audioMp3Atual.currentTime = 0; } catch (e) {}
         audioMp3Atual = null;
@@ -711,63 +846,9 @@
       }
     }
 
-    function tocarDialogoSequencial() {
-      pararTodosAudios();
-      dialogoEmSequencia = true;
-
-      const falas = [
-        { mp3: 'aula5_fala1.mp3', tts: '¡Hola, Sofía! ¿Qué hora es? Ya es muy tarde y todavía tenemos mucho trabajo hoy.' },
-        { mp3: 'aula5_fala2.mp3', tts: 'No te preocupes, Marcos. Tenemos suficiente tiempo. Ahora son las diez de la mañana. ¿Cuántos cafés quieres pedir?' },
-        { mp3: 'aula5_fala3.mp3', tts: 'Solo uno, por favor, y un poco de agua.' }
-      ];
-
-      let indice = 0;
-
-      function tocarProximaFala() {
-        if (!dialogoEmSequencia || indice >= falas.length) {
-          dialogoEmSequencia = false;
-          return;
-        }
-
-        const atual = falas[indice];
-        let avancou = false;
-        let usouFallback = false;
-
-        const avancar = () => {
-          if (avancou || !dialogoEmSequencia) return;
-          avancou = true;
-          indice++;
-          tocarProximaFala();
-        };
-
-        const usarTts = () => {
-          if (usouFallback || !dialogoEmSequencia) return;
-          usouFallback = true;
-
-          if (window.AppInventor) {
-            window.AppInventor.setWebViewString("Falar_" + atual.tts);
-            setTimeout(avancar, Math.max(2600, atual.tts.length * 75));
-          } else if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(atual.tts);
-            u.lang = 'es-ES';
-            u.rate = 0.92;
-            u.onend = avancar;
-            u.onerror = avancar;
-            window.speechSynthesis.speak(u);
-          } else {
-            setTimeout(avancar, 2000);
-          }
-        };
-
-        const audio = new Audio(atual.mp3);
-        audioMp3Atual = audio;
-        audio.onended = avancar;
-        audio.onerror = usarTts;
-        audio.play().catch(usarTts);
-      }
-
-      tocarProximaFala();
+    function pararTodosAudios() {
+      pararLeituraDialogo();
+      pararApenasTtsEOutrosAudios();
     }
 
     function limparMotoresAtivos() {
@@ -789,18 +870,6 @@
         u.lang = 'es-ES';
         u.rate = 0.92;
         window.speechSynthesis.speak(u);
-      }
-    }
-
-    function tocarMp3OuTts(arquivoMp3, textoFallbackTts) {
-      pararTodosAudios();
-      try {
-        const audio = new Audio(arquivoMp3);
-        audioMp3Atual = audio;
-        audio.onerror = () => falarEspanhol(textoFallbackTts);
-        audio.play().catch(() => falarEspanhol(textoFallbackTts));
-      } catch (e) {
-        falarEspanhol(textoFallbackTts);
       }
     }
 
